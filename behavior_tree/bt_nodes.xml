@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<root>
+  <TreeNodesModel>
+    <!-- ############################### ACTION NODES ################################# -->
+    <Action ID="GoTo">
+        <input_port name="goal">Destination goal</input_port>
+        <input_port name="server_name">Action server name</input_port>
+        <input_port name="server_timeout">Action server timeout</input_port>
+    </Action>
+
+    <Action ID="HoldPosition"/>
+
+    <Action ID="SetSingleGoal">
+        <input_port name="goal_topic">Topic for goal</input_port>
+        <output_port name="goal">Pose goal</output_port>
+    </Action>
+
+    <Action ID="SetMidGoal">
+        <input_port name="goal">Latest goal</input_port>
+        <input_port name="pose">Robot pose</input_port>
+        <input_port name="clearance">Distance from goal to place mid goal</input_port>
+        <output_port name="mid_goal">Intermediate pose goal</output_port>
+    </Action>
+
+    <Action ID="SetNextGoal">
+        <input_port name="waypoints">Poses arranged in the order in which they should be visited</input_port>
+        <output_port name="goal">Pose goal</output_port>
+    </Action>
+
+    <Action ID="OrderAndSetWaypoints">
+        <input_port name="waypoints_topic">Topic for waypoints (Odometry)</input_port>
+        <input_port name="pose">Latest robot pose</input_port>
+        <output_port name="waypoints">Geometry poses ordered according to shortest path distance</output_port>
+    </Action>
+
+    <Action ID="RemoveFirstWaypoint">
+        <inout_port name="waypoints">Geometry poses ordered according to shortest path distance</inout_port>
+    </Action>
+
+    <Action ID="UpdateCurrentTask">
+        <input_port name="task_topic">Topic for task</input_port>
+        <output_port name="current_task_name">Name of task currently running</output_port>
+        <output_port name="current_task_status">Status of tasl cirrently running</output_port>
+    </Action>
+
+    <Action ID="UpdatePose">
+        <input_port name="odom_topic">Topic for robot odometry</input_port>
+        <output_port name="pose">Latest robot pose</output_port>
+        <output_port name="last_pose_update">Timestamp for latest pose update</output_port>
+    </Action>
+
+    <Action ID="UpdateZoneNumberAndLetter">
+        <input_port name="gps_topic">Topic for gps</input_port>
+        <output_port name="zone_number">UTM zone number of the current robot pose</output_port>
+        <output_port name="zone_letter">UTM zone letter of the current robot pose</output_port>
+        <output_port name="last_zone_number_update">timestamp for latest zone number update</output_port>
+    </Action>
+
+    <Action ID="UpdatePerceptionResults">
+        <input_port name="detected_topic">Topic for detected objects</input_port>
+        <output_port name="detected_objects">Array of detected objects</output_port>
+    </Action>
+
+    <Action ID="PublishPerceptionResults">
+        <input_port name="perception_task_topic">Topic for publishing results for perception task</input_port>
+        <input_port name="zone_number">UTM zone number of latest robot pose</input_port>
+        <input_port name="zone_letter">UTM zone letter of latest robot pose</input_port>
+        <input_port name="detected_objects">Array of detected objects</input_port>
+    </Action>
+
+    <Action ID="UpdateGatesState">
+        <input_port name="detected_objects">Objects detected by perception</input_port>
+        <input_port name="pose">Latest robot pose</input_port>
+        <output_port name="gates_state">State of gates task for asv to choose move action</output_port>
+        <output_port name="gate_1">Closest gate to asv</output_port>
+        <output_port name="gate_2">Second-closest gate to asv</output_port>
+    </Action>
+
+    <Action ID="NoGate">
+        <input_port name="pose">Latest robot pose</input_port>
+        <output_port name="desired_heading">Heading for ASV to go towards</output_port>
+    </Action>
+
+    <Action ID="RedGate">
+        <input_port name="offset_distance">Offset distance (in m)</input_port>
+        <input_port name="gate_1">Gate 1 pose</input_port>
+        <input_port name="pose">Latest robot pose</input_port>
+        <output_port name="desired_heading">Heading for ASV to go towards</output_port>
+    </Action>
+
+    <Action ID="NonRedGate">
+        <input_port name="offset_distance">Offset distance (in m)</input_port>
+        <input_port name="gate_1">Gate 1 pose</input_port>
+        <input_port name="pose">Latest robot pose</input_port>
+        <output_port name="desired_heading">Heading for ASV to go towards</output_port>
+    </Action>
+
+    <Action ID="GatePair">
+        <input_port name="gate_1">Gate 1 pose</input_port>
+        <input_port name="gate_2">Gate 2 pose</input_port>
+        <input_port name="pose">Latest robot pose</input_port>
+        <output_port name="desired_heading">Heading for ASV to go towards</output_port>
+    </Action>
+
+    <Action ID="PublishDesiredHeading">
+        <input_port name="big_spinny_topic">Topic for big spinning movement</input_port>
+        <input_port name="small_wriggle_topic">Topic for small turning movement</input_port>
+        <input_port name="boundary_angle">Differentiate small or big (in deg)</input_port>
+        <input_port name="desired_heading">Heading for asv to go towards</input_port>
+        <input_port name="hz">Desired publish rate</input_port>
+        <input_port name="pose">Latest robot pose</input_port>
+    </Action>
+
+
+    <!-- ############################### CONDITION NODES ############################## -->
+    <Condition ID="CheckTaskStatus">
+        <input_port name="task_status">Task status that will return true if matched</input_port>
+        <input_port name="current_task_status">Status of task currently running</input_port>
+    </Condition>
+
+    <Condition ID="DoesTaskExist">
+        <input_port name="task_name">Task name that will return true if matched</input_port>
+        <input_port name="current_task_name">Name of task currently running</input_port>
+    </Condition>
+
+    <Condition ID="IsGoalReached">
+        <input_port name="pose">Latest robot pose</input_port>
+        <input_port name="goal">Pose goal</input_port>
+        <input_port name="last_pose_update">Timestamp of latest pose update</input_port>
+        <input_port name="max_error">Maximum error from goal allowed</input_port>
+        <input_port name="duration_tol">Tolerance for time since last pose update (seconds)</input_port>
+    </Condition>
+
+    <Condition ID="IsGoalFarEnough">
+        <input_port name="pose">Latest robot pose</input_port>
+        <input_port name="goal">Pose goal</input_port>
+        <input_port name="clearance">Minimum distance to goal</input_port>
+    </Condition>
+
+    <Condition ID="IsWaypointAvailable">
+        <input_port name="waypoints">Poses arranged in the order in which they should be visited</input_port>
+    </Condition>
+
+    <!-- ############################### CONTROL NODES ################################ -->
+
+    <!-- ############################### DECORATOR NODES ############################## -->
+
+    <Decorator ID="RateController">
+      <input_port name="hz">Rate</input_port>
+    </Decorator>
+
+  </TreeNodesModel>
+</root>
