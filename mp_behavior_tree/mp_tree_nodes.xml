@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<root>
+  <TreeNodesModel>
+    <!-- ############################### ACTION NODES ################################# -->
+    
+
+    <!-- ############################### CONDITION NODES ############################## -->
+    
+    <Condition ID="IsGoalReached">
+        <input_port name="pose">Latest robot pose</input_port>
+        <input_port name="goal">Destination</input_port>
+        <input_port name="last_pose_update">Timestamp of latest pose update</input_port>
+    </Condition>
+
+    <Condition ID="IsGoalUpdated"/>
+
+    <Condition ID="IsPoseUpdated"/>
+
+    <Condition ID="IsDistanceTraveled">
+      <input_port name="distance">Distance to check if passed</input_port>
+      <input_port name="pose">Latest robot pose</input_port>
+    </Condition>
+
+    <Condition ID="IsTimeExpired">
+      <input_port name="seconds">Time to check if expired</input_port>
+    </Condition>
+
+    </Condition>
+
+    <!-- ############################### CONTROL NODES ################################ -->
+
+    <!-- ############################### DECORATOR NODES ############################## -->
+
+  </TreeNodesModel>
+</root>
