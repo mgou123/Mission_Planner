@@ -10,10 +10,10 @@ project(auv_bt_plugins)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   tf2
+  tf2_geometry_msgs
   geometry_msgs
   nav_utils
   mp_behavior_tree
-  behaviortree_cpp_v3
 )
 
 ## System dependencies are found with CMake's conventions
@@ -114,10 +114,10 @@ catkin_package(
   CATKIN_DEPENDS 
     roscpp
     tf2
+    tf2_geometry_msgs
     geometry_msgs
     nav_utils
     mp_behavior_tree
-    behaviortree_cpp_v3
   DEPENDS system_lib
 )
 
@@ -164,8 +164,8 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
-add_library(mp_locomotion_action_bt_node SHARED plugins/action/locomotion_action.cpp)
-list(APPEND plugin_libs mp_locomotion_action_bt_node)
+add_library(mp_navigate_to_pose_bt_node SHARED plugins/action/navigate_to_pose.cpp)
+list(APPEND plugin_libs mp_navigate_to_pose_bt_node)
 
 foreach(bt_plugin ${plugin_libs})
   add_dependencies(${bt_plugin} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -198,11 +198,11 @@ endforeach()
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
 
-install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-)
+# install(TARGETS ${PROJECT_NAME}
+#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+# )
 
 ## Mark cpp header files for installation
 install(DIRECTORY include/${PROJECT_NAME}/

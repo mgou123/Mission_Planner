@@ -15,22 +15,19 @@
 //action server that uses behaviour trees to execute an action
 
 #ifndef MP_BEHAVIOR_TREE__BT_ACTION_SERVER_IMPL_HPP_
-#define MP_BEHAVIOR_TREE__BT_ACTION__SERVER_IMPL_HPP_
-
-#include <memory>
-#include <string>
-#include <fstream>
-#include <set>
-#include <exception>
-#include <vector>
+#define MP_BEHAVIOR_TREE__BT_ACTION_SERVER_IMPL_HPP_
 
 #include "mp_behavior_tree/bt_action_server.hpp"
 
+#include <fstream>
+#include <set>
+#include <exception>
+
 namespace mp_behavior_tree
 {
-template<class ActionT<
-BtActionServer<ActionT>:BtActionServer(
-    const ros::NodeHandle::WeakPtr & parent,
+template<class ActionT>
+BtActionServer<ActionT>::BtActionServer(
+    const std::weak_ptr<ros::NodeHandle> & parent,
     const std::string & action_name,
     const std::vector<std::string> & plugin_lib_names,
     const std::string & default_bt_xml_filename,
@@ -79,7 +76,7 @@ bool BtActionServer<ActionT>::on_configure()
 {
     auto node = node_.lock();
     if (!node) {
-        throw sd::runtime_error("Failed to lock node");
+        throw std::runtime_error("Failed to lock node");
     }
 
     client_node_ = std::make_shared<ros::NodeHandle>("_");
@@ -105,7 +102,7 @@ bool BtActionServer<ActionT>::on_configure()
     blackboard_ = BT::Blackboard::create();
 
     // Put items on the blackboard
-    blackboard_->set<ros::NodeHandle::SharedPtr>("node", client_node_);
+    blackboard_->set<std::shared_ptr<ros::NodeHandle>>("node", client_node_);
     blackboard_->set<std::chrono::milliseconds>("server_timeout", default_server_timeout_);
     blackboard_->set<std::chrono::milliseconds>("bt_loop_duration", bt_loop_duration_);
 
@@ -176,7 +173,7 @@ bool BtActionServer<ActionT>::loadBehaviorTree(const std::string & bt_xml_filena
 
     // Create behavior tree from XML input
     tree_ = bt_->createTreeFromText(xml_string, blackboard_);
-    topic_logger_ = std::make_unique<RosTopicLogger>(client_node_, tree_);
+    topic_logger_ = std::make_unique<BtTopicLogger>(client_node_, tree_);
 
     current_bt_xml_filename_ = filename;
 
@@ -216,7 +213,7 @@ void BtActionServer<ActionT>::executeCallback()
         if (action_server_->isPreemptRequested() && on_preempt_callback_) {
             on_preempt_callback_(action_server_);
         }
-        topic_logger_.flush();
+        topic_logger_->flush();
         on_loop_callback_();
     };
 

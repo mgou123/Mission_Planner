@@ -9,7 +9,6 @@ project(asv_bt_plugins)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  behaviortree_cpp_v3
 )
 
 ## System dependencies are found with CMake's conventions
@@ -79,7 +78,6 @@ catkin_package(
     ${plugin_libs}
   CATKIN_DEPENDS 
     roscpp
-    behaviortree_cpp_v3
   DEPENDS system_lib
 )
 

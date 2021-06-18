@@ -15,32 +15,33 @@
 //action server that uses behaviour trees to execute an action
 
 #ifndef MP_BEHAVIOR_TREE__BT_ACTION_SERVER_NODE_HPP_
-#define MP_BEHAVIOR_TREE__BT_ACTION__SERVER_NODE_HPP_
+#define MP_BEHAVIOR_TREE__BT_ACTION_SERVER_NODE_HPP_
 
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "geometry_msgs/msg/pose_stamped.hpp"
+#include <geometry_msgs/PoseStamped.h>
 #include <actionlib/server/simple_action_server.h>
+
 #include "mp_behavior_tree/behavior_tree_engine.hpp"
 #include "mp_behavior_tree/ros_topic_logger.hpp"
 
 namespace mp_behavior_tree
 {
-template <class ActionT>
+template <typename ActionT, typename GoalT, typename ResultT>
 class BtActionServer
 {
 public:
     using ActionServer = actionlib::SimpleActionServer<ActionT>;
 
-    typedef std::function<bool (typename ActionT::Goal::ConstSharedPtr)> OnGoalReceivedCallback;
+    typedef std::function<bool (const typename std::shared_ptr<GoalT>)> OnGoalReceivedCallback;
     typedef std::function<void ()> OnLoopCallback;
-    typedef std::function<void (typename ActionT::Goal::ConstSharedPtr)> OnPreemptCallback;
-    typedef std::function<void (typename ActionT::Result::SharedPtr)> OnCompletionCallback;
+    typedef std::function<void (const typename std::shared_ptr<GoalT>)> OnPreemptCallback;
+    typedef std::function<void (const typename std::shared_ptr<ResultT>)> OnCompletionCallback;
 
     explicit BtActionServer(
-        const ros::NodeHandle::WeakPtr & parent,
+        const std::weak_ptr<ros::NodeHandle> & parent,
         const std::string & action_name,
         const std::vector<std::string> & plugin_lib_names,
         const std::string & default_bt_xml_filename,
@@ -118,7 +119,10 @@ protected:
     std::weak_ptr<ros::NodeHandle> node_;
     
     // To publish BT logs
-    std::unique_ptr<RosTopicLogger> topic_logger_;
+    std::unique_ptr<BtTopicLogger> topic_logger_;
+
+    std::chrono::milliseconds bt_loop_duration_;
+    std::chrono::milliseconds default_server_timeout_;
 
     // Parameters for Groot monitoring
     bool enable_groot_monitoring_;

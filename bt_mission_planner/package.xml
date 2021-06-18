@@ -49,18 +49,11 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>mp_behavior_tree</build_depend>
-  <build_depend>mp_core</build_depend>
-  <build_depend>mp_msgs</build_depend>
-  <build_depend>roscpp</build_depend>
-  <build_export_depend>mp_behavior_tree</build_export_depend>
-  <build_export_depend>mp_core</build_export_depend>
-  <build_export_depend>mp_msgs</build_export_depend>
-  <build_export_depend>roscpp</build_export_depend>
-  <exec_depend>mp_behavior_tree</exec_depend>
-  <exec_depend>mp_core</exec_depend>
-  <exec_depend>mp_msgs</exec_depend>
-  <exec_depend>roscpp</exec_depend>
+  <depend>mp_behavior_tree</depend>
+  <depend>mp_core</depend>
+  <depend>mp_msgs</depend>
+  <depend>roscpp</depend>
+  <depend>tf2_ros</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
