@@ -25,8 +25,8 @@
 
 namespace mp_behavior_tree
 {
-template<class ActionT>
-BtActionServer<ActionT>::BtActionServer(
+template<typename ActionT, typename GoalT, typename ResultT, typename FeedbackT>
+BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::BtActionServer(
     const std::weak_ptr<ros::NodeHandle> & parent,
     const std::string & action_name,
     const std::vector<std::string> & plugin_lib_names,
@@ -68,11 +68,11 @@ BtActionServer<ActionT>::BtActionServer(
     }
 }
 
-template<class ActionT>
-BtActionServer<ActionT>::~BtActionServer() {}
+template<typename ActionT, typename GoalT, typename ResultT, typename FeedbackT>
+BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::~BtActionServer() {}
 
-template<class ActionT>
-bool BtActionServer<ActionT>::on_configure() 
+template<typename ActionT, typename GoalT, typename ResultT, typename FeedbackT>
+bool BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::on_configure() 
 {
     auto node = node_.lock();
     if (!node) {
@@ -81,7 +81,7 @@ bool BtActionServer<ActionT>::on_configure()
 
     client_node_ = std::make_shared<ros::NodeHandle>("_");
     action_server_ = std::make_shared<ActionServer>(
-        *node, action_name_, std::bind(&BtActionServer<ActionT>::executeCallback, this), false);
+        *node, action_name_, std::bind(&BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::executeCallback, this), false);
     
     // Get parameter for monitoring with Groot via ZMQ Publisher
     node->getParam("enable_groot_monitoring", enable_groot_monitoring_);
@@ -91,9 +91,9 @@ bool BtActionServer<ActionT>::on_configure()
     // Get parameters for BT timeouts
     int timeout;
     node->getParam("bt_loop_duration", timeout);
-    bt_loop_duration_ = std::chrono::milliseconds(timeout);
+    bt_loop_duration_ = timeout * 1000;
     node->getParam("default_server_timeout", timeout);
-    default_server_timeout_ = std::chrono::milliseconds(timeout);
+    default_server_timeout_ = timeout * 1000;
 
     // Create the class that registers our custom nodes and executes the BT
     bt_ = std::make_unique<mp_behavior_tree::BehaviorTreeEngine>(plugin_lib_names_);
@@ -103,14 +103,14 @@ bool BtActionServer<ActionT>::on_configure()
 
     // Put items on the blackboard
     blackboard_->set<std::shared_ptr<ros::NodeHandle>>("node", client_node_);
-    blackboard_->set<std::chrono::milliseconds>("server_timeout", default_server_timeout_);
-    blackboard_->set<std::chrono::milliseconds>("bt_loop_duration", bt_loop_duration_);
+    blackboard_->set<double>("server_timeout", default_server_timeout_);
+    blackboard_->set<double>("bt_loop_duration", bt_loop_duration_);
 
     return true;
 }
 
-template<class ActionT>
-bool BtActionServer<ActionT>::on_activate()
+template<typename ActionT, typename GoalT, typename ResultT, typename FeedbackT>
+bool BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::on_activate()
 {
     if (!loadBehaviorTree(default_bt_xml_filename_)) {
         ROS_ERROR("Error loading XML file: %s", default_bt_xml_filename_.c_str());
@@ -121,15 +121,15 @@ bool BtActionServer<ActionT>::on_activate()
     return true;
 }
 
-template<class ActionT>
-bool BtActionServer<ActionT>::on_deactivate()
+template<typename ActionT, typename GoalT, typename ResultT, typename FeedbackT>
+bool BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::on_deactivate()
 {
     action_server_->shutdown();
     return true;
 }
 
-template<class ActionT>
-bool BtActionServer<ActionT>::on_cleanup() 
+template<typename ActionT, typename GoalT, typename ResultT, typename FeedbackT>
+bool BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::on_cleanup() 
 {
     client_node_.reset();
     action_server_.reset();
@@ -145,8 +145,8 @@ bool BtActionServer<ActionT>::on_cleanup()
     return true;
 }
 
-template<class ActionT>
-bool BtActionServer<ActionT>::loadBehaviorTree(const std::string & bt_xml_filename)
+template<typename ActionT, typename GoalT, typename ResultT, typename FeedbackT>
+bool BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::loadBehaviorTree(const std::string & bt_xml_filename)
 {
     auto filename = bt_xml_filename.empty() ? default_bt_xml_filename_ : bt_xml_filename;
 
@@ -168,7 +168,7 @@ bool BtActionServer<ActionT>::loadBehaviorTree(const std::string & bt_xml_filena
     }
 
     auto xml_string = std::string(
-        std::istreambuf_iterator<char>(xml_file);
+        std::istreambuf_iterator<char>(xml_file),
         std::istreambuf_iterator<char>());
 
     // Create behavior tree from XML input
@@ -189,10 +189,10 @@ bool BtActionServer<ActionT>::loadBehaviorTree(const std::string & bt_xml_filena
     return true;
 }
 
-template<class ActionT>
-void BtActionServer<ActionT>::executeCallback()
+template<typename ActionT, typename GoalT, typename ResultT, typename FeedbackT>
+void BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::executeCallback(const typename GoalT::ConstPtr &goal)
 {
-    if (!on_goal_received_callback_(action_server_)) {
+    if (!on_goal_received_callback_(goal)) {
         action_server_->setPreempted();
         return;
     }
@@ -210,9 +210,11 @@ void BtActionServer<ActionT>::executeCallback()
     };
 
     auto on_loop = [&]() {
-        if (action_server_->isPreemptRequested() && on_preempt_callback_) {
-            on_preempt_callback_(action_server_);
-        }
+        // if (action_server_->isPreemptRequested() && on_preempt_callback_) {
+        //     on_preempt_callback_(action_server_);
+        // }
+
+        // skip preempt for now
         topic_logger_->flush();
         on_loop_callback_();
     };
@@ -224,21 +226,21 @@ void BtActionServer<ActionT>::executeCallback()
     bt_->haltAllActions(tree_.rootNode());
 
     // Populate result message
-    auto result = std::make_shared<typename ActionT::Result>();
+    auto result = typename ResultT::ConstPtr();
     on_completion_callback_(result);
 
     switch (rc) {
         case mp_behavior_tree::BtStatus::SUCCEEDED:
             ROS_INFO("Goal succeeded");
-            action_server_->setSucceeded(result);
+            action_server_->setSucceeded(*result);
             break;
         case mp_behavior_tree::BtStatus::FAILED:
             ROS_ERROR("Goal failed");
-            action_server_->setAborted(result);
+            action_server_->setAborted(*result);
             break;
-        case mp_behavior_tree->CANCELED:
+        case mp_behavior_tree::BtStatus::CANCELED:
             ROS_INFO("Goal canceled");
-            action_server_->setPreempted(result);
+            action_server_->setPreempted(*result);
             break;
     }
 }

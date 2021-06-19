@@ -12,22 +12,28 @@ MissionPlanner::MissionPlanner()
 {
     ROS_INFO("Creating mission planner...");
     default_plugin_libs_ = {};
-
-    setParam("odom_topic", "/nav/odom/ned");
 }
 
 MissionPlanner::~MissionPlanner() {}
 
-bool MissionPlanner::configure(ros::NodeHandle::WeakPtr parent_node) {
+bool MissionPlanner::configure(std::weak_ptr<ros::NodeHandle> parent_node) {
     ROS_INFO("Configuring mission planner...");
     auto node = parent_node.lock();
 
     tf_ = std::make_shared<tf2_ros::Buffer>();
-    tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_, this, false);
-    node->getParam("transform_tolerance", transform_tolerance_, 0.1);
+    transform_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_);
+    if (!node->hasParam("transform_tolerance")) {
+        node->setParam("transform_tolerance", 0.1);
+    }
     
     std::vector<std::string> plugin_lib_names;
-    node->getParam("plugin_lib_names", plugin_lib_names, default_plugin_libs_);
+    if (!node->hasParam("plugin_lib_names"))
+    node->setParam("plugin_lib_names", default_plugin_libs_);
+
+    std::string odom_topic;
+    if (!node->hasParam("odom_topic")) {
+        node->setParam("odom_topic", "/nav/odom/ned");
+    }
 
     // get bt xml filename
     std::string default_bt_xml_filename;
@@ -39,15 +45,16 @@ bool MissionPlanner::configure(ros::NodeHandle::WeakPtr parent_node) {
 
     node->getParam("default_mission_planner_bt_xml", default_bt_xml_filename);
 
-    bt_action_server_ = std::make_unique<mp_behavior_tree::BtActionServer<MissionAction>>(
+    bt_action_server_ = std::make_unique<mp_behavior_tree::BtActionServer<
+                            MissionAction, MissionGoal, MissionResult, MissionFeedback>>(
         node,
         "execute_mission",
         plugin_lib_names,
         default_bt_xml_filename,
         std::bind(&MissionPlanner::onGoalReceived, this, std::placeholders::_1),
-        std::bind(&Navigator::onLoop, this),
-        std::bind(&Navigator::onPreempt, this, std::placeholders::_1),
-        std::bind(&Navigator::onCompletion, this, std::placeholders::_1));
+        std::bind(&MissionPlanner::onLoop, this),
+        std::bind(&MissionPlanner::onPreempt, this, std::placeholders::_1),
+        std::bind(&MissionPlanner::onCompletion, this, std::placeholders::_1));
     
     bool ok = true;
     if (!bt_action_server_->on_configure()) {
@@ -66,7 +73,7 @@ bool MissionPlanner::configure(ros::NodeHandle::WeakPtr parent_node) {
 bool MissionPlanner::activate() {
     ROS_INFO("Activating mission planner...");
     bool ok = true;
-    if(!bt_action_server_.on_activate()) {
+    if(!bt_action_server_->on_activate()) {
         ok = false;
     }
 
@@ -76,7 +83,7 @@ bool MissionPlanner::activate() {
 bool MissionPlanner::deactivate() {
     ROS_INFO("Deactivating mission planner...");
     bool ok = true;
-    if(!bt_action_server_.on_deactivate()) {
+    if(!bt_action_server_->on_deactivate()) {
         ok = false;
     }
 
@@ -85,7 +92,7 @@ bool MissionPlanner::deactivate() {
 
 bool MissionPlanner::cleanup() {
     ROS_INFO("Cleaning up mission planner...");
-    tf_listener_.reset();
+    transform_listener_.reset();
     tf_.reset();
 
     bool ok;
@@ -102,7 +109,7 @@ bool MissionPlanner::shutdown() {
     return true;
 }
 
-bool MissionPlanner::onGoalReceived(MissionAction::Goal::ConstSharedPtr goal) {
+bool MissionPlanner::onGoalReceived(const MissionGoal::ConstPtr &goal) {
     auto bt_xml_filename = goal->behavior_tree;
     if (!bt_action_server_->loadBehaviorTree(bt_xml_filename)) {
         ROS_ERROR("BT file not found: %s. Mission canceled.", bt_xml_filename.c_str());
@@ -113,22 +120,21 @@ bool MissionPlanner::onGoalReceived(MissionAction::Goal::ConstSharedPtr goal) {
     return true;
 }
 
-void MissionPlanner::onCompletion(MissionAction::Result::SharedPtr result) {}
+void MissionPlanner::onCompletion(const MissionResult::ConstPtr &result) {}
 
 void MissionPlanner::onLoop() {
-    auto feedback_msg = std::make_shared<MissionAction::Feedback>();
+    auto feedback_msg = std::make_shared<MissionFeedback>();
     auto blackboard = bt_action_server_->getBlackboard();
 
-    feedback_msg->current_task = "test";
-    bt_action_server_->publishFeedback(feedback_msg);
-
+    // feedback_msg->current_task = "test";
+    // bt_action_server_->publishFeedback(feedback_msg);
 }
 
-void MissionPlanner::onPreempt(MissionAction::Goal::ConstSharedPtr goal) {
+void MissionPlanner::onPreempt(const MissionGoal::ConstPtr &goal) {
     ROS_INFO("Mission Planner goal preemption request received!");
     ROS_WARN("Preempt is currently not allowed. Please cancel the current goal and send a "
              "new action request instead. Continuing to execute previous goal...");
-    bt_action_server_.terminatePendingGoal();
+    //bt_action_server_->terminatePendingGoal();
 }
 
 } // namespace bt_mission_planner

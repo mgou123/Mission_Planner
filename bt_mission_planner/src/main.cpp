@@ -5,16 +5,17 @@
 
 int main(int argc, char ** argv)
 {
-    ros::init(argc, argv);
-    auto node = std::make_shared<mp_bt_navigator::BtNavigator>();
-    auto mp = MissionPlanner();
+    ros::init(argc, argv, "mission_planner");
+    std::shared_ptr<ros::NodeHandle> node;
 
-    if (!mp.configure(node)) {
+    auto mp = std::make_shared<bt_mission_planner::MissionPlanner>();
+
+    if (!mp->configure(node)) {
         ROS_ERROR("Unable to configure mission planner! Aborting...");
         return 0;
     };
 
-    if (!mp.activate()) {
+    if (!mp->activate()) {
         ROS_ERROR("Unable to activate mission planner! Aborting...");
         return 0;
     }
@@ -22,16 +23,16 @@ int main(int argc, char ** argv)
     ros::Rate r(10); // 10 hz
 
     while (ros::ok()) {
-        ros;:spinOnce();
+        ros::spinOnce();
         r.sleep();
     }
     
-    if (!mp.deactivate() && mp.cleanup()) {
+    if (!mp->deactivate() && mp->cleanup()) {
         ROS_WARN("Mission planner not properly deactivated and cleaned up! There may be remaining resources taken up.");
 
     };
     
-    mp.shutdown();
+    mp->shutdown();
 
     return 0;
 }

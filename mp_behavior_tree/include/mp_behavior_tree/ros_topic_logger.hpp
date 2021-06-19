@@ -49,21 +49,21 @@ public:
     {
         mp_msgs::BehaviorTreeStatusChange event;
         // event.timestamp = tf2_ros::toMsg(tf2::TimePoint(timestamp)); // THIS DOESN'T WORK IDK WHY
-        event.timestamp = ros::Time::now(); // cheat a bit first, not true time
-        event.node_name = node.name();
-        event.previous_status = toStr(prev_status, false);
-        event.current_status = toStr(status, false); 
-        event_log_.push_back(std::move(event));
+        // event.timestamp = ros::Time::now(); // cheat a bit first, not true time
+        // event.node_name = node.name();
+        // event.previous_status = toStr(prev_status, false);
+        // event.current_status = toStr(status, false); 
+        // event_log_.push_back(std::move(event));
     }
 
     void flush() override
     {
         if (!event_log_.empty()) {
-            auto log_msg = std::make_unique<mp_msgs::BehaviorTreeLog>();
-            log_msg->header.stamp = ros::Time::now();
-            log_msg->log = event_log_;
-            log_pub_.publish(std::move(log_msg));
-            event_log_.clear();
+            // auto log_msg = std::make_unique<mp_msgs::BehaviorTreeLog>();
+            // log_msg->header.stamp = ros::Time::now();
+            // log_msg->log = event_log_;
+            // log_pub_.publish(std::move(log_msg));
+            // event_log_.clear();
         }
     }
 

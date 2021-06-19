@@ -54,7 +54,11 @@ public:
         const std::string & file_path,
         BT::Blackboard::Ptr blackboard);
     
-    void addGrootMonitoring(BT::Tree * tree);
+    void addGrootMonitoring(
+        BT::Tree * tree, 
+        uint16_t publisher_port, 
+        uint16_t server_port, 
+        uint16_t max_msg_per_second = 25);
     void resetGrootMonitor();
 
     // In order to re-run a Behavior Tree, we must be able to reset all nodes to the initial state

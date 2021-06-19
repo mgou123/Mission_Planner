@@ -22,6 +22,7 @@ public:
     using MissionAction = mp_msgs::ExecuteMissionAction; 
     using MissionGoal = mp_msgs::ExecuteMissionGoal;
     using MissionResult = mp_msgs::ExecuteMissionResult;
+    using MissionFeedback = mp_msgs::ExecuteMissionFeedback;
 
     MissionPlanner();
 
@@ -38,14 +39,15 @@ private:
     std::vector<std::string> default_plugin_libs_;
     std::string goal_blackboard_id_;
 
-    tf2_ros::Buffer tf_;
-    tf2_ros::TransformListener transform_listener_;
+    std::shared_ptr<tf2_ros::Buffer> tf_;
+    std::shared_ptr<tf2_ros::TransformListener> transform_listener_;
 
-    std::unique_ptr<mp_behavior_tree::BtActionServer<MissionAction>> bt_action_server_;
-    bool onGoalReceived(const std::shared_ptr<MissionGoal> goal);
-    void onCompletion(const std::shared_ptr<MissionResult> result);
+    std::unique_ptr<mp_behavior_tree::BtActionServer<
+        MissionAction, MissionGoal, MissionResult, MissionFeedback>> bt_action_server_;
+    bool onGoalReceived(const MissionGoal::ConstPtr &goal);
+    void onCompletion(const MissionResult::ConstPtr &result);
     void onLoop();
-    void onPreempt(const std::shared_ptr<MissionGoal> goal);
+    void onPreempt(const MissionGoal::ConstPtr &goal);
     
 };
 

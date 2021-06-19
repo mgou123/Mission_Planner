@@ -29,16 +29,16 @@
 
 namespace mp_behavior_tree
 {
-template <typename ActionT, typename GoalT, typename ResultT>
+template <typename ActionT, typename GoalT, typename ResultT, typename FeedbackT>
 class BtActionServer
 {
 public:
     using ActionServer = actionlib::SimpleActionServer<ActionT>;
 
-    typedef std::function<bool (const typename std::shared_ptr<GoalT>)> OnGoalReceivedCallback;
+    typedef std::function<bool (const typename GoalT::ConstPtr)> OnGoalReceivedCallback;
     typedef std::function<void ()> OnLoopCallback;
-    typedef std::function<void (const typename std::shared_ptr<GoalT>)> OnPreemptCallback;
-    typedef std::function<void (const typename std::shared_ptr<ResultT>)> OnCompletionCallback;
+    typedef std::function<void (const typename GoalT::ConstPtr)> OnPreemptCallback;
+    typedef std::function<void (const typename ResultT::ConstPtr)> OnCompletionCallback;
 
     explicit BtActionServer(
         const std::weak_ptr<ros::NodeHandle> & parent,
@@ -81,13 +81,13 @@ public:
     }
 
     // wrapper function to accept pending goal
-    const std::shared_ptr<const typename ActionT::Goal> acceptPendingGoal()
+    typename GoalT::ConstPtr acceptPendingGoal()
     {
         return action_server_->acceptNewGoal();
     }
 
     // wrapper function to publish feedback
-    void publishFeedback(typename std::shared_ptr<typename ActionT::Feedback> feedback) 
+    void publishFeedback(typename FeedbackT::ConstPtr feedback) 
     {
         action_server_->publishFeedback(feedback);
     }
@@ -100,7 +100,7 @@ public:
     }
 
 protected:
-    void executeCallback();
+    void executeCallback(const typename GoalT::ConstPtr &goal);
     std::string action_name_;
     std::shared_ptr<ActionServer> action_server_;
 
@@ -121,8 +121,8 @@ protected:
     // To publish BT logs
     std::unique_ptr<BtTopicLogger> topic_logger_;
 
-    std::chrono::milliseconds bt_loop_duration_;
-    std::chrono::milliseconds default_server_timeout_;
+    double bt_loop_duration_;
+    double default_server_timeout_;
 
     // Parameters for Groot monitoring
     bool enable_groot_monitoring_;
