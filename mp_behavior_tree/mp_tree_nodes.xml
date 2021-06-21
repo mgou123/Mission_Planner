@@ -2,7 +2,11 @@
 <root>
   <TreeNodesModel>
     <!-- ############################### ACTION NODES ################################# -->
-    
+    <Action ID="UpdatePose">
+      <input_port name="topic_name">Topic name</input_port>
+      <input_port name="queue_size">Topic queue size </input_port>
+      <input_port name="output_key">Name of output port to write to</input_port>
+    </Action>
 
     <!-- ############################### CONDITION NODES ############################## -->
     
@@ -23,8 +27,6 @@
 
     <Condition ID="IsTimeExpired">
       <input_port name="seconds">Time to check if expired</input_port>
-    </Condition>
-
     </Condition>
 
     <!-- ############################### CONTROL NODES ################################ -->

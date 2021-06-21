@@ -11,7 +11,9 @@ namespace bt_mission_planner
 MissionPlanner::MissionPlanner()
 {
     ROS_INFO("Creating mission planner...");
-    default_plugin_libs_ = {};
+    default_plugin_libs_ = {
+        
+    };
 }
 
 MissionPlanner::~MissionPlanner() {}

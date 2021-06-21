@@ -3,6 +3,9 @@
 #ifndef MP_BEHAVIOR_TREE__BT_TOPIC_PUB_NODE_HPP_
 #define MP_BEHAVIOR_TREE__BT_TOPIC_PUB_NODE_HPP_
 
+#include <ros/ros.h>
+#include <behaviortree_cpp_v3/action_node.h>
+
 namespace mp_behavior_tree
 {
 template <typename TopicT>
@@ -19,6 +22,9 @@ public:
         result_ = typename TopicT::ConstPtr();
 
         std::string remapped_topic_name;
+        int queue_size;
+        std::string remapped_input_key; 
+
         if (getInput("topic_name", remapped_topic_name)) {
             topic_name_ = remapped_topic_name;
         }
@@ -33,21 +39,19 @@ public:
             input_key_ = topic_name_;
         }
 
-        pub_ = node_->advertise<TopicT>(topic_name_, queue_size);
+        pub_ = std::make_shared<ros::Publisher>(node_->advertise<TopicT>(topic_name_, queue_size));
 
-        ROS_INFO("\"%s\" BtTopicPubNode initialized", xml_tag_name.c_str(), topic_name_.c_str());
+        ROS_INFO("[%s] BtTopicPubNode initialized, publishing to %s", xml_tag_name.c_str(), topic_name_.c_str());
     }
 
-    BtTopicPubNode() = delete;
+    ~BtTopicPubNode() {};
 
-    virtual ~BtTopicPubNode() = delete;
-
-    static BT::PortsList providedBasicPorts(BT::PortList addition)
+    static BT::PortsList providedBasicPorts(BT::PortsList addition)
     {
         BT::PortsList basic = {
             BT::InputPort<std::string>("topic_name", "Topic name"),
             BT::InputPort<int>("queue_size", "Topic queue size"),
-            BT::InputPort<std::string>("input_key", "Name of input port to read from");
+            BT::InputPort<std::string>("input_key", "Name of input port to read from")
         };
 
         basic.insert(addition.begin(), addition.end());
@@ -58,7 +62,7 @@ public:
     // mandatory to define this method
     static BT::PortsList providedPorts()
     {
-        return providedBasicPorts(());
+        return providedBasicPorts({});
     }
 
     // Derived classes can override any of the following methods to hook into the
@@ -73,7 +77,7 @@ public:
 
     virtual BT::NodeStatus on_failure()
     {
-        ROS_WARN("No value received from %s", input_key_);
+        ROS_WARN("No value received from %s", input_key_.c_str());
         return BT::NodeStatus::FAILURE;
     }
 
@@ -93,7 +97,7 @@ protected:
     std::string input_key_;
     int queue_size_;
 
-    ros::Publisher pub_;
+    std::shared_ptr<ros::Publisher> pub_;
     typename TopicT::ConstPtr result_;
 
     std::shared_ptr<ros::NodeHandle> node_;

@@ -81,7 +81,7 @@ bool BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::on_configure()
 
     client_node_ = std::make_shared<ros::NodeHandle>("_");
     action_server_ = std::make_shared<ActionServer>(
-        *node, action_name_, std::bind(&BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::executeCallback, this), false);
+        *node, action_name_, std::bind(&BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::executeCallback, this, std::placeholders::_1), false);
     
     // Get parameter for monitoring with Groot via ZMQ Publisher
     node->getParam("enable_groot_monitoring", enable_groot_monitoring_);

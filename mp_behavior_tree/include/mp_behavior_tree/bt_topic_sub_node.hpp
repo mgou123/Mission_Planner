@@ -3,6 +3,9 @@
 #ifndef MP_BEHAVIOR_TREE__BT_TOPIC_SUB_NODE_HPP_
 #define MP_BEHAVIOR_TREE__BT_TOPIC_SUB_NODE_HPP_
 
+#include <ros/ros.h>
+#include <behaviortree_cpp_v3/action_node.h>
+
 namespace mp_behavior_tree
 {
 template <typename TopicT>
@@ -19,6 +22,9 @@ public:
         result_ = typename TopicT::ConstPtr();
 
         std::string remapped_topic_name;
+        int queue_size;
+        std::string remapped_output_key;
+
         if (getInput("topic_name", remapped_topic_name)) {
             topic_name_ = remapped_topic_name;
         }
@@ -32,23 +38,20 @@ public:
         } else {
             output_key_ = topic_name_;
         }
+        
+        sub_ = std::make_shared<ros::Subscriber>(node_->subscribe(topic_name_, queue_size_, &BtTopicSubNode::callback, this));
 
-        sub_ = std::make_shared<node_->subscribe>(topic_name_, queue_size_, &BtTopicNode::callback, this);
-
-        ROS_INFO("\"%s\" BtTopicSubNode initialized", xml_tag_name.c_str(), topic_name_.c_str());
+        ROS_INFO("[%s] BtTopicSubNode initialized, subscribed to %s", xml_tag_name.c_str(), topic_name_.c_str());
     }
 
-    BtTopicSubNode() = delete;
+    ~BtTopicSubNode() {};
 
-    virtual ~BtTopicSubNode() = delete;
-
-    static BT::PortsList providedBasicPorts(BT::PortList addition)
+    static BT::PortsList providedBasicPorts(BT::PortsList addition)
     {
         BT::PortsList basic = {
             BT::InputPort<std::string>("topic_name", "Topic name"),
             BT::InputPort<int>("queue_size", "Topic queue size"),
-            BT::InputPort<std::string>("output_key", "Name of output port to write to");
-            BT::OutputPort<TopicT>(output_key_, "Output port");
+            BT::InputPort<std::string>("output_key", "Name of output port to write to")
         };
 
         basic.insert(addition.begin(), addition.end());
@@ -59,7 +62,7 @@ public:
     // mandatory to define this method
     static BT::PortsList providedPorts()
     {
-        return providedBasicPorts(());
+        return providedBasicPorts({});
     }
 
     // Derived classes can override any of the following methods to hook into the
@@ -76,17 +79,17 @@ public:
 
     virtual BT::NodeStatus on_failure()
     {
-        ROS_WARN("No messages received over %s", topic_name_);
+        ROS_WARN("No messages received over %s", topic_name_.c_str());
         return BT::NodeStatus::FAILURE;
     }
 
     BT::NodeStatus tick() override
     {
         on_tick();
-        if (first_time) {
+        if (first_time_) {
             return on_failure();
         } else {
-            setOutput(output_key_, *result_);
+            config().blackboard->set<TopicT>(output_key_, *result_);
             return on_success();
         }
     }
@@ -108,7 +111,7 @@ protected:
 
     bool first_time_{true};
 
-    ros::Subscriber sub_;
+    std::shared_ptr<ros::Subscriber> sub_;
     typename TopicT::ConstPtr result_;
 
     std::shared_ptr<ros::NodeHandle> node_;

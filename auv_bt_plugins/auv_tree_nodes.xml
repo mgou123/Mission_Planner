@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<root>
+  <TreeNodesModel>
+    <!-- ############################### ACTION NODES ################################# -->
+    <Action ID="NavigateToPose">
+        <input_port name="goal">Goal</input_port>
+    </Action>
+
+    <!-- ############################### CONDITION NODES ############################## -->
+    
+
+    <!-- ############################### CONTROL NODES ################################ -->
+
+    <!-- ############################### DECORATOR NODES ############################## -->
+
+  </TreeNodesModel>
+</root>

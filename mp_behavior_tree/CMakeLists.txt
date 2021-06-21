@@ -62,6 +62,9 @@ target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
 
+add_library(mp_update_pose_bt_node SHARED plugins/action/update_pose.cpp)
+list(APPEND plugin_libs mp_update_pose_bt_node)
+
 add_library(mp_is_time_expired_condition_bt_node SHARED plugins/condition/is_time_expired_condition.cpp)
 list(APPEND plugin_libs mp_is_time_expired_condition_bt_node)
 
