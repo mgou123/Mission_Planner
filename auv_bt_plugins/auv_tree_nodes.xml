@@ -3,12 +3,13 @@
   <TreeNodesModel>
     <!-- ############################### ACTION NODES ################################# -->
     <Action ID="NavigateToPose">
+        <input_port name="server_name">Action server name</input_port>
+        <input_port name="server_timeout">Timeout for action server to respond</input_port>
         <input_port name="goal">Goal</input_port>
     </Action>
 
     <!-- ############################### CONDITION NODES ############################## -->
     
-
     <!-- ############################### CONTROL NODES ################################ -->
 
     <!-- ############################### DECORATOR NODES ############################## -->

@@ -54,6 +54,8 @@
   <depend>mp_msgs</depend>
   <depend>roscpp</depend>
   <depend>tf2_ros</depend>
+  <depend>auv_bt_plugins</depend>
+  <depend>robosub21_bt_plugins</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

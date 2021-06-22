@@ -18,16 +18,11 @@ IsGoalReachedCondition::IsGoalReachedCondition(
     node_->param("odom_update_timeout", odom_update_timeout_, 1.0);
 }
 
-IsGoalReachedCondition::~IsGoalReachedCondition()
-{
-  cleanup();
-}
-
 BT::NodeStatus IsGoalReachedCondition::tick()
 {
     ros::Time now = ros::Time::now();
-    geometry_msgs::Pose goal;
-    geometry_msgs::Pose robot_pose;
+    geometry_msgs::PoseStamped goal;
+    geometry_msgs::PoseStamped robot_pose;
     ros::Time last_pose_update;
 
     if (!getInput("goal", goal)) {
@@ -40,19 +35,14 @@ BT::NodeStatus IsGoalReachedCondition::tick()
         return BT::NodeStatus::FAILURE;
     }
 
-    if (!getInput("last_pose_update", last_pose_update)) {
-        ROS_WARN("[IsGoalReached] Cannot get timestamp of last pose update");
-        return BT::NodeStatus::FAILURE;
-    }
+    // if (now - last_pose_update > ros::Duration(odom_update_timeout_)) {
+    //     ROS_WARN("[IsGoalReached] Too long since last odom update");
+    //     return BT::NodeStatus::FAILURE;
+    // } // change to using the timestamp
 
-    if (now - last_pose_update > ros::Duration(odom_update_timeout_)) {
-        ROS_WARN("[IsGoalReached] Too long since last odom update");
-        return BT::NodeStatus::FAILURE;
-    }
-
-    double dx = goal.position.x - robot_pose.position.x;
-    double dy = goal.position.y - robot_pose.position.y;
-    double dz = goal.position.z - robot_pose.position.z;
+    double dx = goal.pose.position.x - robot_pose.pose.position.x;
+    double dy = goal.pose.position.y - robot_pose.pose.position.y;
+    double dz = goal.pose.position.z - robot_pose.pose.position.z;
 
     if ((dx * dx + dy * dy + dz * dz) > (goal_reached_tol_ * goal_reached_tol_)) {
         return BT::NodeStatus::FAILURE;

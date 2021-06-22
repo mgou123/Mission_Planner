@@ -6,8 +6,7 @@
 int main(int argc, char ** argv)
 {
     ros::init(argc, argv, "mission_planner");
-    std::shared_ptr<ros::NodeHandle> node;
-
+    std::shared_ptr<ros::NodeHandle> node = std::make_shared<ros::NodeHandle>();
     auto mp = std::make_shared<bt_mission_planner::MissionPlanner>();
 
     if (!mp->configure(node)) {
@@ -29,7 +28,6 @@ int main(int argc, char ** argv)
     
     if (!mp->deactivate() && mp->cleanup()) {
         ROS_WARN("Mission planner not properly deactivated and cleaned up! There may be remaining resources taken up.");
-
     };
     
     mp->shutdown();

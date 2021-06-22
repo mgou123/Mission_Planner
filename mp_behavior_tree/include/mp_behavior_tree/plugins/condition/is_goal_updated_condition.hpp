@@ -20,7 +20,7 @@
 #include <vector>
 
 #include "behaviortree_cpp_v3/condition_node.h"
-#include "geometry_msgs/Pose.h"
+#include "geometry_msgs/PoseStamped.h"
 
 namespace mp_behavior_tree
 {
@@ -31,25 +31,19 @@ public:
         const std::string & condition_name,
         const BT::NodeConfiguration & conf);
 
-    IsGoalUpdatedCondition() = delete;
-
-    ~IsGoalUpdatedCondition() override;
+    ~IsGoalUpdatedCondition() {};
 
     BT::NodeStatus tick() override;
 
     static BT::PortsList providedPorts()
     {
-        return {};
+        return {
+            BT::InputPort<geometry_msgs::PoseStamped>("goal", "Destination")
+        };
     }
 
-
-protected:
-    void cleanup() {};
-
 private:
-    geometry_msgs::Pose goal_;
-    std::vector<geometry_msgs::Pose> goals_;
-    
+    geometry_msgs::PoseStamped goal_;    
 };
 
 } // namespace mp_behavior_tree

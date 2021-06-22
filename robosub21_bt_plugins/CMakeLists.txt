@@ -28,7 +28,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES robosub21_bt_plugins
+ LIBRARIES ${plugin_libs}
  CATKIN_DEPENDS 
   roscpp
   behaviortree_cpp_v3
@@ -63,12 +63,11 @@ endforeach()
 ## Install ##
 #############
 
-# install(TARGETS ${PROJECT_NAME}
-#   ${plugin_libs}
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(TARGETS ${plugin_libs}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Install project namespaced headers
 install(DIRECTORY include/${PROJECT_NAME}/

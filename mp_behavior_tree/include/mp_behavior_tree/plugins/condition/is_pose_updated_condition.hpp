@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "behaviortree_cpp_v3/condition_node.h"
-#include "geometry_msgs/Pose.h"
+#include "geometry_msgs/PoseStamped.h"
 
 namespace mp_behavior_tree
 {
@@ -24,7 +24,9 @@ public:
 
     static BT::PortsList providedPorts()
     {
-        return {};
+        return {
+            BT::InputPort<geometry_msgs::PoseStamped>("pose", "Latest robot pose")
+        };
     }
 
 
@@ -32,7 +34,7 @@ protected:
     void cleanup() {};
 
 private:
-    geometry_msgs::Pose pose_;
+    geometry_msgs::PoseStamped pose_;
 };
 
 } // namespace mp_behavior_tree

@@ -19,7 +19,7 @@
 #include <memory>
 
 #include "ros/ros.h"
-#include "geometry_msgs/Pose.h"
+#include "geometry_msgs/PoseStamped.h"
 #include "behaviortree_cpp_v3/condition_node.h"
 
 namespace mp_behavior_tree
@@ -30,10 +30,8 @@ public:
     IsGoalReachedCondition(
         const std::string & condition_name,
         const BT::NodeConfiguration & conf);
-    
-    IsGoalReachedCondition() = delete;
-    
-    ~IsGoalReachedCondition() override;
+        
+    ~IsGoalReachedCondition() {};
 
     BT::NodeStatus tick() override;
 
@@ -44,14 +42,10 @@ public:
     static BT::PortsList providedPorts()
     {
         return {
-            BT::InputPort<geometry_msgs::Pose>("pose", "Latest robot pose"),
-            BT::InputPort<geometry_msgs::Pose>("goal", "Destination"),
-            BT::InputPort<ros::Time>("last_pose_update", "timestamp of latest pose update")
+            BT::InputPort<geometry_msgs::PoseStamped>("pose", "Latest robot pose"),
+            BT::InputPort<geometry_msgs::PoseStamped>("goal", "Destination"),
         };
     }
-
-protected:
-    void cleanup() {}
 
 private:   
     std::shared_ptr<ros::NodeHandle> node_;

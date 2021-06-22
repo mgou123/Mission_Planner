@@ -19,6 +19,7 @@ MissionPlanner::MissionPlanner()
 MissionPlanner::~MissionPlanner() {}
 
 bool MissionPlanner::configure(std::weak_ptr<ros::NodeHandle> parent_node) {
+
     ROS_INFO("Configuring mission planner...");
     auto node = parent_node.lock();
 
@@ -26,25 +27,33 @@ bool MissionPlanner::configure(std::weak_ptr<ros::NodeHandle> parent_node) {
     transform_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_);
     if (!node->hasParam("transform_tolerance")) {
         node->setParam("transform_tolerance", 0.1);
-    }
-    
+    }    
     std::vector<std::string> plugin_lib_names;
-    if (!node->hasParam("plugin_lib_names"))
-    node->setParam("plugin_lib_names", default_plugin_libs_);
+    if (!node->hasParam("plugin_lib_names")) {
+        node->setParam("plugin_lib_names", default_plugin_libs_);
+    }
 
     std::string odom_topic;
     if (!node->hasParam("odom_topic")) {
-        node->setParam("odom_topic", "/nav/odom/ned");
+        node->setParam("odom_topic", "/nav/odom_ned");
     }
 
     // get bt xml filename
     std::string default_bt_xml_filename;
-    if (!node->hasParam("default_mission_planner_bt_xml")) {
+
+    if (node->getParam("default_mission_planner_bt_xml", default_bt_xml_filename)) {
+        if (default_bt_xml_filename.at(0) != '/') {
+            std::string path = ros::package::getPath("bt_mission_planner");
+            std::string tree_file = path + "/behavior_trees/" + default_bt_xml_filename;
+            node->setParam("default_mission_planner_bt_xml", tree_file);
+        }
+    } else {
         std::string path = ros::package::getPath("bt_mission_planner");
         std::string tree_file = path + "/behavior_trees/basic_demo.xml";
         node->setParam("default_mission_planner_bt_xml", tree_file);
     }
 
+    node->getParam("plugin_lib_names", plugin_lib_names);
     node->getParam("default_mission_planner_bt_xml", default_bt_xml_filename);
 
     bt_action_server_ = std::make_unique<mp_behavior_tree::BtActionServer<
@@ -57,7 +66,11 @@ bool MissionPlanner::configure(std::weak_ptr<ros::NodeHandle> parent_node) {
         std::bind(&MissionPlanner::onLoop, this),
         std::bind(&MissionPlanner::onPreempt, this, std::placeholders::_1),
         std::bind(&MissionPlanner::onCompletion, this, std::placeholders::_1));
-    
+
+    std::cout << default_bt_xml_filename << std::endl;
+    for (auto i = plugin_lib_names.begin(); i != plugin_lib_names.end(); ++i)
+        std::cout << *i << ' ';
+        
     bool ok = true;
     if (!bt_action_server_->on_configure()) {
       ok = false;

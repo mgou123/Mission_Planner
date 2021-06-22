@@ -19,8 +19,8 @@ NavigateToPose::NavigateToPose(
                  nav_utils::LocomotionResult>(xml_tag_name, action_name, conf) {}
 
 void NavigateToPose::on_tick() {
-    geometry_msgs::PoseStamped goal_pose_stamped;
     tf2::Quaternion quat;
+    geometry_msgs::PoseStamped goal_pose_stamped;
     double roll, pitch, yaw;
 
     if (!getInput("goal", goal_pose_stamped)) {
@@ -47,9 +47,9 @@ BT_REGISTER_NODES(factory)
     [](const std::string & name, const BT::NodeConfiguration & config)
     {
       return std::make_unique<mp_behavior_tree::NavigateToPose>(
-        name, "locomotion", config);
+        name, "Locomotion", config);
     };
 
   factory.registerBuilder<mp_behavior_tree::NavigateToPose>(
-    "Locomotion", builder);
+    "NavigateToPose", builder);
 }

@@ -9,10 +9,11 @@ MoveForwardDemo::MoveForwardDemo(
 
 BT::NodeStatus MoveForwardDemo::tick() 
 {
-    nav_msgs::Odometry odom_pose;
+
+    geometry_msgs::PoseStamped pose;
     geometry_msgs::PoseStamped goal;
     double distance;
-    if (!getInput("pose", odom_pose)) {
+    if (!getInput("pose", pose)) {
         ROS_ERROR("[MoveForwardDemo] Unable to obtain pose from blackboard!");
         return BT::NodeStatus::FAILURE;
     }
@@ -21,12 +22,11 @@ BT::NodeStatus MoveForwardDemo::tick()
         distance = 5.0;
     }
 
-    goal.pose = odom_pose.pose.pose;
+    goal.pose = pose.pose;
     goal.pose.position.x = goal.pose.position.x + distance;
     
     setOutput("goal", goal);
     return BT::NodeStatus::SUCCESS;
-
 }
 
 } // namespace mp_behavior_tree

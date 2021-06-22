@@ -8,6 +8,11 @@
       <input_port name="output_key">Name of output port to write to</input_port>
     </Action>
 
+    <Action ID="ConvertOdomToPose">
+      <input_port name="odom_pose">Pose as a nav_msgs::Odometry message</input_port>
+      <output_port name="pose">Pose as a geometry_msgs::PoseStamped message</output_port>
+    </Action>
+
     <!-- ############################### CONDITION NODES ############################## -->
     
     <Condition ID="IsGoalReached">

@@ -36,7 +36,7 @@ IsDistanceTraveledCondition::~IsDistanceTraveledCondition() {
 
 BT::NodeStatus IsDistanceTraveledCondition::tick()
 {
-    geometry_msgs::Pose robot_pose;
+    geometry_msgs::PoseStamped robot_pose;
     if (status() == BT::NodeStatus::IDLE) {
         if (!getInput("pose", start_pose_)) {
             ROS_WARN("[IsDistanceTraveled] No pose available");
@@ -49,9 +49,9 @@ BT::NodeStatus IsDistanceTraveledCondition::tick()
         return BT::NodeStatus::FAILURE;
     }
 
-    double dx = start_pose_.position.x - robot_pose.position.x;
-    double dy = start_pose_.position.y - robot_pose.position.y;
-    double dz = start_pose_.position.z - robot_pose.position.z;
+    double dx = start_pose_.pose.position.x - robot_pose.pose.position.x;
+    double dy = start_pose_.pose.position.y - robot_pose.pose.position.y;
+    double dz = start_pose_.pose.position.z - robot_pose.pose.position.z;
 
     if ((dx * dx + dy * dy + dz * dz) < (distance_ * distance_)) {
         return BT::NodeStatus::FAILURE;

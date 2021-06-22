@@ -19,7 +19,7 @@
 #include <memory>
 
 #include "ros/ros.h"
-#include "nav_msgs/Odometry.h"
+#include "geometry_msgs/PoseStamped.h"
 #include "behaviortree_cpp_v3/condition_node.h"
 
 namespace mp_behavior_tree
@@ -42,7 +42,7 @@ public:
     {
         return {
             BT::InputPort<double>("distance", 1.0, "Distance"),
-            BT::InputPort<geometry_msgs::Pose>("pose", "Latest robot pose")
+            BT::InputPort<geometry_msgs::PoseStamped>("pose", "Latest robot pose")
         };
     }
 
@@ -51,7 +51,7 @@ protected:
 
 private:
     std::shared_ptr<ros::NodeHandle> node_;
-    geometry_msgs::Pose start_pose_;
+    geometry_msgs::PoseStamped start_pose_;
 
     double distance_;
 };

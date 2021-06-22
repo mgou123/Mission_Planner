@@ -79,10 +79,9 @@ bool BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::on_configure()
         throw std::runtime_error("Failed to lock node");
     }
 
-    client_node_ = std::make_shared<ros::NodeHandle>("_");
+    client_node_ = std::make_shared<ros::NodeHandle>();
     action_server_ = std::make_shared<ActionServer>(
         *node, action_name_, std::bind(&BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::executeCallback, this, std::placeholders::_1), false);
-    
     // Get parameter for monitoring with Groot via ZMQ Publisher
     node->getParam("enable_groot_monitoring", enable_groot_monitoring_);
     node->getParam("groot_zmq_publisher_port", groot_zmq_publisher_port_);
@@ -226,7 +225,7 @@ void BtActionServer<ActionT, GoalT, ResultT, FeedbackT>::executeCallback(const t
     bt_->haltAllActions(tree_.rootNode());
 
     // Populate result message
-    auto result = typename ResultT::ConstPtr();
+    auto result = boost::make_shared<const ResultT>();
     on_completion_callback_(result);
 
     switch (rc) {

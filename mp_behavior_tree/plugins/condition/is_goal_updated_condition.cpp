@@ -24,25 +24,17 @@ IsGoalUpdatedCondition::IsGoalUpdatedCondition(
     const BT::NodeConfiguration & conf)
   : BT::ConditionNode(condition_name, conf) {}
 
-IsGoalUpdatedCondition::~IsGoalUpdatedCondition() {
-    cleanup();
-}
-
 BT::NodeStatus IsGoalUpdatedCondition::tick() {
     if (status() == BT::NodeStatus::IDLE) {
-        config().blackboard->get<std::vector<geometry_msgs::Pose>>("goals", goals_);
-        config().blackboard->get<geometry_msgs::Pose>("goal", goal_);
+        getInput("goal", goal_);
         return BT::NodeStatus::FAILURE;
     }
 
-    std::vector<geometry_msgs::Pose> current_goals;
-    config().blackboard->get<std::vector<geometry_msgs::Pose>>("goals", current_goals);
-    geometry_msgs::Pose current_goal;
-    config().blackboard->get<geometry_msgs::Pose>("goal", current_goal);
+    geometry_msgs::PoseStamped current_goal;
+    getInput("goal", current_goal);
 
-    if (goal_ != current_goal || goals_ != current_goals) {
+    if (goal_ != current_goal) {
         goal_ = current_goal;
-        goals_ = current_goals;
         return BT::NodeStatus::SUCCESS;
     }
 

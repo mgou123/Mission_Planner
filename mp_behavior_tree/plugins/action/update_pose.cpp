@@ -5,7 +5,12 @@ namespace mp_behavior_tree
 UpdatePose::UpdatePose(
         const std::string & xml_tag_name,
         const std::string &topic_name,
-        const BT::NodeConfiguration &conf) : BtTopicSubNode<nav_msgs::Odometry>(xml_tag_name, topic_name, conf) {}
+        const BT::NodeConfiguration &conf) : BtTopicSubNode<nav_msgs::Odometry>(xml_tag_name, topic_name, conf) {
+    
+    node_ = config().blackboard->get<std::shared_ptr<ros::NodeHandle>>("node");
+    node_->getParam("odom_topic", topic_name_); // from config file
+
+}
 
 } // namespace mp_behavior_tree
 

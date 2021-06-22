@@ -2,7 +2,6 @@
 #define ROBOSUB21_BT_PLUGINS__ACTION__MOVE_FORWARD_DEMO_HPP_
 
 #include <ros/ros.h>
-#include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <behaviortree_cpp_v3/action_node.h>
 
@@ -23,7 +22,7 @@ public:
     {
         return {
             BT::InputPort<double>("distance", "Distance to move forward, default to 5m"),
-            BT::InputPort<nav_msgs::Odometry>("pose", "Current pose"),
+            BT::InputPort<geometry_msgs::PoseStamped>("pose", "Current pose"),
             BT::OutputPort<geometry_msgs::PoseStamped>("goal", "Goal set 5m forward")
         };
     }

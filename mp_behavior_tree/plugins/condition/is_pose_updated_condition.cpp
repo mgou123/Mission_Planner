@@ -16,15 +16,15 @@ IsPoseUpdatedCondition::~IsPoseUpdatedCondition() {
 
 BT::NodeStatus IsPoseUpdatedCondition::tick() {
     if (status() == BT::NodeStatus::IDLE) {
-        config().blackboard->get<geometry_msgs::Pose>("pose", pose_);
+        getInput("pose", pose_);
         return BT::NodeStatus::FAILURE;
     }
 
-    geometry_msgs::Pose current_pose;
-    config().blackboard->get<geometry_msgs::Pose>("pose", current_pose);
+    geometry_msgs::PoseStamped current_pose;
+    getInput("pose", current_pose);
 
-    if (pose_ != current_pose) {
-        pose_ = current_pose;
+    if (pose_.pose != current_pose.pose) {
+        pose_.pose = current_pose.pose;
         return BT::NodeStatus::SUCCESS;
     }
 
