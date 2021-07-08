@@ -9,7 +9,8 @@ project(vision_bt_plugins)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  behaviortree_cpp_v3
+  mp_behavior_tree
+  vision
 )
 
 ## System dependencies are found with CMake's conventions
@@ -75,11 +76,11 @@ find_package(Boost REQUIRED COMPONENTS system)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES 
-    ${PROJECT_NAME}
     ${plugin_libs}
   CATKIN_DEPENDS 
     roscpp
-    behaviortree_cpp_v3
+    mp_behavior_tree
+    vision
   DEPENDS system_lib
 )
 
@@ -125,6 +126,21 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+add_library(mp_detector_auv_service_bt_node SHARED plugins/action/detector_auv_service.cpp)
+list(APPEND plugin_libs mp_detector_auv_service_bt_node)
+
+add_library(mp_update_detected_objects_bt_node SHARED plugins/action/update_detected_objects.cpp)
+list(APPEND plugin_libs mp_update_detected_objects_bt_node)
+
+foreach(bt_plugin ${plugin_libs})
+  add_dependencies(${bt_plugin} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+  target_link_libraries(${bt_plugin}
+    ${catkin_LIBRARIES}
+  )
+  target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
+endforeach()
+
+
 #############
 ## Install ##
 #############
@@ -147,7 +163,7 @@ include_directories(
 
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS ${plugin_libs}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}

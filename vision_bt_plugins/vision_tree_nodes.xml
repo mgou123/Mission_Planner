@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<root>
+  <TreeNodesModel>
+    <!-- ############################### ACTION NODES ################################# -->
+    <Action ID="UpdateDetectedObjects">
+      <input_port name="topic_name">Topic name</input_port>
+      <input_port name="queue_size">Topic queue size </input_port>
+      <input_port name="output_key">Name of output port to write to</input_port>
+    </Action>
+
+    <Action ID="DetectorAUVService">
+      <input_port name="service_name">Name of service</input_port>
+      <input_port name="objects">Names of objects to be detected</input_port>
+    </Action>
+
+    <!-- ############################### CONDITION NODES ############################## -->
+    
+    <!-- ############################### CONTROL NODES ################################ -->
+
+    <!-- ############################### DECORATOR NODES ############################## -->
+
+  </TreeNodesModel>
+</root>

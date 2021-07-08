@@ -10,6 +10,8 @@
 #include <tf2_ros/transform_listener.h>
 
 #include "mp_behavior_tree/bt_action_server.hpp"
+#include "mp_behavior_tree/bt_conversions.hpp"
+
 #include "mp_msgs/ExecuteMissionAction.h"
 #include "mp_msgs/ExecuteMissionGoal.h"
 #include "mp_msgs/ExecuteMissionResult.h"

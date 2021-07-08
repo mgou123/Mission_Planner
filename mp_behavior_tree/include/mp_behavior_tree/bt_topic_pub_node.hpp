@@ -5,6 +5,8 @@
 
 #include <ros/ros.h>
 #include <behaviortree_cpp_v3/action_node.h>
+#include "mp_behavior_tree/bt_conversions.hpp"
+
 
 namespace mp_behavior_tree
 {

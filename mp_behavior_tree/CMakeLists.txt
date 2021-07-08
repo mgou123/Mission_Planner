@@ -13,6 +13,9 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
   behaviortree_cpp_v3
   tf2_ros
+  tf2
+  tf2_geometry_msgs
+  nav_utils
   geometry_msgs
   nav_msgs
   std_msgs
@@ -32,7 +35,10 @@ catkin_package(
     actionlib
     actionlib_msgs
     tf2_ros
+    tf2
+    tf2_geometry_msgs
     behaviortree_cpp_v3
+    nav_utils
     geometry_msgs
     nav_msgs
     sensor_msgs
@@ -67,6 +73,15 @@ list(APPEND plugin_libs mp_update_pose_bt_node)
 
 add_library(mp_convert_odom_to_pose_bt_node SHARED plugins/action/convert_odom_to_pose.cpp)
 list(APPEND plugin_libs mp_convert_odom_to_pose_bt_node)
+
+add_library(mp_controller_service_bt_node SHARED plugins/action/controller_service.cpp)
+list(APPEND plugin_libs mp_controller_service_bt_node)
+
+add_library(mp_set_blackboard_string_bt_node SHARED plugins/action/set_blackboard_string.cpp)
+list(APPEND plugin_libs mp_set_blackboard_string_bt_node)
+
+add_library(mp_set_relative_goal_bt_node SHARED plugins/action/set_relative_goal.cpp)
+list(APPEND plugin_libs mp_set_relative_goal_bt_node)
 
 add_library(mp_is_time_expired_condition_bt_node SHARED plugins/condition/is_time_expired_condition.cpp)
 list(APPEND plugin_libs mp_is_time_expired_condition_bt_node)

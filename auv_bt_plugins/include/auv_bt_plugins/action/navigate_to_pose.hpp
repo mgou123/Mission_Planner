@@ -31,6 +31,7 @@ public:
         return providedBasicPorts(
         {
             BT::InputPort<geometry_msgs::PoseStamped>("goal", "Destination to plan to"),
+            BT::InputPort<bool>("relative", "Set to true to use relative coordinates")
         });
     }
 };

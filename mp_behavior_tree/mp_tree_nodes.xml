@@ -13,6 +13,24 @@
       <output_port name="pose">Pose as a geometry_msgs::PoseStamped message</output_port>
     </Action>
 
+    <Action ID="ControllerService">
+      <input_port name="service_name">Name of service</input_port>
+      <input_port name="enable">True to enable controls, false to disable controls</input_port>
+    </Action>
+
+    <Action ID="SetBlackboardString">
+      <input_port name="key">Key to set string to</input_port>
+      <input_port name="value">String value</input_port>
+    </Action>
+
+    <Action ID="SetRelativeGoal">
+      <input_port name="relative_goal">Relative pose goal (refer to bt conversions for specification)</input_port>
+      <input_port name="pose">Current pose</input_port>
+      <input_port name="yaw_lock">Yaw to lock to. If specified, relative yaw in pose will be ignored.</input_port>
+      <input_port name="depth_lock">Depth to lock to. If specified, relative depth in pose will be ignored.</input_port>
+      <output_port name="goal">Port to set goal to</output_port>
+    </Action>
+
     <!-- ############################### CONDITION NODES ############################## -->
     
     <Condition ID="IsGoalReached">

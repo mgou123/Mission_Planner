@@ -5,6 +5,8 @@
 
 #include <ros/ros.h>
 #include <behaviortree_cpp_v3/action_node.h>
+#include "mp_behavior_tree/bt_conversions.hpp"
+
 
 namespace mp_behavior_tree
 {
@@ -20,28 +22,7 @@ public:
     {
         node_ = config().blackboard->get<std::shared_ptr<ros::NodeHandle>>("node");
         result_ = typename TopicT::ConstPtr();
-
-        std::string remapped_topic_name;
-        int queue_size;
-        std::string remapped_output_key;
-
-        if (getInput("topic_name", remapped_topic_name)) {
-            topic_name_ = remapped_topic_name;
-        }
-
-        if (getInput("queue_size", queue_size)) {
-            queue_size_ = queue_size;
-        }
-
-        if (getInput("output_key", remapped_output_key)) {
-            output_key_ = remapped_output_key;
-        } else {
-            output_key_ = topic_name_;
-        }
-        
-        sub_ = std::make_shared<ros::Subscriber>(node_->subscribe(topic_name_, queue_size_, &BtTopicSubNode::callback, this));
-
-        ROS_INFO("[%s] BtTopicSubNode initialized, subscribed to %s", xml_tag_name.c_str(), topic_name_.c_str());
+        ROS_INFO("[%s] BtTopicSubNode initialized", xml_tag_name.c_str());
     }
 
     ~BtTopicSubNode() {};
@@ -65,6 +46,30 @@ public:
         return providedBasicPorts({});
     }
 
+    void subscribe() {
+        std::string remapped_topic_name;
+        int queue_size;
+        std::string remapped_output_key;
+
+        if (getInput("topic_name", remapped_topic_name)) {
+            topic_name_ = remapped_topic_name;
+        }
+
+        if (getInput("queue_size", queue_size)) {
+            queue_size_ = queue_size;
+        }
+
+        if (getInput("output_key", remapped_output_key)) {
+            output_key_ = remapped_output_key;
+        } else {
+            output_key_ = topic_name_;
+        }
+
+        sub_ = std::make_shared<ros::Subscriber>(node_->subscribe(topic_name_, queue_size_, &BtTopicSubNode::callback, this));
+        ROS_INFO("[%s] BtTopicSubNode subscribed to %s", name().c_str(), topic_name_.c_str());
+        subscribed_ = true;
+    }
+
     // Derived classes can override any of the following methods to hook into the
     // processing for the action: on_tick, on_callback, on_failure and on_success
 
@@ -79,13 +84,18 @@ public:
 
     virtual BT::NodeStatus on_failure()
     {
-        ROS_WARN("No messages received over %s", topic_name_.c_str());
+        //ROS_WARN("No messages received over %s", topic_name_.c_str());
         return BT::NodeStatus::FAILURE;
     }
 
     BT::NodeStatus tick() override
     {
         on_tick();
+
+        if (!subscribed_) {
+            subscribe();
+            return on_failure();
+        }
         if (first_time_) {
             return on_failure();
         } else {
@@ -109,6 +119,7 @@ protected:
     std::string output_key_;
     int queue_size_;
 
+    bool subscribed_{false};
     bool first_time_{true};
 
     std::shared_ptr<ros::Subscriber> sub_;
