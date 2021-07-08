@@ -1,0 +1,25 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <Sequence>
+      <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
+      <RetryUntilSuccesful num_attempts="-1">
+        <UpdatePose topic_name="/auv3/nav/odom_ned" output_key="odom_pose" />
+      </RetryUntilSuccesful>
+      <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+      
+      <!-- Goal Setting done here -->
+      <MoveForwardDemo pose="{pose}" goal="{goal}" distance="-0.5"/>
+      
+      <ReactiveSequence>
+        <RetryUntilSuccesful num_attempts="-1">
+          <UpdatePose topic_name="/auv3/nav/odom_ned" output_key="odom_pose" />
+        </RetryUntilSuccesful>
+        <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+        <ReactiveFallback>
+          <IsDistanceTraveled distance="0.5" pose="{pose}" />
+          <NavigateControl server_name="/auv3/LocomotionServer" forward="6" depth="0.5"/>
+        </ReactiveFallback>
+      </ReactiveSequence>
+    </Sequence>
+  </BehaviorTree>
+</root>

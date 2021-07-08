@@ -1,0 +1,31 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <Sequence>
+      
+      <RetryUntilSuccesful num_attempts="-1">
+        <UpdateDetectedObjects topic_name="/auv/vision/detected" output_key="vision_detected" />
+      </RetryUntilSuccesful>
+
+      <FindBuoy vision_objects="{vision_detected}" target_identity="Bob" forward="{forward}" sideways="{sideways}" depth="{depth}" yaw="{yaw}"/>
+
+      <!-- <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" /> -->
+      <!-- Goal Setting done here -->
+      <!-- <MoveForwardDemo pose="{pose}" goal="{goal}" distance="-0.5"/> -->
+      
+      <ReactiveSequence>
+        
+        <!-- <RetryUntilSuccesful num_attempts="-1">
+          <UpdatePose topic_name="/auv4/nav/odom_ned" output_key="odom_pose" />
+        </RetryUntilSuccesful>
+        <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" /> -->
+
+        
+        <ReactiveFallback>
+          <!-- <IsDistanceTraveled distance="0.5" pose="{pose}" /> -->
+          <NavigateControl server_name="/auv4/LocomotionServer" forward="{forward}" sideways="{sideways}" depth="0.7" yaw="{yaw}"/>
+        </ReactiveFallback>
+
+      </ReactiveSequence>
+    </Sequence>
+  </BehaviorTree>
+</root>
