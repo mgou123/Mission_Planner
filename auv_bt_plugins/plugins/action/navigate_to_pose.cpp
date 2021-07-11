@@ -20,6 +20,7 @@ NavigateToPose::NavigateToPose(
 void NavigateToPose::on_tick() {
     tf2::Quaternion quat;
     geometry_msgs::PoseStamped goal_pose_stamped;
+    double depth;
     double roll, pitch, yaw;
 
     if (!getInput("goal", goal_pose_stamped)) {
@@ -27,14 +28,39 @@ void NavigateToPose::on_tick() {
         return;
     }
 
+    // set goal
     tf2::convert(goal_pose_stamped.pose.orientation, quat);
     tf2::Matrix3x3(quat).getRPY(roll, pitch, yaw);
 
-    goal_.forward_setpoint = goal_pose_stamped.pose.position.y;
-    goal_.sidemove_setpoint = goal_pose_stamped.pose.position.x;
+    goal_.forward_setpoint = goal_pose_stamped.pose.position.x;
+    goal_.sidemove_setpoint = goal_pose_stamped.pose.position.y;
     goal_.depth_setpoint = goal_pose_stamped.pose.position.z;
 
-    goal_.yaw_setpoint = yaw;
+    goal_.yaw_setpoint = yaw / M_PI * 180.0;
+
+    //set relative
+    bool relative;
+    if (getInput("relative", relative)) {
+      if (relative) {
+        goal_.movement_rel = true;
+        goal_.yaw_rel = true;
+      } else {
+        goal_.movement_rel = false;
+        goal_.yaw_rel = false;
+      }
+    } else {
+      goal_.movement_rel = true;
+      goal_.yaw_rel = true;
+    } 
+
+    if (getInput("depth_lock", depth)) {
+        goal_.depth_setpoint = depth;
+    }
+
+    if (getInput("yaw_lock", yaw)) {
+      goal_.yaw_rel = false;
+      goal_.yaw_setpoint = yaw;
+    }
 }
 
 } // namespace mp_behavior_tree

@@ -1,0 +1,11 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <Sequence>
+      <ControllerService service_name="/auv3/controller" enable="true"/>
+      <DetectorAUVService service_name="/auv/vision/detector" objects="buoy,red_buoy,green_buoy"/>
+      <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
+      
+      <ControllerService service_name="/auv3/controller" enable="false"/>
+    </Sequence>
+  </BehaviorTree>
+</root>

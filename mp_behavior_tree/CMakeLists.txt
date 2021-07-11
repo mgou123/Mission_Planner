@@ -98,6 +98,9 @@ list(APPEND plugin_libs mp_is_goal_updated_condition_bt_node)
 add_library(mp_is_pose_updated_condition_bt_node SHARED plugins/condition/is_pose_updated_condition.cpp)
 list(APPEND plugin_libs mp_is_pose_updated_condition_bt_node)
 
+add_library(mp_dynamic_timeout_bt_node SHARED plugins/decorator/dynamic_timeout.cpp)
+list(APPEND plugin_libs mp_dynamic_timeout_bt_node)
+
 foreach(bt_plugin ${plugin_libs})
   add_dependencies(${bt_plugin} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
   target_link_libraries(${bt_plugin}

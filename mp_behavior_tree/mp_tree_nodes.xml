@@ -56,5 +56,11 @@
 
     <!-- ############################### DECORATOR NODES ############################## -->
 
+    <Decorator ID="DynamicTimeout">
+      <input_port name="sec">After a certain amount of time, halt() the child if it's still running</input_port>
+      <input_port name="add_sec">Additional time carried over from previous node</input_port>
+      <output_port name="extra">Time left over at this node</output_port>
+    </Decorator>
+
   </TreeNodesModel>
 </root>

@@ -32,7 +32,8 @@ public:
         BT::PortsList basic = {
             BT::InputPort<std::string>("topic_name", "Topic name"),
             BT::InputPort<int>("queue_size", "Topic queue size"),
-            BT::InputPort<std::string>("output_key", "Name of output port to write to")
+            BT::InputPort<double>("timeout_sec", "Timeout for waiting for message publish"),
+            BT::OutputPort<TopicT>("result", "Output port to write message result to"),
         };
 
         basic.insert(addition.begin(), addition.end());
@@ -50,6 +51,7 @@ public:
         std::string remapped_topic_name;
         int queue_size;
         std::string remapped_output_key;
+        double timeout_sec;
 
         if (getInput("topic_name", remapped_topic_name)) {
             topic_name_ = remapped_topic_name;
@@ -63,6 +65,12 @@ public:
             output_key_ = remapped_output_key;
         } else {
             output_key_ = topic_name_;
+        }
+
+        if (getInput("timeout_sec", timeout_sec)) {
+            timeout_sec_ = timeout_sec;
+        } else {
+            timeout_sec_ = 2.0;
         }
 
         sub_ = std::make_shared<ros::Subscriber>(node_->subscribe(topic_name_, queue_size_, &BtTopicSubNode::callback, this));
@@ -94,12 +102,17 @@ public:
 
         if (!subscribed_) {
             subscribe();
-            return on_failure();
+
+            // wait for first message to come in
+            auto start = ros::Time::now();
+            while (first_time_ && (ros::Time::now() - start).toSec() < timeout_sec_);
         }
+
         if (first_time_) {
+            ROS_ERROR("[TopicSubNode] Unable to receive messages from topic %s", topic_name_.c_str());
             return on_failure();
         } else {
-            config().blackboard->set<TopicT>(output_key_, *result_);
+            setOutput("result", *result_);
             return on_success();
         }
     }
@@ -118,6 +131,7 @@ protected:
     std::string topic_name_;
     std::string output_key_;
     int queue_size_;
+    double timeout_sec_;
 
     bool subscribed_{false};
     bool first_time_{true};

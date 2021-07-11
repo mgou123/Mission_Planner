@@ -31,6 +31,8 @@ public:
         return providedBasicPorts(
         {
             BT::InputPort<geometry_msgs::PoseStamped>("goal", "Destination to plan to"),
+            BT::InputPort<double>("yaw_lock", "Yaw to lock to. If specified, relative yaw in pose will be ignored."),
+            BT::InputPort<double>("depth_lock", "Depth to lock to. If specified, relative depth in pose will be ignored."),
             BT::InputPort<bool>("relative", "Set to true to use relative coordinates")
         });
     }
