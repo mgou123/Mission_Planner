@@ -35,10 +35,6 @@ public:
 
     BT::NodeStatus tick() override;
 
-    void initialize();
-
-    bool isGoalReached();
-
     static BT::PortsList providedPorts()
     {
         return {
@@ -48,6 +44,9 @@ public:
     }
 
 private:   
+    void initialize();
+    bool isGoalReached();
+
     std::shared_ptr<ros::NodeHandle> node_;
 
     double goal_reached_tol_;

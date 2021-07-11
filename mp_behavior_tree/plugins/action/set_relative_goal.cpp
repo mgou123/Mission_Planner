@@ -38,7 +38,7 @@ BT::NodeStatus SetRelativeGoal::tick() {
 
     if (getInput("yaw_lock", yaw)) {
         tf2::Quaternion quat;
-        quat.setRPY(0, 0, yaw);
+        quat.setRPY(0, 0, yaw / 180 * M_PI);
         quat = quat.normalize();
         tf2::convert(quat, goal.pose.orientation);
     }

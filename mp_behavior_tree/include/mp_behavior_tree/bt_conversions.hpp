@@ -57,7 +57,7 @@ template<>
 inline geometry_msgs::PoseStamped convertFromString(const StringView key)
 {
   // 7 real numbers separated by semicolons
-  auto parts = BT::splitString(key, ';');
+  auto parts = BT::splitString(key, ';'); 
   if (parts.size() == 9) {
     geometry_msgs::PoseStamped pose_stamped;
     pose_stamped.header.stamp = ros::Time(BT::convertFromString<int64_t>(parts[0]));
@@ -86,7 +86,7 @@ inline geometry_msgs::PoseStamped convertFromString(const StringView key)
     pose_stamped.pose.position.y = BT::convertFromString<double>(parts[1]);
     pose_stamped.pose.position.z = BT::convertFromString<double>(parts[2]);
     tf2::Quaternion quat;
-    quat.setRPY(0, 0, BT::convertFromString<double>(parts[3]));
+    quat.setRPY(0, 0, BT::convertFromString<double>(parts[3]) / 180.0 * M_PI);
     quat = quat.normalize();
     tf2::convert(quat, pose_stamped.pose.orientation);
     return pose_stamped;
@@ -96,7 +96,7 @@ inline geometry_msgs::PoseStamped convertFromString(const StringView key)
     pose_stamped.pose.position.y = BT::convertFromString<double>(parts[1]);
     pose_stamped.pose.position.z = BT::convertFromString<double>(parts[2]);
     return pose_stamped;
-  } else if (parts.size() == 2) {
+  } else if (parts.size() == 2) { 
     geometry_msgs::PoseStamped pose_stamped;
     pose_stamped.pose.position.x = BT::convertFromString<double>(parts[0]);
     pose_stamped.pose.position.y = BT::convertFromString<double>(parts[1]);
