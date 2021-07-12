@@ -21,6 +21,7 @@ BT::NodeStatus SetRelativeGoal::tick() {
         return BT::NodeStatus::FAILURE;
     }
 
+
     goal.pose.position.x = current_pose.pose.position.x + relative_goal.pose.position.x;
     goal.pose.position.y = current_pose.pose.position.y + relative_goal.pose.position.y;
     goal.pose.position.z = current_pose.pose.position.z + relative_goal.pose.position.z;

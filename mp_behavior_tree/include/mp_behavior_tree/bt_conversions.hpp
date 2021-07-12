@@ -95,11 +95,21 @@ inline geometry_msgs::PoseStamped convertFromString(const StringView key)
     pose_stamped.pose.position.x = BT::convertFromString<double>(parts[0]);
     pose_stamped.pose.position.y = BT::convertFromString<double>(parts[1]);
     pose_stamped.pose.position.z = BT::convertFromString<double>(parts[2]);
+    pose_stamped.pose.orientation.x = 0;
+    pose_stamped.pose.orientation.y = 0;
+    pose_stamped.pose.orientation.z = 0;
+    pose_stamped.pose.orientation.w = 1;
     return pose_stamped;
   } else if (parts.size() == 2) { 
     geometry_msgs::PoseStamped pose_stamped;
     pose_stamped.pose.position.x = BT::convertFromString<double>(parts[0]);
     pose_stamped.pose.position.y = BT::convertFromString<double>(parts[1]);
+    pose_stamped.pose.position.z = 0;
+    pose_stamped.pose.orientation.x = 0;
+    pose_stamped.pose.orientation.y = 0;
+    pose_stamped.pose.orientation.z = 0;
+    pose_stamped.pose.orientation.w = 1;
+    
     return pose_stamped;
 
   } else {
