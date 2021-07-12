@@ -21,8 +21,6 @@ public:
         return {
             BT::InputPort<geometry_msgs::PoseStamped>("relative_goal", "Relative pose goal (refer to bt conversions for specification)"),
             BT::InputPort<geometry_msgs::PoseStamped>("pose", "Current pose"),
-            BT::InputPort<double>("yaw_lock", "Yaw to lock to. If specified, relative yaw in pose will be ignored."),
-            BT::InputPort<double>("depth_lock", "Depth to lock to. If specified, relative depth in pose will be ignored."),
             BT::OutputPort<geometry_msgs::PoseStamped>("goal", "Port to set goal to")
         };
     }
