@@ -1,25 +1,34 @@
 <root main_tree_to_execute="MainTree">
   <BehaviorTree ID="MainTree">
     <Sequence>
+      <ControllerService service_name="/auv3/controller" enable="true"/>
+      <!-- <DetectorAUVService service_name="/auv3/vision/detector" objects="badge,tommy_gun"/> -->
+
       <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
+      <!-- <SetBlackboard output_key="server_name" value="/auv3/LocomotionServer"/> -->
+      
+      <!-- 10 Second delay -->
+      <!-- <RetryUntilSuccessful num_attempts="-1">
+        <IsTimeExpired seconds="10"/>
+      </RetryUntilSuccessful> -->
+
+      <!-- Hopefully it finds the object... -->
       <RetryUntilSuccesful num_attempts="-1">
-        <UpdatePose topic_name="/auv3/nav/odom_ned" output_key="odom_pose" />
+        <UpdateDetectedObjects topic_name="/auv3/vision/detected" result="vision_detected" />
       </RetryUntilSuccesful>
-      <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+      <FindBuoy vision_objects="{vision_detected}" target_identity="badge" forward="{forward}" sideways="{sideways}" depth="{depth}" yaw="{yaw}"/>
+  
+      <!-- Move Yaw-->
+      <NavigateControl server_name="/auv3/LocomotionServer" forward="0.0" sideways="0.0" depth="0.7" yaw="{yaw}"/>
+
+      <RetryUntilSuccesful num_attempts="-1">
+        <UpdateDetectedObjects topic_name="/auv3/vision/detected" result="vision_detected" />
+      </RetryUntilSuccesful>
+      <FindBuoy vision_objects="{vision_detected}" target_identity="badge" forward="{forward}" sideways="{sideways}" depth="{depth}" yaw="{yaw}"/>
       
-      <!-- Goal Setting done here -->
-      <MoveForwardDemo pose="{pose}" goal="{goal}" distance="-0.5"/>
-      
-      <ReactiveSequence>
-        <RetryUntilSuccesful num_attempts="-1">
-          <UpdatePose topic_name="/auv3/nav/odom_ned" output_key="odom_pose" />
-        </RetryUntilSuccesful>
-        <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
-        <ReactiveFallback>
-          <IsDistanceTraveled distance="0.5" pose="{pose}" />
-          <NavigateControl server_name="/auv3/LocomotionServer" forward="6" depth="0.5"/>
-        </ReactiveFallback>
-      </ReactiveSequence>
+      <!-- Move Forward -->
+      <NavigateControl server_name="/auv3/LocomotionServer" forward="{forward}" sideways="{sideways}" depth="0.7" yaw="0"/>
+      <!-- <ControllerService service_name="/auv3/controller" enable="false" />   -->
     </Sequence>
   </BehaviorTree>
 </root>

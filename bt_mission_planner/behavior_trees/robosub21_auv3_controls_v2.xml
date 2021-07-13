@@ -1,0 +1,38 @@
+<!-- Same as controls, but rewritten to make use of Kaitlyn's relative goal node -->
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <Sequence>
+      <ControllerService service_name="/auv4/controller" enable="true"/>
+      <DetectorAUVService service_name="/auv/vision/detector" objects="buoy" />
+      <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
+      <!-- Don't think can be unsuccessful but just in case -->
+      <RetryUntilSuccesful num_attempts="-1">
+        <UpdatePose topic_name="{pose_topic_name}" output_key="odom_pose" />
+        <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+      </RetryUntilSuccesful>
+      
+      <!-- Goal Setting done here. TODO: Integrate FindBuoy into SetRelativeGoal -->
+      <!-- Forward, Sideways, Depth, Yaw => string of 4 real numbers separated by semicolon -->
+      <!-- Sequence: If any one node fails, restart from beginning of sequence -->
+      <Sequence>
+        <FindBuoy vision_objects="{vision_detected}" target_identity="Bob" forward="{forward}" sideways="{sideways}" depth="{depth}" yaw="{yaw}"/>
+        
+
+        <SetRelativeGoal relative_goal="{forward}" pose="{pose}" goal="{goal}" /> 
+        <SubTree ID="GoToTree" node="node" goal="goal" pose_topic_name="pose_topic_name" />
+      </Sequence>
+
+      <!-- Turn services off -->
+      <ControllerService service_name="/auv4/controller" enable="false"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <!-- Standard Subtree that brings vehicle in to goal. Should be reused -->
+  <BehaviorTree ID="GoToTree">
+    <ReactiveSequence>
+      <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}"/>
+      <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+      <NavigateToPose server_name="/auv3/LocomotionServer" goal="{goal}"/>
+    </ReactiveSequence>
+  </BehaviorTree>
+</root>

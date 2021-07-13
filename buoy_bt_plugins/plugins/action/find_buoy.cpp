@@ -37,7 +37,10 @@ BT::NodeStatus FindBuoy::tick() {
 
   ROS_INFO("[FindBuoy] Finding %s", target_identity.c_str());
   for (auto object : objects.detected) {
-    if (object.name == target_identity) {
+    ROS_INFO("[FindBuoy]: Object Name: %s", object.name.c_str());
+    ROS_INFO("[FindBuoy]: Found? : %d", object.name.compare(target_identity) == 0);
+    if (object.name.compare(target_identity) == 0)
+    {
       targetFoundFlag = 1;  // As expected
       setOutput("forward", object.rel_coords[0]);
       setOutput("sideways", object.rel_coords[1]);
@@ -48,19 +51,21 @@ BT::NodeStatus FindBuoy::tick() {
     }
   }
 
-  if (targetFoundFlag == -1) {
-    vision::DetectedObject defaultTarget = objects.detected[0];  // Default to first element
-    setOutput("forward", defaultTarget.rel_coords[0]);
-    setOutput("sideways", defaultTarget.rel_coords[1]);
-    setOutput("depth", defaultTarget.rel_coords[2]);
-    setOutput("yaw", 0.0F);  // TODO: Set this properly
+  ROS_WARN("[FindBuoy]: No correct object found!");
 
-    ROS_INFO("Defaulting to first element. Forward: %f. Sideways: %f. Depth: %f",
-              defaultTarget.rel_coords[0],
-              defaultTarget.rel_coords[1],
-              defaultTarget.rel_coords[2]);
-    return BT::NodeStatus::SUCCESS;
-  }
+  // if (targetFoundFlag == -1) {
+  //   vision::DetectedObject defaultTarget = objects.detected[0];  // Default to first element
+  //   setOutput("forward", defaultTarget.rel_coords[0]);
+  //   setOutput("sideways", defaultTarget.rel_coords[1]);
+  //   setOutput("depth", defaultTarget.rel_coords[2]);
+  //   setOutput("yaw", 0.0F);  // TODO: Set this properly
+
+  //   ROS_INFO("[FindBuoy] Defaulting to first element. Forward: %f. Sideways: %f. Depth: %f",
+  //            defaultTarget.rel_coords[0],
+  //            defaultTarget.rel_coords[1],
+  //            defaultTarget.rel_coords[2]);
+  //   return BT::NodeStatus::SUCCESS;
+  // }
 
   return BT::NodeStatus::FAILURE;  // Should never reach here, but just in case
 }

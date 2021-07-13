@@ -45,6 +45,7 @@ void NavigateControl::on_tick() {
         yaw = 0;
     }
 
+    ROS_WARN("[NavigateControl] Sending to Controls!");
     // Using NED Convention
     goal_.forward_setpoint = forward;
     goal_.sidemove_setpoint = sideways;
