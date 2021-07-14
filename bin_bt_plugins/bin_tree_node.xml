@@ -2,7 +2,7 @@
 <root>
   <TreeNodesModel>
     <!-- ############################### ACTION NODES ################################# -->
-    <Action ID="CalcBinAngle">
+    <Action ID="CalcPicAngle">
       <input_port name="vision_objects">Detected Objects</input_port>
       <input_port name="pic_identifier">Which pic to go</input_port>
       <input_port name="center_offset_x">allowed offset to center on x-axis</input_port>
@@ -24,6 +24,12 @@
       <input_port name="prarm_y">y unit movement</input_port>
       <output_port name="x_goal">sideways move</output_port>
       <output_port name="y_goal">forward move</output_port>
+    </Action>
+
+    <Action ID="Adder">
+      <input_port name="orig_value">value before adding</input_port>
+      <input_port name="value_added">value to add</input_port>
+      <output_port name="result">calculated result</output_port>
     </Action>
 
     <!-- ############################### CONDITION NODES ############################## -->

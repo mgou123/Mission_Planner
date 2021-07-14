@@ -132,6 +132,9 @@ include_directories(
 # list(APPEND plugin_libs mp_navigate_to_pose_bt_node)
 ###########################################
 
+add_library(mp_adder_bt_node SHARED plugins/action/adder.cpp)
+list(APPEND plugin_libs mp_adder_bt_node)
+
 add_library(mp_calc_pic_angle_bt_node SHARED plugins/action/calc_pic_angle.cpp)
 list(APPEND plugin_libs mp_calc_pic_angle_bt_node)
 

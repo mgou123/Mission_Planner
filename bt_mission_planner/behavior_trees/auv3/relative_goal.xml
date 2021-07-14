@@ -2,7 +2,8 @@
   <BehaviorTree ID="MainTree">
     <Sequence>
       <ControllerService service_name="/auv3/controller" enable="true"/>
-      <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/
+      <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
+      
       <ReactiveFallback>
         <IsTimeExpired seconds="10"/>
         <NavigateToPose server_name="/auv3/LocomotionServer" goal="0;0;0.8;0" relative="true"/>
