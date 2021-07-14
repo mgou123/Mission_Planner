@@ -5,7 +5,10 @@
     <Action ID="NavigateToPose">
         <input_port name="server_name">Action server name</input_port>
         <input_port name="server_timeout">Timeout for action server to respond</input_port>
-        <input_port name="goal">Goal</input_port>
+        <input_port name="goal">Destination to plan to</input_port>
+        <input_port name="yaw_lock">Yaw to lock to. If specified, relative yaw in pose will be ignored.</input_port>
+        <input_port name="depth_lock">Depth to lock to. If specified, relative depth in pose will be ignored.</input_port>
+        <input_port name="relative">Set to true to use relative coordinates<input_port>
     </Action>
 
     <!-- ############################### CONDITION NODES ############################## -->

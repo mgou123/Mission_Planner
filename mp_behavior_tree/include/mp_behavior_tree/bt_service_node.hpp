@@ -44,24 +44,10 @@ public:
     {
         node_ = config().blackboard->get<std::shared_ptr<ros::NodeHandle>>("node");
 
-        //server_timeout_ = config().blackboard->get<std::chrono::milliseconds>("server_timeout");
-
-        // Now that we have node_ to use, create the service client for this BT service
-        std::string remapped_service_name;
-
-        if (getInput("service_name", remapped_service_name)) {
-            service_name_ = remapped_service_name;
-        }
-
-        service_client_ = std::make_shared<ros::ServiceClient>(node_->serviceClient<ServiceT>(service_name_));
-
         // Make a request for the service without parameter
         srv_ = std::make_shared<ServiceT>();
 
-        // Make sure the server is actually there before continuing
-        ROS_INFO("Waiting for \"%s\" service", service_name_.c_str());
-        service_client_->waitForExistence();
-        ROS_INFO("\"%s\" BtServiceNode initialized", xml_tag_name.c_str());
+        ROS_INFO("[%s] BtServiceNode initialized", xml_tag_name.c_str());
     }
 
     BtServiceNode() = delete;
@@ -86,10 +72,32 @@ public:
         return providedBasicPorts({});
     }
 
+    void subscribe() {
+        // Now that we have node_ to use, create the service client for this BT service
+        std::string remapped_service_name;
+
+        if (getInput("service_name", remapped_service_name)) {
+            service_name_ = remapped_service_name;
+        }
+
+        service_client_ = std::make_shared<ros::ServiceClient>(node_->serviceClient<ServiceT>(service_name_));
+
+        // Make sure the server is actually there before continuing
+        ROS_INFO("Waiting for \"%s\" service", service_name_.c_str());
+        service_client_->waitForExistence();
+        ROS_INFO("[%s] BtServiceNode subscribed to %s", name().c_str(), service_name_.c_str());
+
+        subscribed_ = true;
+    }
+
 
     // The main override required by a BT service
     BT::NodeStatus tick() override
     {
+        if (!subscribed_) {
+            subscribe();
+        }
+        
         on_tick();
         if (yaml_req_.empty()) {
             if (!service_client_->call(*srv_)) {
@@ -135,6 +143,8 @@ protected:
     std::shared_ptr<ServiceT> srv_;
     std::string yaml_req_;
     std::string yaml_res_;
+
+    bool subscribed_{false};
 
     // The node that will be used for any ROS operations
     std::shared_ptr<ros::NodeHandle> node_;

@@ -40,6 +40,16 @@ public:
         goal_ = GoalT();
         result_ = typename ResultT::ConstPtr();
 
+        // Give the derive class a chance to do any initialization
+        ROS_INFO("[%s] BtActionNode initialized", xml_tag_name.c_str());
+
+    }
+
+    BtActionNode() = delete;
+
+    virtual ~BtActionNode() = default;
+
+    void subscribe() {
         std::string remapped_action_name;
         if (getInput("server_name", remapped_action_name)) {
             action_name_ = remapped_action_name;
@@ -47,14 +57,10 @@ public:
         
         createActionClient(action_name_);
 
-        // Give the derive class a chance to do any initialization
-        ROS_INFO("\"%s\" BtActionNode initialized", xml_tag_name.c_str());
+        ROS_INFO("[%s] BtActionNode subscribed to %s", name().c_str(), action_name_.c_str());
+        subscribed_ = true;
 
     }
-
-    BtActionNode() = delete;
-
-    virtual ~BtActionNode() = default;
     
     // creates an instance of a simple action client
     void createActionClient(const std::string & action_name) 
@@ -119,6 +125,10 @@ public:
     // The main override required by a BT action
     BT::NodeStatus tick() override
     {
+        if (!subscribed_) {
+            subscribe();
+        }
+       
         // this is to be done only at the beginning of the Action
         if (status() == BT::NodeStatus::IDLE) {
             setStatus(BT::NodeStatus::RUNNING);
@@ -220,6 +230,7 @@ protected:
     typename std::shared_ptr<actionlib::SimpleActionClient<ActionT>> action_client_;
 
     GoalT goal_;
+    bool subscribed_{false};
     bool goal_updated_{false};
     bool goal_result_available_{false};
     bool goal_active_{false};

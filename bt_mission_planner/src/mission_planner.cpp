@@ -25,7 +25,11 @@ bool MissionPlanner::configure(std::weak_ptr<ros::NodeHandle> parent_node) {
     transform_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_);
     if (!node->hasParam("transform_tolerance")) {
         node->setParam("transform_tolerance", 0.1);
-    }    
+    }
+    if (!node->hasParam("transform_timeout")) {
+        node->setParam("transform_timeout", 1.0);
+    }
+
     std::vector<std::string> plugin_lib_names;
     if (!node->hasParam("plugin_lib_names")) {
         node->setParam("plugin_lib_names", default_plugin_libs_);

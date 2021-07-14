@@ -1,0 +1,15 @@
+ <root main_tree_to_execute = "Navigate2dTree" >
+    <BehaviorTree ID="Navigate2dTree">
+        <Sequence>
+            <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{initial_depth}" />
+            <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+            
+            <GetYawBetweenPoses source_pose="{pose}" target_pose="{goal}" absolute_yaw="{yaw}" />
+            <NavigateToPose server_name="{server_name}" goal="0;0" relative="true" depth_lock="{initial_depth}" yaw_lock="{yaw}" />
+            <NavigateToPose server_name="{server_name}" goal="{goal}" relative="false" depth_lock="{initial_depth}" yaw_lock="{yaw}" />
+            
+            <SplitPoseComponents pose="{goal}" yaw="{yaw}" />
+            <NavigateToPose server_name="{server_name}" goal="0;0" relative="true" depth_lock="{initial_depth}" yaw_lock="{yaw}" />
+        </Sequence>
+    </BehaviorTree>
+</root>

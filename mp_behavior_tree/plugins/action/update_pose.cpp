@@ -9,7 +9,11 @@ UpdatePose::UpdatePose(
     
     node_ = config().blackboard->get<std::shared_ptr<ros::NodeHandle>>("node");
     node_->getParam("odom_topic", topic_name_); // from config file
+}
 
+BT::NodeStatus UpdatePose::on_success() {
+    setOutput("depth", result_->pose.pose.position.z);
+    return BT::NodeStatus::SUCCESS;
 }
 
 } // namespace mp_behavior_tree

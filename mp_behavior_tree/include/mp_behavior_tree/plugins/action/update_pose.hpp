@@ -14,6 +14,14 @@ public:
         const std::string & xml_tag_name,
         const std::string &topic_name,
         const BT::NodeConfiguration &conf);
+    
+    static BT::PortsList providedPorts() {
+        return providedBasicPorts({
+            BT::OutputPort<double>("depth", "Port to write depth value to") // hack job for now to correct for depth
+        });
+    }
+
+    BT::NodeStatus on_success() override;
 };
 
 } // namespace mp_behavior_tree

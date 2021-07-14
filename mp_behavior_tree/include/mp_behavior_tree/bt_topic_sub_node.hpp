@@ -31,8 +31,8 @@ public:
     {
         BT::PortsList basic = {
             BT::InputPort<std::string>("topic_name", "Topic name"),
-            BT::InputPort<int>("queue_size", "Topic queue size"),
-            BT::InputPort<double>("timeout_sec", "Timeout for waiting for message publish"),
+            BT::InputPort<int>("queue_size", 10, "Topic queue size"),
+            BT::InputPort<double>("timeout_sec", 2.0, "Timeout for waiting for message publish"),
             BT::OutputPort<TopicT>("result", "Output port to write message result to"),
         };
 
@@ -49,16 +49,10 @@ public:
 
     void subscribe() {
         std::string remapped_topic_name;
-        int queue_size;
         std::string remapped_output_key;
-        double timeout_sec;
 
         if (getInput("topic_name", remapped_topic_name)) {
             topic_name_ = remapped_topic_name;
-        }
-
-        if (getInput("queue_size", queue_size)) {
-            queue_size_ = queue_size;
         }
 
         if (getInput("output_key", remapped_output_key)) {
@@ -67,11 +61,9 @@ public:
             output_key_ = topic_name_;
         }
 
-        if (getInput("timeout_sec", timeout_sec)) {
-            timeout_sec_ = timeout_sec;
-        } else {
-            timeout_sec_ = 2.0;
-        }
+        getInput("queue_size", queue_size_);
+        getInput("timeout_sec", timeout_sec_);
+
 
         sub_ = std::make_shared<ros::Subscriber>(node_->subscribe(topic_name_, queue_size_, &BtTopicSubNode::callback, this));
         ROS_INFO("[%s] BtTopicSubNode subscribed to %s", name().c_str(), topic_name_.c_str());

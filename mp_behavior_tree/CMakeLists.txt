@@ -77,11 +77,14 @@ list(APPEND plugin_libs mp_convert_odom_to_pose_bt_node)
 add_library(mp_controller_service_bt_node SHARED plugins/action/controller_service.cpp)
 list(APPEND plugin_libs mp_controller_service_bt_node)
 
-add_library(mp_set_blackboard_string_bt_node SHARED plugins/action/set_blackboard_string.cpp)
-list(APPEND plugin_libs mp_set_blackboard_string_bt_node)
-
 add_library(mp_set_relative_goal_bt_node SHARED plugins/action/set_relative_goal.cpp)
 list(APPEND plugin_libs mp_set_relative_goal_bt_node)
+
+add_library(mp_get_yaw_between_poses_bt_node SHARED plugins/action/get_yaw_between_poses.cpp)
+list(APPEND plugin_libs mp_get_yaw_between_poses_bt_node)
+
+add_library(mp_split_pose_components_bt_node SHARED plugins/action/split_pose_components.cpp)
+list(APPEND plugin_libs mp_split_pose_components_bt_node)
 
 add_library(mp_is_time_expired_condition_bt_node SHARED plugins/condition/is_time_expired_condition.cpp)
 list(APPEND plugin_libs mp_is_time_expired_condition_bt_node)
@@ -97,6 +100,9 @@ list(APPEND plugin_libs mp_is_goal_updated_condition_bt_node)
 
 add_library(mp_is_pose_updated_condition_bt_node SHARED plugins/condition/is_pose_updated_condition.cpp)
 list(APPEND plugin_libs mp_is_pose_updated_condition_bt_node)
+
+add_library(mp_dynamic_timeout_sequence_bt_node SHARED plugins/control/dynamic_timeout_sequence.cpp)
+list(APPEND plugin_libs mp_dynamic_timeout_sequence_bt_node)
 
 add_library(mp_dynamic_timeout_bt_node SHARED plugins/decorator/dynamic_timeout.cpp)
 list(APPEND plugin_libs mp_dynamic_timeout_bt_node)
