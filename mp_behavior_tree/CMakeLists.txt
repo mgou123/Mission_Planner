@@ -83,6 +83,9 @@ list(APPEND plugin_libs mp_set_relative_goal_bt_node)
 add_library(mp_get_yaw_between_poses_bt_node SHARED plugins/action/get_yaw_between_poses.cpp)
 list(APPEND plugin_libs mp_get_yaw_between_poses_bt_node)
 
+add_library(mp_get_distance_between_poses_bt_node SHARED plugins/action/get_distance_between_poses.cpp)
+list(APPEND plugin_libs mp_get_distance_between_poses_bt_node)
+
 add_library(mp_split_pose_components_bt_node SHARED plugins/action/split_pose_components.cpp)
 list(APPEND plugin_libs mp_split_pose_components_bt_node)
 

@@ -9,19 +9,12 @@
       <SetBlackboard output_key="pose_topic_name" value="/auv4/nav/odom_ned"/>
       <SetBlackboard output_key="locomotion_server_name" value="/auv4/LocomotionServer" />
 
-      <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{current_depth}"/>
+      <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
       <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
 
       <SetBlackboard output_key="goal" value="0;0;0;0;0;0;1" />
-      <SubTree ID="Navigate2dTree" node="node" goal="goal" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" />
-      
-<!-- 
-      <Repeat num_cycles="4">
-        <ReactiveSequence>
-          <NavigateToPose server_name="/auv4/LocomotionServer" goal="2;0" relative="true" depth_lock="{current_depth}"/>
-          <NavigateToPose server_name="/auv4/LocomotionServer" goal="0;0;0;90" relative="true" depth_lock="{current_depth}"/>
-        </ReactiveSequence>
-      </Repeat> -->
+      <SubTree ID="Navigate2dTree" node="node" goal="goal" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth"/>
+  
       <ControllerService service_name="/auv4/controller" enable="false" />
     </Sequence>
   </BehaviorTree>
