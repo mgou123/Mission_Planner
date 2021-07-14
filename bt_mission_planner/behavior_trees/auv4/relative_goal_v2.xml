@@ -1,0 +1,25 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <Sequence>
+      <ControllerService service_name="/auv4/controller" enable="true"/>
+      <!-- <DetectorAUVService service_name="/auv4/vision/detector" objects="buoy,red_buoy,green_buoy"/> -->
+      <SetBlackboard output_key="pose_topic_name" value="/auv4/nav/odom_ned"/>
+      
+      <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}"/>
+      <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />     
+
+      <ReactiveSequence>
+        <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}"/>
+        <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+        <NavigateToPose server_name="/auv4/LocomotionServer" goal="2;0;0.5;0" relative="true"/>
+        <NavigateToPose server_name="/auv4/LocomotionServer" goal="0;0.5;0.5;0" relative="true"/>
+        <NavigateToPose server_name="/auv4/LocomotionServer" goal="2;0;0.5;0" relative="true"/>
+        <Repeat num_cycles="4">
+          <NavigateToPose server_name="/auv4/LocomotionServer" goal="0;0;0.5;90" relative="true"/>
+        </Repeat>
+      </ReactiveSequence>
+    <ControllerService service_name="/auv4/controller" enable="false" />
+    </Sequence>
+  </BehaviorTree>
+
+</root>

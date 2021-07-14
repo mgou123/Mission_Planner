@@ -29,7 +29,7 @@ BT_REGISTER_NODES(factory)
         [](const std::string & name, const BT::NodeConfiguration & config)
         {
             return std::make_unique<mp_behavior_tree::UpdateDetectedObjects>(
-                name, "/auv/vision/detected", config);
+                name, "/auv3/vision/detected", config);
         };
     
     factory.registerBuilder<mp_behavior_tree::UpdateDetectedObjects>("UpdateDetectedObjects", builder);

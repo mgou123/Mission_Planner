@@ -163,6 +163,9 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+add_library(mp_navigate_control_bt_node SHARED plugins/action/navigate_control.cpp)
+list(APPEND plugin_libs mp_navigate_control_bt_node)
+
 add_library(mp_navigate_to_pose_bt_node SHARED plugins/action/navigate_to_pose.cpp)
 list(APPEND plugin_libs mp_navigate_to_pose_bt_node)
 
