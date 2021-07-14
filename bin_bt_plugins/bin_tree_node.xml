@@ -5,7 +5,12 @@
     <Action ID="CalcBinAngle">
       <input_port name="vision_objects">Detected Objects</input_port>
       <input_port name="pic_identifier">Which pic to go</input_port>
-      <output_port name="angle">angle to turn to face the object</output_port>
+      <input_port name="center_offset_x">allowed offset to center on x-axis</input_port>
+      <input_port name="center_offset_y">allowed offset to center on y-axis</input_port>
+      <input_port name="ratio">ratio between camera pixel value and real-world coordinate</input_port>
+      <output_port name="x_goal">sideways move</output_port>
+      <output_port name="y_goal">forward move</output_port>
+      <output_port name="yaw_goal">yaw move</output_port>
     </Action>
 
     <Action ID="ChoosePic">
@@ -15,46 +20,28 @@
 
     <Action ID="SetAdjustment">
       <input_port name="vision_objects">Detected Objects</input_port>
-      <input_port name="gate_side">the side of gate chosen, Gman or Bootlegger</input_port>
-      <output_port name="pic_identifier">the pic chosen to throw the ball</output_port>
+      <input_port name="param_x">x unit movement</input_port>
+      <input_port name="prarm_y">y unit movement</input_port>
+      <output_port name="x_goal">sideways move</output_port>
+      <output_port name="y_goal">forward move</output_port>
     </Action>
 
     <!-- ############################### CONDITION NODES ############################## -->
     
     <Condition ID="IsLidSeen">
-        <input_port name="vision_objects">Detected Objects</input_port>
-        <input_port name="lid_num">larger than or equal to lid_num of lids are seen</input_port>
+      <input_port name="vision_objects">Detected Objects</input_port>
+      <input_port name="lid_num">larger than or equal to lid_num of lids are seen</input_port>
     </Condition>
 
     <Condition ID="IsPicCentered">
-        <input_port name="vision_objects">Detected Objects</input_port>
-        <input_port name="pic_identifier">Which pic to go</input_port>
-        <input_port name="center_offset_x">allowed offset to center on x-axis</input_port>
-        <input_port name="center_offset_y">allowed offset to center on y-axis</input_port>
+      <input_port name="vision_objects">Detected Objects</input_port>
+      <input_port name="pic_identifier">Which pic to go</input_port>
+      <input_port name="center_offset_x">allowed offset to center on x-axis</input_port>
+      <input_port name="center_offset_y">allowed offset to center on y-axis</input_port>
     </Condition>
-
-
-
-    <Condition ID="IsPoseUpdated"/>
-
-    <Condition ID="IsDistanceTraveled">
-      <input_port name="distance">Distance to check if passed</input_port>
-      <input_port name="pose">Latest robot pose</input_port>
-    </Condition>
-
-    <Condition ID="IsTimeExpired">
-      <input_port name="seconds">Time to check if expired</input_port>
-    </Condition>
-
     <!-- ############################### CONTROL NODES ################################ -->
 
     <!-- ############################### DECORATOR NODES ############################## -->
-
-    <Decorator ID="DynamicTimeout">
-      <input_port name="sec">After a certain amount of time, halt() the child if it's still running</input_port>
-      <input_port name="add_sec">Additional time carried over from previous node</input_port>
-      <output_port name="extra">Time left over at this node</output_port>
-    </Decorator>
 
   </TreeNodesModel>
 </root>

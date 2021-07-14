@@ -1,5 +1,5 @@
-#ifndef BIN_BT_PLUGINS__IS_PIC_CENTERED_CONDITION_
-#define BIN_BT_PLUGINS__IS_PIC_CENTERED_CONDITION_
+#ifndef BIN_BT_PLUGINS__CONDITION__IS_LID_SEEN_CONDITION_HPP_
+#define BIN_BT_PLUGINS__CONDITION__IS_LID_SEEN_CONDITION_HPP_
 
 #include <memory>
 #include <string>
@@ -10,14 +10,14 @@
 
 namespace mp_behavior_tree
 {
-class IsPicCenteredCondition : public BT::ConditionNode 
+class IsLidSeenCondition : public BT::ConditionNode 
 {
 public:
-    IsPicCenteredCondition(
+    IsLidSeenCondition(
         const std::string & condition_name,
         const BT::NodeConfiguration & conf);
         
-    ~IsPicCenteredCondition() {};
+    ~IsLidSeenCondition() {};
 
     BT::NodeStatus tick() override;
 
@@ -25,12 +25,10 @@ public:
     {
         return {
             BT::InputPort<vision::DetectedObjects>("detected_objects", "Detected Objects"),
-            BT::InputPort<std::string>("pic_identifier", "Which pic to go"),
-            BT::InputPort<float>("center_offset_x", "allowed offset to center on x-axis"),
-            BT::InputPort<float>("center_offset_y", "allowed offset to center on y-axis")
+            BT::InputPort<int>("lid_num", "larger than or equal to lid_num of lids are seen"),
         };
     }
-}
+};
 
 } // namespace mp_behavior_tree
 

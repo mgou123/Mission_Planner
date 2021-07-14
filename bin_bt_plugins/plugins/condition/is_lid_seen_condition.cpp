@@ -1,7 +1,7 @@
 #include <string>
 #include <memory>
 
-#include "mp_behavior_tree/plugins/condition/is_lid_seen.hpp"
+#include "bin_bt_plugins/condition/is_lid_seen_condition.hpp"
 
 namespace mp_behavior_tree
 {

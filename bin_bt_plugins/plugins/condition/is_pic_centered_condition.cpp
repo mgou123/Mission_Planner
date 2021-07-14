@@ -1,20 +1,19 @@
 #include <string>
 #include <memory>
 
-#include "mp_behavior_tree/plugins/condition/is_pic_centered.hpp"
+#include "bin_bt_plugins/condition/is_pic_centered_condition.hpp"
 
 namespace mp_behavior_tree
 {
-
-IsLidSeenCondition::IsPicCenteredCondition(
+IsPicCenteredCondition::IsPicCenteredCondition(
     const std::string & condition_name,
     const BT::NodeConfiguration & conf)
   : BT::ConditionNode(condition_name, conf) {}
 
-BT::NodeStatus IsPicCeteredCondition::tick()
+BT::NodeStatus IsPicCenteredCondition::tick()
 {   
   vision::DetectedObjects objects;
-  vision::DetectedObject pic; 
+  vision::DetectedObject pic;
   std::string identifier;
   float center_offset_x; 
   float center_offset_y;
@@ -50,8 +49,8 @@ BT::NodeStatus IsPicCeteredCondition::tick()
   for (auto object : objects.detected) {
     if (object.name == identifier) {
       pic = object; 
-      float pic_center_x = object.center_x;
-      float pic_center_y = object.center_y;
+      float pic_center_x = object.centre_x;
+      float pic_center_y = object.centre_y;
       float view_center_x = object.image_width / 2;
       float view_center_y = object.image_width / 2;
       if (abs(view_center_x - pic_center_x) < center_offset_x && abs(view_center_y - pic_center_y) < center_offset_y) {

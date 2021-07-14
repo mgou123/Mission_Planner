@@ -50,11 +50,11 @@
         <input_port name="goal">Destination</input_port>
     </Condition>
 
-    <Condition ID="IsPoseUpdated"/>
+    <Condition ID="IsPoseUpdated">
         <input_port name="pose">Latest robot pose</input_port>
     </Condition>
 
-    <Condition ID="IsGoalUpdated"/>
+    <Condition ID="IsGoalUpdated">
         <input_port name="goal">Destination</input_port>
     </Condition>
 

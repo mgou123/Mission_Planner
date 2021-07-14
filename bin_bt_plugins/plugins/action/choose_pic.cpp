@@ -1,7 +1,7 @@
 #include <string>
 #include <memory>
 
-#include "mp_behavior_tree/plugins/condition/choose_pic.hpp"
+#include "bin_bt_plugins/action/choose_pic.hpp"
 
 namespace mp_behavior_tree
 {
@@ -14,8 +14,8 @@ ChoosePic::ChoosePic(
 BT::NodeStatus ChoosePic::tick()
 {   
   vision::DetectedObjects objects; 
-  std::string gate_side
-  int task_identifier; 
+  std::string gate_side;
+  int task_identifier;
   int count_gman;
   int count_bootlegger; 
   int area_one = 0;
@@ -36,9 +36,9 @@ BT::NodeStatus ChoosePic::tick()
   }
 
   if (gate_side == "Gman") {
-    condition_identifier = 0; 
+    task_identifier = 0; 
   } else if (gate_side == "Bootlegger") {
-    condition_identifier = 1; 
+    task_identifier = 1; 
   } else {
     ROS_ERROR("[ChoosePic] Invalid side of gate!");
   }
