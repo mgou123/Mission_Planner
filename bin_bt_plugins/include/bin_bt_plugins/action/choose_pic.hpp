@@ -24,7 +24,7 @@ public:
     static BT::PortsList providedPorts()
     {
         return {
-            BT::InputPort<vision::DetectedObjects>("detected_objects", "Detected Objects"),
+            BT::InputPort<vision::DetectedObjects>("vision_objects", "Detected Objects"),
             BT::InputPort<std::string>("gate_side", "the side of gate chosen, Gman or Bootlegger"),
             BT::OutputPort<std::string>("pic_identifier", "the pic chosen to throw the ball"),
         };

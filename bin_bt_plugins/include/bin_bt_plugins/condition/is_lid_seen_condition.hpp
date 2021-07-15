@@ -24,7 +24,7 @@ public:
     static BT::PortsList providedPorts()
     {
         return {
-            BT::InputPort<vision::DetectedObjects>("detected_objects", "Detected Objects"),
+            BT::InputPort<vision::DetectedObjects>("vision_objects", "Detected Objects"),
             BT::InputPort<int>("lid_num", "larger than or equal to lid_num of lids are seen"),
         };
     }

@@ -24,7 +24,7 @@ public:
     static BT::PortsList providedPorts()
     {
         return {
-            BT::InputPort<vision::DetectedObjects>("detected_objects", "Detected Objects"),
+            BT::InputPort<vision::DetectedObjects>("vision_objects", "Detected Objects"),
             BT::InputPort<std::string>("pic_identifier", "Which pic to go"),
             BT::InputPort<float>("center_offset_x", "allowed offset to center on x-axis"),
             BT::InputPort<float>("center_offset_y", "allowed offset to center on y-axis")

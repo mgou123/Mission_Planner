@@ -3,12 +3,12 @@
     <!-- ////////// -->
     <BehaviorTree ID="BehaviorTree">
         <Sequence>
-            <Action ID="ControllerService" enable="true" service_name="/auv3/controller"/>
-            <SetBlackboard output_key="server" value="/auv3/LocomotionServer"/>
-            <SetBlackboard output_key="vision_topic" value="/auv3/vision/detected"/>
-            <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
+            <Action ID="ControllerService" enable="true" service_name="/auv4/controller"/>
+            <SetBlackboard output_key="server" value="/auv4/LocomotionServer"/>
+            <SetBlackboard output_key="vision_topic" value="/auv4/vision/detected"/>
+            <SetBlackboard output_key="pose_topic_name" value="/auv4/nav/odom_ned"/>
             <SetBlackboard output_key="trial_dis" value="0.4"/>
-            <Action ID="DetectorAUVService" objects="bin" service_name="/auv3/vision/detected"/>
+            <Action ID="DetectorAUVService" objects="bin" service_name="/auv4/vision/detected"/>
             <ReactiveFallback>
                 <Condition ID="IsLidSeen" lid_num="1" vision_objects="{vision_detected}"/>
                 <ReactiveSequence>

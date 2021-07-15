@@ -24,7 +24,7 @@ public:
     static BT::PortsList providedPorts()
     {
         return {
-            BT::InputPort<vision::DetectedObjects>("detected_objects", "Detected Objects"),
+            BT::InputPort<vision::DetectedObjects>("vision_objects", "Detected Objects"),
             BT::InputPort<float>("param_x", "x unit movement"),
             BT::InputPort<float>("param_y", "x unit movement"),
             BT::OutputPort<float>("x_goal", "sideways move"),

@@ -15,13 +15,14 @@
 
     <Action ID="ChoosePic">
       <input_port name="vision_objects">Detected Objects</input_port>
+      <input_port name="gate_side">the side of gate chosen, Gman or Bootlegger</input_port>
       <output_port name="pic_identifier">the pic chosen to throw the ball</output_port>
     </Action>
 
     <Action ID="SetAdjustment">
       <input_port name="vision_objects">Detected Objects</input_port>
       <input_port name="param_x">x unit movement</input_port>
-      <input_port name="prarm_y">y unit movement</input_port>
+      <input_port name="param_y">y unit movement</input_port>
       <output_port name="x_goal">sideways move</output_port>
       <output_port name="y_goal">forward move</output_port>
     </Action>
