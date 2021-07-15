@@ -3,7 +3,7 @@
     <BehaviorTree ID="BuoyTaskTree">
         <Sequence>
             <DetectorAUVService service_name="{vision_service_name}" objects="badge"/>
-            <NavigateToPose server_name="{server_name}" goal="0;7" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
+            <NavigateToPose server_name="{server_name}" goal="3;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" forward_tolerance="0.5" sidemove_tolerance="0.5" yaw_tolerance="5" />
 
             <ReactiveFallback>
                 <Sequence>
@@ -13,13 +13,13 @@
                 <SubTree ID="SideSweepTree" node="node" server_name="server_name" original_yaw="fixed_yaw" depth="standard_depth" />
             </ReactiveFallback>
 
-            <!--<SetObjectGoal vision_objects="{detected_objects}" target_identity="badge" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
-            <NavigateToPose server_name="{server_name}" goal="0;0" yaw_lock="{object_yaw}" depth_lock="{standard_depth}" />
+            <SetObjectGoal vision_objects="{detected_objects}" target_identity="badge" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
+            <NavigateToPose server_name="{server_name}" goal="0;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
 
-            <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+            <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="20.0" />
             <SetObjectGoal vision_objects="{detected_objects}" target_identity="badge" goal="{object_goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
 
-            <NavigateToPose server_name="{server_name}" goal="{object_goal}" yaw_lock="{object_yaw}" depth_lock="{standard_depth}"/> -->
+            <NavigateToPose server_name="{server_name}" goal="{object_goal}" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}"/>
         </Sequence>
     </BehaviorTree>
 </root>

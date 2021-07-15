@@ -2,14 +2,16 @@
 #define VISION_BT_PLUGINS__ACTION__SET_OBJECT_GOAL_HPP_
 
 #include <ros/ros.h>
-#include "vision/DetectedObjects.h"
 #include <geometry_msgs/PoseStamped.h>
 #include <behaviortree_cpp_v3/action_node.h>
 
+#include "vision/DetectedObjects.h"
+
 namespace mp_behavior_tree
 {
-class SetObjectGoal : public BT::SyncActionNode {
-public :
+class SetObjectGoal : public BT::SyncActionNode 
+{
+public:
     SetObjectGoal(
         const std::string &xml_tag_name,
         const BT::NodeConfiguration &conf);

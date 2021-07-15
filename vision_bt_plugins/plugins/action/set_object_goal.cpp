@@ -32,6 +32,7 @@ BT::NodeStatus SetObjectGoal::tick() {
     ROS_WARN("[SetObjectGoal] target not provided! Defaulting to first object!");
   }
 
+
   ROS_INFO("[SetObjectGoal] Finding %s", target_identity.c_str());
   for (auto object : objects.detected) {
     ROS_INFO("[SetObjectGoal]: Object Name: %s", object.name.c_str());
@@ -41,12 +42,12 @@ BT::NodeStatus SetObjectGoal::tick() {
       targetFoundFlag = 1;  // As expected
 
       geometry_msgs::PoseStamped output_pose;
-      output_pose.pose.position.x = object.rel_coords[0];
-      output_pose.pose.position.y = object.rel_coords[1];
-      output_pose.pose.position.z = object.rel_coords[2];
+      output_pose.pose.position.x = (double)(object.rel_coords[0]);
+      output_pose.pose.position.y = (double)(object.rel_coords[1]);
+      output_pose.pose.position.z = (double)(object.rel_coords[2]);
       setOutput("goal", output_pose);
-      setOutput("absolute_depth", object.world_coords[2]);
-      setOutput("absolute_yaw", object.world_yaw);
+      setOutput("absolute_depth", (double)(object.world_coords[2]));
+      setOutput("absolute_yaw", (double)(object.world_yaw));
 
       return BT::NodeStatus::SUCCESS;
     }

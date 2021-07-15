@@ -20,11 +20,11 @@
       <SetBlackboard output_key="goal" value="-2;6" />
       <!-- <SubTree ID="Navigate2dTree" node="node" goal="goal" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth"/> -->
 
-      <SubTree ID="GateTaskTree" node="node" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" />
+      <!-- <SubTree ID="GateTaskTree" node="node" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" /> -->
       <SubTree ID="BuoyTaskTree" node="node" 
                vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" 
                server_name="locomotion_server_name" pose_topic_name="pose_topic_name" 
-               standard_depth="standard_depth" fixed_yaw="{standard_yaw}" />
+               standard_depth="standard_depth" fixed_yaw="standard_yaw" />
       <!-- <ControllerService service_name="/auv4/controller" enable="false" /> -->
     </Sequence>
   </BehaviorTree>
