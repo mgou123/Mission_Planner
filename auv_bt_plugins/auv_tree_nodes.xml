@@ -19,6 +19,15 @@
         <input_port name="yaw">yaw</input_port>
     </Action>
 
+    <Action ID="ManipulatorsService">
+      <input_port name="top_torpedo">True to fire top torpedo, false to disable it</input_port>
+      <input_port name="bottom_torpedo">True to fire bottom torpedo, false to disable it</input_port>
+      <input_port name="dropper">True to drop, false to disable it</input_port>
+      <input_port name="grabber">True to grab, false to disable it</input_port>
+      <input_port name="extend_linear">True to extend linear, false to disable it</input_port>
+      <input_port name="retract_linear">True to retract linear, false to disable it</input_port>
+    </Action>
+
     <!-- ############################### CONDITION NODES ############################## -->
     
     <!-- ############################### CONTROL NODES ################################ -->

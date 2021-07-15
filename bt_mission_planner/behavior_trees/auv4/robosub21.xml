@@ -1,11 +1,31 @@
 <root main_tree_to_execute="MainTree">
+  <include ros_pkg="bt_mission_planner" path="behavior_trees/navigate2d.xml"/>
+  <include ros_pkg="bt_mission_planner" path="behavior_trees/robosub21/gate_task.xml"/>
+  <include ros_pkg="bt_mission_planner" path="behavior_trees/robosub21/buoy_task.xml"/>
+
   <BehaviorTree ID="MainTree">
     <Sequence>
       <ControllerService service_name="/auv4/controller" enable="true"/>
-      <DetectorAUVService service_name="/auv/vision/detector" objects="buoy,red_buoy,green_buoy"/>
       <SetBlackboard output_key="pose_topic_name" value="/auv4/nav/odom_ned"/>
-      
-      <ControllerService service_name="/auv4/controller" enable="false"/>
+      <SetBlackboard output_key="vision_topic_name" value="/auv4/vision/detected" />
+      <SetBlackboard output_key="vision_service_name" value="/auv4/vision/detector" />
+      <SetBlackboard output_key="locomotion_server_name" value="/auv4/LocomotionServer" />
+
+      <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
+      <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+      <SplitPoseComponents pose="{pose}" yaw="{standard_yaw}" />
+
+      <SetBlackboard output_key="{standard_depth}" value="0.7" />
+
+      <SetBlackboard output_key="goal" value="-2;6" />
+      <!-- <SubTree ID="Navigate2dTree" node="node" goal="goal" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth"/> -->
+
+      <!-- <SubTree ID="GateTaskTree" node="node" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" /> -->
+      <SubTree ID="BuoyTaskTree" node="node" 
+               vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" 
+               server_name="locomotion_server_name" pose_topic_name="pose_topic_name" 
+               standard_depth="standard_depth" fixed_yaw="standard_yaw" />
+      <!-- <ControllerService service_name="/auv4/controller" enable="false" /> -->
     </Sequence>
   </BehaviorTree>
 </root>

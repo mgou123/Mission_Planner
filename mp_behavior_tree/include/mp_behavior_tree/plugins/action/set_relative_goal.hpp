@@ -36,6 +36,7 @@ public:
 private:
     std::shared_ptr<ros::NodeHandle> node_;
     std::shared_ptr<tf2_ros::Buffer> tf_;
+    std::shared_ptr<tf2_ros::TransformListener> listener_;
 
     bool initialized_;
     std::string global_frame_;

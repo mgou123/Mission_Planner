@@ -35,6 +35,13 @@
       <output_port name="absolute yaw">Absolute yaw to turn to the target pose from the source pose</output_port>
     </Action>
 
+    <Action ID="GetDistanceBetweenPoses">
+      <input_port name="source_pose">Initial starting pose</input_port>
+      <input_port name="target_pose">Final pose</input_port>
+      <output_port name="relative_pose">Distance between poses in a geometry pose message (x value)</output_port>
+      <output_port name="distance">Distance between poses</output_port>
+    </Action>
+
     <Action ID="SplitPoseComponents">
       <input_port name="pose">Geometry pose</input_port>
       <output_port name="x">x value</output_port>

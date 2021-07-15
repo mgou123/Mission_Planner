@@ -1,0 +1,22 @@
+ <root main_tree_to_execute = "SideSweepTree" >
+    <BehaviorTree ID="SideSweepTree">
+        <Sequence>
+            <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}"/>
+            <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+
+            <SplitPoseComponents pose="{pose}" yaw="{original_yaw}" />
+
+            <Repeat num_cycles="3">
+                <NavigateToPose server_name="{server_name}" goal="0;0;0;-10" depth_lock="{depth}" yaw_tolerance="3"/>
+            </Repeat>
+
+            <NavigateToPose server_name="{server_name}" goal="0;0" yaw_lock="{original_yaw}" depth_lock="{depth}" yaw_tolerance="3"/>
+
+            <Repeat num_cycles="3">
+                <NavigateToPose server_name="{server_name}" goal="0;0;0;10" depth_lock="{depth}" yaw_tolerance="3"/>
+            </Repeat>
+
+            <NavigateToPose server_name="{server_name}" goal="0;0" yaw_lock="{original_yaw}" depth_lock="{depth}" yaw_tolerance="1" />
+        </Sequence>
+    </BehaviorTree>
+</root>

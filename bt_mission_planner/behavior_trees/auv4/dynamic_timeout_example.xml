@@ -1,0 +1,43 @@
+<root main_tree_to_execute="MainTree">
+  <include ros_pkg="bt_mission_planner" path="behavior_trees/navigate2d.xml"/>
+
+  <BehaviorTree ID="MainTree">
+    <Sequence>
+      <ControllerService service_name="/auv4/controller" enable="true"/>
+
+      <SetBlackboard output_key="pose_topic_name" value="/auv4/nav/odom_ned"/>
+      <SetBlackboard output_key="locomotion_server_name" value="/auv4/LocomotionServer" />
+
+      <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
+      <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+
+      <DynamicTimeoutSequence rule="ALL" add_sec="{add_sec}" extra_sec="{extra_sec}">
+
+        <DynamicTimeout sec="20.0" add_sec="{add_sec}" extra_sec="{extra_sec}">
+            <Sequence>
+                <SetBlackboard output_key="goal" value="10;10;90" />
+                <SubTree ID="Navigate2dTree" node="node" goal="goal" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" />
+            </Sequence>
+        </DynamicTimeout>
+<!-- 
+        <DynamicTimeout sec="1.0" add_sec="{add_sec}" extra_sec="{extra_sec}">
+             <Sequence>
+                <SetBlackboard output_key="goal" value="0;-5;270" />
+                <SubTree ID="Navigate2dTree" node="node" goal="goal" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" />
+            </Sequence>
+        </DynamicTimeout>
+
+        <DynamicTimeout sec="30.0" add_sec="{add_sec}" extra_sec="{extra_sec}">
+             <Sequence>
+                <SetBlackboard output_key="goal" value="-4;7;0" />
+                <SubTree ID="Navigate2dTree" node="node" goal="goal" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" />
+            </Sequence>
+        </DynamicTimeout> -->
+
+      </DynamicTimeoutSequence>
+      
+      <ControllerService service_name="/auv4/controller" enable="false" />
+    </Sequence>
+  </BehaviorTree>
+
+</root>

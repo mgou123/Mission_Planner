@@ -23,6 +23,14 @@ BT::NodeStatus SplitPoseComponents::tick() {
     tf2::convert(pose.pose.orientation, quat);
     tf2::Matrix3x3(quat).getRPY(roll, pitch, yaw);
 
+    yaw = yaw / M_PI * 180.0;
+
+    if (yaw < 0) {
+      yaw += 360.0;
+    }
+
+    std::cout << "Yaw: " << yaw << std::endl; 
+
     setOutput("x", pose.pose.position.x);
     setOutput("y", pose.pose.position.y);
     setOutput("z", pose.pose.position.z);

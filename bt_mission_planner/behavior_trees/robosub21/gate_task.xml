@@ -1,0 +1,23 @@
+ <root main_tree_to_execute = "GateTaskTree" >
+    <BehaviorTree ID="GateTaskTree">
+        <Sequence>
+
+            <NavigateToPose server_name="{server_name}" goal="3;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" forward_tolerance="0.5" sidemove_tolerance="0.5" yaw_tolerance="5" />
+            <NavigateToPose server_name="{server_name}" goal="0;-0.5" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}"/>
+            <NavigateToPose server_name="{server_name}" goal="2;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}"/>
+
+            <SubTree ID="DanceTree" node="node" server_name="server_name" standard_depth="standard_depth" />
+
+            <NavigateToPose server_name="{server_name}" goal="0;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" yaw_tolerance="3" />
+
+        </Sequence>
+    </BehaviorTree>
+
+    <BehaviorTree ID="DanceTree">
+        <Timeout msec="60000">
+        <Repeat num_cycles="3">
+            <NavigateToPose server_name="{server_name}" goal="0;0;0;120" depth_lock="{standard_depth}" yaw_tolerance="30"/>
+        </Repeat>
+        </Timeout>
+    </BehaviorTree>
+</root>

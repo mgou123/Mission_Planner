@@ -7,7 +7,8 @@ DynamicTimeoutSequence::DynamicTimeoutSequence(
     const BT::NodeConfiguration &conf)
   : BT::ControlNode(name, conf),
     current_child_idx_(0),
-    timeout_children_count_(0) {}
+    timeout_children_count_(0),
+    bank_(0) {}
 
 void DynamicTimeoutSequence::halt() {
     current_child_idx_ = 0;
@@ -55,6 +56,8 @@ BT::NodeStatus DynamicTimeoutSequence::tick()
                         bank_ += extra_sec;
                     }
                 }
+
+                std::cout << "Bank balance: " << bank_ << std::endl;
 
                 setOutput("add_sec", divide_extra_time());
                 current_child_idx_++;

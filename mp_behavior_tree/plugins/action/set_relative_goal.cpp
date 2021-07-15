@@ -52,7 +52,7 @@ BT::NodeStatus SetRelativeGoal::tick() {
 void SetRelativeGoal::initialize() {
   node_ = config().blackboard->get<std::shared_ptr<ros::NodeHandle>>("node");
   tf_ = config().blackboard->get<std::shared_ptr<tf2_ros::Buffer>>("tf_buffer");
-
+  
   if (node_->hasParam("transform_timeout")) {
     node_->getParam("transform_timeout", transform_timeout_);
   } else {

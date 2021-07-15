@@ -49,6 +49,7 @@ BT::NodeStatus DynamicTimeout::tick() {
 
     if (child_halted_) {
         timeout_started_ = false;
+        setOutput("extra_sec", 0.0);
         return BT::NodeStatus::FAILURE;
     } else {
         auto child_status = child()->executeTick();
@@ -58,7 +59,7 @@ BT::NodeStatus DynamicTimeout::tick() {
             timer_.cancel(timer_id_);
             timeout_mutex_.lock();
 
-            setOutput("extra", (ros::Time::now() - start_).toSec() - ((double)msec_ / 1000.0));
+            setOutput("extra_sec", ((double)msec_ / 1000.0) - (ros::Time::now() - start_).toSec());
         }
 
         return child_status;
