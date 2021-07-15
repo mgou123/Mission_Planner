@@ -8,42 +8,43 @@
             <SetBlackboard output_key="vision_topic" value="/auv3/vision/detected"/>
             <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
             <SetBlackboard output_key="trial_dis" value="0.4"/>
-            <ReactiveSequence>
-                <RetryUntilSuccesful num_attempts="-1">
-                    <Action ID="UpdateDetectedObjects" queue_size="" result="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
-                </RetryUntilSuccesful>
-                <Inverter>
-                    <Condition ID="IsLidSeen" lid_num="1" vision_objects="{vision_detected}"/>
-                </Inverter>
-                <Repeat num_cycles="5">
-                    <Sequence>
-                        <Action ID="NavigateControl" depth="0.5" forward="trial_dis" server_name="{server}" server_timeout="" sideways="0.0" yaw="0.0"/>
-                        <Action ID="NavigateControl" depth="0.5" forward="0.0" server_name="{server}" server_timeout="" sideways="0.0" yaw="0.523"/>
-                        <Action ID="Adder" orig_value="{trial_dis}" result="{trial_dis}" value_added="0.1"/>
-                    </Sequence>
-                </Repeat>
-            </ReactiveSequence>
-            <ReactiveSequence>
-                <RetryUntilSuccesful num_attempts="-1">
-                    <Action ID="UpdateDetectedObjects" queue_size="" result="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
-                </RetryUntilSuccesful>
-                <Inverter>
-                    <Condition ID="IsLidSeen" lid_num="2" vision_objects="{vision_detected}"/>
-                </Inverter>
-                <Action ID="SetAdjustment" param_x="0.2" prarm_y="0.2" vision_objects="{vision_detected}" x_goal="adjust_x" y_goal="adjust_y"/>
-                <Action ID="NavigateControl" depth="0.5" forward="{adjust_x}" server_name="" server_timeout="{server}" sideways="{adjust_y}" yaw="0.0"/>
-            </ReactiveSequence>
+            <Action ID="DetectorAUVService" objects="bin" service_name="/auv3/vision/detected"/>
+            <ReactiveFallback>
+                <Condition ID="IsLidSeen" lid_num="1" vision_objects="{vision_detected}"/>
+                <ReactiveSequence>
+                    <RetryUntilSuccesful num_attempts="-1">
+                        <Action ID="UpdateDetectedObjects" queue_size="" result="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
+                    </RetryUntilSuccesful>
+                    <Repeat num_cycles="5">
+                        <Sequence>
+                            <Action ID="NavigateControl" depth="0.5" forward="{trial_dis}" server_name="{server}" server_timeout="" sideways="0.0" yaw="0.0"/>
+                            <Action ID="NavigateControl" depth="0.5" forward="0.0" server_name="{server}" server_timeout="" sideways="0.0" yaw="0.523"/>
+                            <Action ID="Adder" orig_value="{trial_dis}" result="{trial_dis}" value_added="0.1"/>
+                        </Sequence>
+                    </Repeat>
+                </ReactiveSequence>
+            </ReactiveFallback>
+            <ReactiveFallback>
+                <Condition ID="IsLidSeen" lid_num="2" vision_objects="{vision_detected}"/>
+                <ReactiveSequence>
+                    <RetryUntilSuccesful num_attempts="-1">
+                        <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
+                    </RetryUntilSuccesful>
+                    <Action ID="SetAdjustment" param_x="0.2" prarm_y="0.2" vision_objects="{vision_detected}" x_goal="adjust_x" y_goal="adjust_y"/>
+                    <Action ID="NavigateControl" depth="0.5" forward="{adjust_x}" server_name="" server_timeout="{server}" sideways="{adjust_y}" yaw="0.0"/>
+                </ReactiveSequence>
+            </ReactiveFallback>
             <Action ID="ChoosePic" pic_identifier="pic" vision_objects="{vision_detected}"/>
-            <ReactiveSequence>
-                <RetryUntilSuccesful num_attempts="-1">
-                    <Action ID="UpdateDetectedObjects" queue_size="" result="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
-                </RetryUntilSuccesful>
-                <Inverter>
-                    <Condition ID="IsPicCentered" center_offset_x="5" center_offset_y="5" pic_identifier="{pic}" vision_objects="{vision_detected}"/>
-                </Inverter>
-                <Action ID="CalcPicAngle" center_offset_x="5" center_offset_y="5" pic_identifier="{pic}" ratio="0.3" vision_objects="{vision_detected}" x_goal="go_pic_x" y_goal="go_pic_y" yaw_goal="go_pic_yaw"/>
-                <Action ID="NavigateControl" depth="0.5" forward="{go_pic_y}" server_name="{server}" server_timeout="" sideways="{go_pic_x}" yaw="{go_pic_yaw}"/>
-            </ReactiveSequence>
+            <ReactiveFallback>
+                <Condition ID="IsPicCentered" center_offset_x="5" center_offset_y="5" pic_identifier="{pic}" vision_objects="{vision_detected}"/>
+                <ReactiveSequence>
+                    <RetryUntilSuccesful num_attempts="-1">
+                        <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
+                    </RetryUntilSuccesful>
+                    <Action ID="CalcPicAngle" center_offset_x="5" center_offset_y="5" pic_identifier="{pic}" ratio="0.3" vision_objects="{vision_detected}" x_goal="go_pic_x" y_goal="go_pic_y" yaw_goal="go_pic_yaw"/>
+                    <Action ID="NavigateControl" depth="0.5" forward="{go_pic_y}" server_name="{server}" server_timeout="" sideways="{go_pic_x}" yaw="{go_pic_yaw}"/>
+                </ReactiveSequence>
+            </ReactiveFallback>
             <Action ID="NavigateToPose" depth_lock="" goal="0;0;0.5;0" relative="true" server_name="{server}" server_timeout="" yaw_lock="0.0"/>
         </Sequence>
     </BehaviorTree>
