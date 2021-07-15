@@ -12,9 +12,10 @@ UpdateDetectedObjects::UpdateDetectedObjects(
 
 BT::NodeStatus UpdateDetectedObjects::on_success() {
     std::string prefix = "";
-    getInput("prefix", prefix);
-    for (auto object : result_->detected) {
-        config().blackboard->set<vision::DetectedObject>(prefix + "_" + object.name, object);
+    if (getInput("prefix", prefix)) {
+        for (auto object : result_->detected) {
+            config().blackboard->set<vision::DetectedObject>(prefix + "_" + object.name, object);
+        }
     }
 
     return BT::NodeStatus::SUCCESS;

@@ -61,6 +61,20 @@ void NavigateToPose::on_tick() {
       goal_.yaw_rel = false;
       goal_.yaw_setpoint = yaw;
     }
+
+    double sidemove_tolerance, forward_tolerance, yaw_tolerance;
+
+    if (getInput("sidemove_tolerance", sidemove_tolerance)) {
+      goal_.sidemove_tolerance = sidemove_tolerance;
+    }
+
+    if (getInput("forward_tolerance", forward_tolerance)) {
+      goal_.forward_tolerance = forward_tolerance;
+    }
+
+    if (getInput("yaw_tolerance", yaw_tolerance)) {
+      goal_.yaw_tolerance = yaw_tolerance;
+    }
 }
 
 } // namespace mp_behavior_tree

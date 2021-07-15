@@ -1,11 +1,22 @@
 <root main_tree_to_execute="MainTree">
+  <include ros_pkg="bt_mission_planner" path="behavior_trees/robosub21/gate_task.xml"/>
+  <include ros_pkg="bt_mission_planner" path="behavior_trees/robosub21/buoy_task.xml"/>
   <BehaviorTree ID="MainTree">
     <Sequence>
       <ControllerService service_name="/auv3/controller" enable="true"/>
-      <DetectorAUVService service_name="/auv/vision/detector" objects="buoy,red_buoy,green_buoy"/>
       <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
-      
-      <ControllerService service_name="/auv3/controller" enable="false"/>
+      <SetBlackboard output_key="vision_topic_name" value="/auv3/vision/detected" />
+      <SetBlackboard output_key="locomotion_server_name" value="/auv3/LocomotionServer" />
+
+      <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
+      <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+      <SplitPoseComponents pose="{pose}" yaw="{standard_yaw}" />
+
+      <NavigateToPose server_name="{locomotion_server_name}" goal=";0" yaw_lock="{standard_yaw}" depth_lock="{standard_depth}" />
+
+      <SubTree ID="GateTaskTree" node="node" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" />
+      <SubTree ID="BuoyTaskTree" node="node" vision_topic_name="vision_topic_name" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" />
+      <ControllerService service_name="/auv3/controller" enable="false" />
     </Sequence>
   </BehaviorTree>
 </root>
