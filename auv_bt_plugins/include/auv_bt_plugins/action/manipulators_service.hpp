@@ -21,8 +21,14 @@ public:
 
     static BT::PortsList providedPorts()
     {
-        return providedBasicPorts(
-        {});
+        return providedBasicPorts({
+            BT::InputPort<bool>("top_torpedo", false, "True to fire top torpedo, false to disable it"),
+            BT::InputPort<bool>("bottom_torpedo", false, "True to fire bottom torpedo, false to disable it"),
+            BT::InputPort<bool>("dropper", false, "True to drop, false to disable it"),
+            BT::InputPort<bool>("grabber", false, "True to grab, false to disable it"),
+            BT::InputPort<bool>("extend_linear", false, "True to extend linear, false to disable it"),
+            BT::InputPort<bool>("retract_linear", false, "True to retract linear, false to disable it")
+        });
     }
 };
 
