@@ -1,23 +1,30 @@
  <root main_tree_to_execute = "GateTaskTree" >
     <BehaviorTree ID="GateTaskTree">
-        <Sequence>
+        <DynamicTimeoutSequence rule="EQUAL" add_sec="{add_sec}" extra_sec="{extra_sec}">
+            <DynamicTimeout sec="10.0" add_sec="{add_sec}" extra_sec="{extra_sec}">
+                <NavigateToPose server_name="{server_name}" goal="0;-0.5" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}"/>
+            </DynamicTimeout>
 
-            <NavigateToPose server_name="{server_name}" goal="3;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" forward_tolerance="0.5" sidemove_tolerance="0.5" yaw_tolerance="5" />
-            <NavigateToPose server_name="{server_name}" goal="0;-0.5" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}"/>
-            <NavigateToPose server_name="{server_name}" goal="2;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}"/>
+            <DynamicTimeout sec="15.0" add_sec="{add_sec}" extra_sec="{extra_sec}">
+                <NavigateToPose server_name="{server_name}" goal="2;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}"/>
+            </DynamicTimeout>
 
-            <SubTree ID="DanceTree" node="node" server_name="server_name" standard_depth="standard_depth" />
+            <DynamicTimeout sec="20.0" add_sec="{add_sec}" extra_sec="{extra_sec}">
+                <SubTree ID="DanceTree" node="node" server_name="server_name" standard_depth="standard_depth" />
+            </DynamicTimeout>
 
-            <NavigateToPose server_name="{server_name}" goal="0;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" yaw_tolerance="3" />
-
-        </Sequence>
+            <DynamicTimeout sec="5.0" add_sec="{add_sec}" extra_sec="{extra_sec}">
+                <NavigateToPose server_name="{server_name}" goal="0;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" yaw_tolerance="3" />
+            </DynamicTimeout>
+        </DynamicTimeoutSequence>
     </BehaviorTree>
 
     <BehaviorTree ID="DanceTree">
-        <Timeout msec="60000">
         <Repeat num_cycles="3">
-            <NavigateToPose server_name="{server_name}" goal="0;0;0;120" depth_lock="{standard_depth}" yaw_tolerance="30"/>
+            <Timeout msec="1500">
+                <NavigateToPose server_name="{server_name}" goal="0;0;0;120" depth_lock="{standard_depth}" yaw_tolerance="30"/>
+            </Timeout>
         </Repeat>
-        </Timeout>
     </BehaviorTree>
+
 </root>

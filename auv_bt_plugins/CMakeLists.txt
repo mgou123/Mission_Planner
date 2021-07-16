@@ -168,8 +168,8 @@ include_directories(
 add_library(mp_navigate_to_pose_bt_node SHARED plugins/action/navigate_to_pose.cpp)
 list(APPEND plugin_libs mp_navigate_to_pose_bt_node)
 
-add_library(mp_manipulators_service_bt_node SHARED plugins/action/manipulators_service.cpp)
-list(APPEND plugin_libs mp_manipulators_service_bt_node)
+# add_library(mp_manipulators_service_bt_node SHARED plugins/action/manipulators_service.cpp)
+# list(APPEND plugin_libs mp_manipulators_service_bt_node)
 
 foreach(bt_plugin ${plugin_libs})
   add_dependencies(${bt_plugin} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

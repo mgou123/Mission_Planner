@@ -11,7 +11,7 @@
             <NavigateToPose server_name="{server_name}" goal="{straight_goal}" depth_lock="{standard_depth}" yaw_lock="{yaw}" />
             
             <SplitPoseComponents pose="{goal}" yaw="{yaw}" />
-            <NavigateToPose server_name="{server_name}" goal="0;0" relative="true" depth_lock="{standard_depth}" yaw_lock="{yaw}" />
+            <NavigateToPose server_name="{server_name}" goal="0;0" depth_lock="{standard_depth}" yaw_lock="{yaw}" />
         </Sequence>
     </BehaviorTree>
 </root>

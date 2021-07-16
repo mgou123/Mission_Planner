@@ -18,15 +18,23 @@
       <SetBlackboard output_key="{standard_depth}" value="0.7" />
       <SetBlackboard output_key="{standard_yaw}" value="175" />
 
+      <!-- Submerge AUV to correct depth-->
       <AlwaysSuccess>
           <Timeout msec="10000">
               <NavigateToPose server_name="{server_name}" goal="0;0;0;0" depth_lock="{standard_depth}" />
           </Timeout>
       </AlwaysSuccess>
 
-      <!-- <SubTree ID="Navigate2dTree" node="node" goal="goal" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth"/> -->
+      <!-- Travel to gate task -->
+      <NavigateToPose server_name="{server_name}" goal="3;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" forward_tolerance="0.5" sidemove_tolerance="0.5" yaw_tolerance="5" />
 
+      <!-- Run gate task-->
       <SubTree ID="GateTaskTree" node="node" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" />
+      
+      <!-- Travel to buoy task -->
+      <NavigateToPose server_name="{server_name}" goal="3;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" forward_tolerance="0.5" sidemove_tolerance="0.5" yaw_tolerance="5" />
+      
+      <!-- Run buoy task -->
       <SubTree ID="BuoyTaskTree" node="node" 
                vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" 
                server_name="locomotion_server_name" pose_topic_name="pose_topic_name" 

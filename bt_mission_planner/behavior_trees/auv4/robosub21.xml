@@ -16,11 +16,20 @@
       <SplitPoseComponents pose="{pose}" yaw="{standard_yaw}" />
 
       <SetBlackboard output_key="{standard_depth}" value="0.7" />
+      <SetBlackboard output_key="{standard_yaw}" value="0" />
 
-      <SetBlackboard output_key="goal" value="-2;6" />
-      <!-- <SubTree ID="Navigate2dTree" node="node" goal="goal" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth"/> -->
+      <!-- Submerge AUV to correct depth-->
+      <AlwaysSuccess>
+          <Timeout msec="1000">
+              <NavigateToPose server_name="{server_name}" goal="0;0;0;0" depth_lock="{standard_depth}" />
+          </Timeout>
+      </AlwaysSuccess>
 
-      <!-- <SubTree ID="GateTaskTree" node="node" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" /> -->
+      <!-- Travel to buoy task -->
+      <SetBlackboard output_key="waypoint" value="1;13;0" />
+      <SubTree ID="Navigate2dTree" node="node" goal="waypoint" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth"/>
+
+      <!-- Run buoy task -->
       <SubTree ID="BuoyTaskTree" node="node" 
                vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" 
                server_name="locomotion_server_name" pose_topic_name="pose_topic_name" 

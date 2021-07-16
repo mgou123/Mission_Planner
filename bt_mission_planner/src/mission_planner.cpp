@@ -22,6 +22,7 @@ bool MissionPlanner::configure(std::weak_ptr<ros::NodeHandle> parent_node) {
     auto node = parent_node.lock();
 
     tf_ = std::make_shared<tf2_ros::Buffer>();
+    
     transform_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_);
     if (!node->hasParam("transform_tolerance")) {
         node->setParam("transform_tolerance", 0.1);

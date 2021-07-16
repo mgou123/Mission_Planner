@@ -24,10 +24,8 @@ public:
     static BT::PortsList providedPorts() {
         return {
             BT::InputPort<geometry_msgs::PoseStamped>("relative_goal", "Relative pose goal (refer to bt conversions for specification)"),
-            BT::InputPort<geometry_msgs::PoseStamped>("global_pose", "Current pose"),
-            BT::InputPort<std::string>("global_frame", std::string("world"), "Global frame"),
-            BT::InputPort<std::string>("base_frame", std::string("base_link"), "Robot base frame"),
-            BT::OutputPort<geometry_msgs::PoseStamped>("global_goal", "Port to set goal to"),
+            BT::InputPort<geometry_msgs::PoseStamped>("pose", "Current pose"),
+            BT::OutputPort<geometry_msgs::PoseStamped>("goal", "Port to set goal to"),
         };
     }
 
@@ -36,7 +34,6 @@ public:
 private:
     std::shared_ptr<ros::NodeHandle> node_;
     std::shared_ptr<tf2_ros::Buffer> tf_;
-    std::shared_ptr<tf2_ros::TransformListener> listener_;
 
     bool initialized_;
     std::string global_frame_;

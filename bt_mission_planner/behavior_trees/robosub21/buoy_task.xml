@@ -3,7 +3,6 @@
     <BehaviorTree ID="BuoyTaskTree">
         <Sequence>
             <DetectorAUVService service_name="{vision_service_name}" objects="badge"/>
-            <NavigateToPose server_name="{server_name}" goal="3;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" forward_tolerance="0.5" sidemove_tolerance="0.5" yaw_tolerance="5" />
 
             <ReactiveFallback>
                 <Sequence>
