@@ -13,8 +13,8 @@ IsLidSeenCondition::IsLidSeenCondition(
 
 BT::NodeStatus IsLidSeenCondition::tick()
 {   
-  int lid_num; 
-  int count;
+  int lid_num = 0; 
+  int count = 0;
   vision::DetectedObjects objects; 
 
   if (!getInput("vision_objects", objects)) {
@@ -33,13 +33,20 @@ BT::NodeStatus IsLidSeenCondition::tick()
 
   for (auto object : objects.detected) {
       if (object.name == "Lid") {
+          ROS_INFO("one more lid");
           count = count + 1;
       }
   }
-    
+
+  ROS_INFO("is_lid_seen running");
+  ROS_INFO("count is %d", count);
+  ROS_INFO("lid_num is %d", count);
+
   if (count >= lid_num) {
+      ROS_INFO("see enough lids");
       return BT::NodeStatus::SUCCESS;
   } else {
+      ROS_INFO("not enough lids");
       return BT::NodeStatus::FAILURE;
   }
 }

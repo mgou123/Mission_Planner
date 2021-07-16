@@ -34,7 +34,7 @@
     </Action>
 
     <!-- ############################### CONDITION NODES ############################## -->
-    
+
     <Condition ID="IsLidSeen">
       <input_port name="vision_objects">Detected Objects</input_port>
       <input_port name="lid_num">larger than or equal to lid_num of lids are seen</input_port>

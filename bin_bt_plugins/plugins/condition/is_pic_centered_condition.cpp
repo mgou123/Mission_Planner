@@ -46,16 +46,24 @@ BT::NodeStatus IsPicCenteredCondition::tick()
     getInput("center_offset_y", center_offset_y);
   }
 
+  ROS_INFO("is picture centered running");
+
   for (auto object : objects.detected) {
     if (object.name == identifier) {
-      pic = object; 
+      pic = object;
       float pic_center_x = object.centre_x;
       float pic_center_y = object.centre_y;
       float view_center_x = object.image_width / 2;
-      float view_center_y = object.image_width / 2;
+      float view_center_y = object.image_height / 2;
+      ROS_INFO("pic_center_x %f", pic_center_x);
+      ROS_INFO("pic_center_y %f", pic_center_y);
+      ROS_INFO("view_center_x %f", view_center_x);
+      ROS_INFO("view_center_y %f", view_center_y);
       if (abs(view_center_x - pic_center_x) < center_offset_x && abs(view_center_y - pic_center_y) < center_offset_y) {
-        return BT::NodeStatus::SUCCESS; 
+        ROS_INFO("pic is centered");
+        return BT::NodeStatus::SUCCESS;
       } else {
+        ROS_INFO("pic is not centered");
         return BT::NodeStatus::FAILURE;
       }
     }

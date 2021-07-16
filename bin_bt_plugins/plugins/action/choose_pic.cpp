@@ -20,6 +20,7 @@ BT::NodeStatus ChoosePic::tick()
   int count_bootlegger; 
   int area_one = 0;
   int area_two = 0; 
+  std::string pic_chosen;
 
   if (!getInput("vision_objects", objects)) {
     ROS_ERROR("[ChoosePic] objects not provided!");
@@ -46,7 +47,7 @@ BT::NodeStatus ChoosePic::tick()
   for (auto object : objects.detected) {
     if (task_identifier == 0) {
       if (object.name == "Barrel") {
-        count_bootlegger += 1; 
+        count_bootlegger += 1;
         area_one = object.bbox_height * object.bbox_width;
       } else if (object.name == "Wiskey Bottle") {
         count_bootlegger += 1; 
@@ -69,9 +70,11 @@ BT::NodeStatus ChoosePic::tick()
       return BT::NodeStatus::FAILURE;
     } else if (area_one > area_two) {
       setOutput("pic_identifier", "Barrel");
+      pic_chosen = "Barrel";
       return BT::NodeStatus::SUCCESS;
     } else {
       setOutput("pic_identifier", "Wiskey Bottle");
+      pic_chosen = "Wiskey Bottle";
       return BT::NodeStatus::SUCCESS;
     }
   } else {
@@ -80,12 +83,16 @@ BT::NodeStatus ChoosePic::tick()
       return BT::NodeStatus::FAILURE;
     } else if (area_one > area_two) {
       setOutput("pic_identifier", "Notepad");
+      pic_chosen = "Notepad";
       return BT::NodeStatus::SUCCESS;
     } else {
       setOutput("pic_identifier", "Telephone");
+      pic_chosen = "Telephone";
       return BT::NodeStatus::SUCCESS;
     }
   } 
+
+  ROS_INFO("choose pic running, pic chosen is %s", pic_chosen);
   
   return BT::NodeStatus::FAILURE;
 }

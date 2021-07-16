@@ -24,8 +24,8 @@ public:
         return {
             BT::InputPort<vision::DetectedObjects>("vision_objects", "Detected Objects"),
             BT::InputPort<std::string>("pic_identifier", "Which pic to go"),
-            BT::InputPort<float>("center_offset_x", "allowed offset to center on x-axis"),
-            BT::InputPort<float>("center_offset_y", "allowed offset to center on y-axis"),
+            // BT::InputPort<float>("center_offset_x", "allowed offset to center on x-axis"),
+            // BT::InputPort<float>("center_offset_y", "allowed offset to center on y-axis"),
             BT::InputPort<float>("ratio", "ratio between camera pixel value and real-world coordinate"),
             BT::OutputPort<float>("x_goal", "sideways move"),
             BT::OutputPort<float>("y_goal", "forward move"),

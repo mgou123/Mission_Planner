@@ -20,9 +20,9 @@ BT::NodeStatus CalcPicAngle::CalcPicAngle::tick()
   float center_offset_x; 
   float center_offset_y; 
   float ratio;
-  float x;
-  float y;
-  float yaw;
+  float x = 0;
+  float y = 0;
+  float yaw = 0;
 
   if (!getInput("vision_objects", objects)) {
     ROS_ERROR("[CalcPicAngle] objects not provided!");
@@ -68,17 +68,23 @@ BT::NodeStatus CalcPicAngle::CalcPicAngle::tick()
   float view_center_x = pic.image_width / 2;
   float view_center_y = pic.image_height / 2;
   
-  if (abs(view_center_x - pic.centre_x) < center_offset_x) {
-    y = ratio * (pic.centre_x - view_center_x);
-  } else if (abs(view_center_y - pic.centre_y) < center_offset_y) {
-    x = ratio * (pic.centre_y - view_center_x);
-  } else {
-    yaw = atan2(pic.centre_x - view_center_y, pic.centre_x - view_center_x);
-  }
+  x = - ratio * (pic.centre_x - view_center_x);
+  y = - ratio * (pic.centre_y - view_center_y);
+
+  
+  // if (abs(view_center_x - pic.centre_x) < center_offset_x) {
+  //   y = ratio * (pic.centre_x - view_center_x);
+  // } else if (abs(view_center_y - pic.centre_y) < center_offset_y) {
+  //   x = ratio * (pic.centre_y - view_center_y);
+  // } else {
+  //   yaw = - atan((pic.centre_x - view_center_x) / (pic.centre_y - view_center_y)) * 180 / 6.28;
+  // }
 
   setOutput("x_goal", x);
   setOutput("y_goal", y);
   setOutput("yaw_goal", yaw);
+
+  ROS_INFO("calc_bin_angle running");
 
   return BT::NodeStatus::SUCCESS;
 }

@@ -34,6 +34,8 @@ BT::NodeStatus Adder::tick()
 
   setOutput("result", result);
 
+  ROS_INFO("Adder running");
+
   return BT::NodeStatus::SUCCESS;
 }
 

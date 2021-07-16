@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <iostream>
 
 #include "ros/ros.h"
 #include "vision/DetectedObjects.h"

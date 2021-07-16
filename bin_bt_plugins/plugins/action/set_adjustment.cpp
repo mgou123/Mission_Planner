@@ -64,6 +64,8 @@ BT::NodeStatus SetAdjustment::tick()
   setOutput("x_goal", x_goal);
   setOutput("y_goal", y_goal);
 
+  ROS_INFO("set_adjustment running");
+
   return BT::NodeStatus::SUCCESS;
 }
 

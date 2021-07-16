@@ -16,7 +16,7 @@
                 <Repeat num_cycles="5">
                     <Sequence>
                         <Action ID="NavigateControl" depth="0.5" forward="{trial_dis}" server_name="/auv4/LocomotionServer" server_timeout="" sideways="0.0" yaw="0.0"/>
-                        <Action ID="NavigateControl" depth="0.5" forward="0.0" server_name="/auv4/LocomotionServer" server_timeout="" sideways="0.0" yaw="0.523"/>
+                        <Action ID="NavigateControl" depth="0.5" forward="0.0" server_name="/auv4/LocomotionServer" server_timeout="" sideways="0.0" yaw="30"/>
                         <Action ID="Adder" orig_value="{trial_dis}" result="{trial_dis}" value_added="0.1"/>
                     </Sequence>
                 </Repeat>
@@ -27,22 +27,22 @@
                     <Condition ID="IsLidSeen" lid_num="2" vision_objects="{vision_detected}"/>
                 </Sequence>
                 <Sequence>
-                    <Action ID="SetAdjustment" param_x="0.2" param_y="0.2" vision_objects="{vision_detected}" x_goal="adjust_x" y_goal="adjust_y"/>
+                    <Action ID="SetAdjustment" param_x="0.03" param_y="0.03" vision_objects="{vision_detected}" x_goal="adjust_x" y_goal="adjust_y"/>
                     <Action ID="NavigateControl" depth="0.5" forward="{adjust_x}" server_name="" server_timeout="/auv4/LocomotionServer" sideways="{adjust_y}" yaw="0.0"/>
                 </Sequence>
             </ReactiveFallback>
-            <Action ID="ChoosePic" pic_identifier="pic" gate_side="Gman" vision_objects="{vision_detected}"/>
+            <Action ID="ChoosePic" pic_identifier="pic" gate_side="Bootlegger" vision_objects="{vision_detected}"/>
             <ReactiveFallback>
                 <Sequence>
                     <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
-                    <Condition ID="IsPicCentered" center_offset_x="5" center_offset_y="5" pic_identifier="{pic}" vision_objects="{vision_detected}"/>
+                    <Condition ID="IsPicCentered" center_offset_x="15" center_offset_y="15" pic_identifier="{pic}" vision_objects="{vision_detected}"/>
                 </Sequence>
                 <Sequence>
-                    <Action ID="CalcPicAngle" center_offset_x="5" center_offset_y="5" pic_identifier="{pic}" ratio="0.3" vision_objects="{vision_detected}" x_goal="go_pic_x" y_goal="go_pic_y" yaw_goal="go_pic_yaw"/>
+                    <Action ID="CalcPicAngle" pic_identifier="{pic}" ratio="0.01" vision_objects="{vision_detected}" x_goal="go_pic_x" y_goal="go_pic_y" yaw_goal="go_pic_yaw"/>
                     <Action ID="NavigateControl" depth="0.5" forward="{go_pic_y}" server_name="/auv4/LocomotionServer" server_timeout="" sideways="{go_pic_x}" yaw="{go_pic_yaw}"/>
                 </Sequence>
             </ReactiveFallback>
-            <Action ID="NavigateToPose" depth_lock="" goal="0;0;0.5;0" relative="true" server_name="/auv4/LocomotionServer" server_timeout="" yaw_lock="0.0"/>
+            <Action ID="NavigateToPose" depth_lock="" goal="0;0;0.7;0" relative="true" server_name="/auv4/LocomotionServer" server_timeout="" yaw_lock=""/>
         </Sequence>
     </BehaviorTree>
     <!-- ////////// -->
