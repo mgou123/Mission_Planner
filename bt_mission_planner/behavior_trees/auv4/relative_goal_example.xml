@@ -6,14 +6,14 @@
 
       <SetBlackboard output_key="pose_topic_name" value="/auv4/nav/odom_ned"/>
       <SetBlackboard output_key="locomotion_server_name" value="/auv4/LocomotionServer" />
-      <SetBlackboard output_key="base_link" value="auv4/base_link" />
 
       <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
       <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
 
-      <SetRelativeGoal relative_goal="3;0;0;0" global_pose="{pose}" global_goal="{goal}" base_frame="{base_link}" />
+      <SetRelativeGoal relative_goal="3;0;0;0" pose="{pose}" goal="{goal}"  />
+      <SetRelativeGoal relative_goal="-3;2;0;0" pose="{goal}" goal="{goal}"  />
       <!-- <SetRelativeGoal relative_goal="0;0;0;90" global_pose="{goal}" global_goal="{goal}" base_frame="{base_link}"/> -->
-      <NavigateToPose server_name="{locomotion_server_name}" goal="{goal}" relative="{false}" depth_lock="{standard_depth}" />
+      <NavigateToPose server_name="{locomotion_server_name}" goal="{goal}" relative="false" depth_lock="{standard_depth}" />
 
       <ControllerService service_name="/auv4/controller" enable="false" />
     </Sequence>

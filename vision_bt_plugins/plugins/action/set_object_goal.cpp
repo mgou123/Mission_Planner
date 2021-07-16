@@ -47,7 +47,7 @@ BT::NodeStatus SetObjectGoal::tick() {
       output_pose.pose.position.z = (double)(object.rel_coords[2]);
       setOutput("goal", output_pose);
       setOutput("absolute_depth", (double)(object.world_coords[2]));
-      setOutput("absolute_yaw", (double)(object.world_yaw));
+      setOutput("relative_yaw", (double)(object.angle));
 
       return BT::NodeStatus::SUCCESS;
     }

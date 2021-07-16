@@ -1,6 +1,11 @@
- <root main_tree_to_execute = "SideSweepTree" >
-    <BehaviorTree ID="SideSweepTree">
+ <root main_tree_to_execute = "SquareTree" >
+    <BehaviorTree ID="SquareTree">
         <Sequence>
+            <NavigateToPose server_name="{}"
+
+
+
+
             <Repeat num_cycles="3">
                 <NavigateToPose server_name="{server_name}" goal="0;0;0;-10" depth_lock="{depth}" yaw_tolerance="3"/>
             </Repeat>
