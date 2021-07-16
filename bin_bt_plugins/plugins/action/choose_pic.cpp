@@ -21,6 +21,7 @@ BT::NodeStatus ChoosePic::tick()
   int area_one = 0;
   int area_two = 0; 
   std::string pic_chosen;
+  int pic_num = 0; 
 
   if (!getInput("vision_objects", objects)) {
     ROS_ERROR("[ChoosePic] objects not provided!");
@@ -45,6 +46,7 @@ BT::NodeStatus ChoosePic::tick()
   }
 
   for (auto object : objects.detected) {
+    pic_num += 1; 
     if (task_identifier == 0) {
       if (object.name == "Barrel") {
         count_bootlegger += 1;
@@ -68,20 +70,43 @@ BT::NodeStatus ChoosePic::tick()
     if (count_bootlegger == 0) {
       ROS_WARN("[ChoosePic] no pic in sight");
       return BT::NodeStatus::FAILURE;
-    } else if (area_one > area_two) {
-      setOutput("pic_identifier", "Barrel");
-      pic_chosen = "Barrel";
-      return BT::NodeStatus::SUCCESS;
+    } else if (count_bootlegger == 1) {
+      if (area_one != 0) {
+        setOutput("pic_identifier", "Barrel");
+        pic_chosen = "Barrel";
+        return BT::NodeStatus::SUCCESS;
+      } else {
+        setOutput("pic_identifier", "Wiskey Bottle");
+        pic_chosen = "Wiskey Bottle";
+        return BT::NodeStatus::SUCCESS;
+      }
     } else {
-      setOutput("pic_identifier", "Wiskey Bottle");
-      pic_chosen = "Wiskey Bottle";
-      return BT::NodeStatus::SUCCESS;
+      if (area_one > area_two) {
+        setOutput("pic_identifier", "Barrel");
+        pic_chosen = "Barrel";
+        return BT::NodeStatus::SUCCESS;
+      } else {
+        setOutput("pic_identifier", "Wiskey Bottle");
+        pic_chosen = "Wiskey Bottle";
+        return BT::NodeStatus::SUCCESS;
+      }
     }
   } else {
     if (count_gman == 0) {
       ROS_WARN("[ChoosePic] no pic in sight");
       return BT::NodeStatus::FAILURE;
-    } else if (area_one > area_two) {
+    } else if (count_gman == 1) {
+      if ( area_one != 0) {
+        setOutput("pic_identifier", "Notepad");
+        pic_chosen = "Notepad";
+        return BT::NodeStatus::SUCCESS;
+      } else {
+        setOutput("pic_identifier", "Telephone");
+        pic_chosen = "Telephone";
+        return BT::NodeStatus::SUCCESS;
+      }
+    } 
+    if (area_one > area_two) {
       setOutput("pic_identifier", "Notepad");
       pic_chosen = "Notepad";
       return BT::NodeStatus::SUCCESS;

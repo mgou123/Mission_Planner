@@ -45,19 +45,19 @@ BT::NodeStatus CalcPicAngle::CalcPicAngle::tick()
     getInput("ratio", ratio);
   }
 
-  if (!getInput("center_offset_x", center_offset_x)) {
-    ROS_ERROR("[CalcPicAngle] center_offset_x not provided!");
-    return BT::NodeStatus::FAILURE;
-  } else {
-    getInput("center_offset_x", center_offset_x);
-  }
+  // if (!getInput("center_offset_x", center_offset_x)) {
+  //   ROS_ERROR("[CalcPicAngle] center_offset_x not provided!");
+  //   return BT::NodeStatus::FAILURE;
+  // } else {
+  //   getInput("center_offset_x", center_offset_x);
+  // }
 
-  if (!getInput("center_offset_y", center_offset_y)) {
-    ROS_ERROR("[CalcPicAngle] center_offset_y not provided!");
-    return BT::NodeStatus::FAILURE;
-  } else {
-    getInput("center_offset_y", center_offset_y);
-  }
+  // if (!getInput("center_offset_y", center_offset_y)) {
+  //   ROS_ERROR("[CalcPicAngle] center_offset_y not provided!");
+  //   return BT::NodeStatus::FAILURE;
+  // } else {
+  //   getInput("center_offset_y", center_offset_y);
+  // }
 
   for (auto object : objects.detected) {
     if (object.name == identifier) {
@@ -68,8 +68,8 @@ BT::NodeStatus CalcPicAngle::CalcPicAngle::tick()
   float view_center_x = pic.image_width / 2;
   float view_center_y = pic.image_height / 2;
   
-  x = - ratio * (pic.centre_x - view_center_x);
-  y = - ratio * (pic.centre_y - view_center_y);
+  x = ratio * (pic.centre_x - view_center_x);
+  y = ratio * (pic.centre_y - view_center_y);
 
   
   // if (abs(view_center_x - pic.centre_x) < center_offset_x) {

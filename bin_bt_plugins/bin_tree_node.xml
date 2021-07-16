@@ -5,8 +5,8 @@
     <Action ID="CalcPicAngle">
       <input_port name="vision_objects">Detected Objects</input_port>
       <input_port name="pic_identifier">Which pic to go</input_port>
-      <input_port name="center_offset_x">allowed offset to center on x-axis</input_port>
-      <input_port name="center_offset_y">allowed offset to center on y-axis</input_port>
+      <!-- <input_port name="center_offset_x">allowed offset to center on x-axis</input_port>
+      <input_port name="center_offset_y">allowed offset to center on y-axis</input_port> -->
       <input_port name="ratio">ratio between camera pixel value and real-world coordinate</input_port>
       <output_port name="x_goal">sideways move</output_port>
       <output_port name="y_goal">forward move</output_port>

@@ -47,6 +47,7 @@ BT::NodeStatus IsPicCenteredCondition::tick()
   }
 
   ROS_INFO("is picture centered running");
+  ROS_INFO("looking for %s", identifier);
 
   for (auto object : objects.detected) {
     if (object.name == identifier) {
