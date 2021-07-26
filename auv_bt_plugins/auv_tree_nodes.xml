@@ -8,16 +8,17 @@
         <input_port name="goal">Destination to plan to</input_port>
         <input_port name="yaw_lock">Yaw to lock to. If specified, relative yaw in pose will be ignored.</input_port>
         <input_port name="depth_lock">Depth to lock to. If specified, relative depth in pose will be ignored.</input_port>
-        <input_port name="relative">Set to true to use relative coordinates<input_port>
+        <input_port name="relative">Set to true to use relative coordinates</input_port>
     </Action>
 
     <Action ID="ManipulatorsService">
+      <input_port name="service_name">Name of service</input_port>
       <input_port name="top_torpedo">True to fire top torpedo, false to disable it</input_port>
       <input_port name="bottom_torpedo">True to fire bottom torpedo, false to disable it</input_port>
       <input_port name="dropper">True to drop, false to disable it</input_port>
-      <input_port name="grabber">True to grab, false to disable it</input_port>
-      <input_port name="extend_linear">True to extend linear, false to disable it</input_port>
-      <input_port name="retract_linear">True to retract linear, false to disable it</input_port>
+      <input_port name="grabber">DOES NOTHING DON'T USE</input_port>
+      <input_port name="extend_linear">True to open grabber, false to disable it</input_port>
+      <input_port name="retract_linear">True to close grabber, false to disable it</input_port>
     </Action>
 
     <!-- ############################### CONDITION NODES ############################## -->

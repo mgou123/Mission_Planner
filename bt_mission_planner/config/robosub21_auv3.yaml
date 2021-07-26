@@ -1,4 +1,4 @@
-default_mission_planner_bt_xml: auv3/robosub21_sim.xml
+default_mission_planner_bt_xml: robosub21/torpedo_task_sim.xml
 plugin_lib_names:
   - mp_navigate_to_pose_bt_node
   - mp_set_relative_goal_bt_node
@@ -14,6 +14,7 @@ plugin_lib_names:
   - mp_get_distance_between_poses_bt_node
   - mp_update_detected_objects_bt_node
   - mp_set_object_goal_bt_node
+  - mp_manipulators_service_bt_node
 
 odom_topic: /auv3/nav/odom_ned
 transform_tolerance: 0.1
