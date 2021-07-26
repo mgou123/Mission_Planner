@@ -23,9 +23,9 @@ public:
         return {
             BT::InputPort<vision::DetectedObjects>("vision_objects", "Objects detected by vision pipeline as a vision::DetectedObjects message"),
             BT::InputPort<std::string>("target_identity", "Target to be made as goal. String"),
-            BT::OutputPort<geometry_msgs::PoseStamped>("relative_goal", "Goal to move to"),
+            BT::OutputPort<geometry_msgs::PoseStamped>("goal", "Goal to move to"),
             BT::OutputPort<double>("absolute_depth", "Depth of object"),
-            BT::OutputPort<double>("relative_yaw", "Yaw of object"),
+            BT::OutputPort<double>("absolute_yaw", "Yaw of object"),
         };
     }
 
