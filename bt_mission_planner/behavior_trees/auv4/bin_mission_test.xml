@@ -21,7 +21,9 @@
                     </Sequence>
                 </Repeat>
             </ReactiveFallback>
-            <!-- <ReactiveFallback>
+            <!-- <ReactiveFallback>adding</input_port>
+            <output_port name="result">calculated result</output_port>
+            <input_port name="value_added">value
                 <Sequence>
                     <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
                     <Condition ID="IsLidSeen" lid_num="0" vision_objects="{vision_detected}"/>

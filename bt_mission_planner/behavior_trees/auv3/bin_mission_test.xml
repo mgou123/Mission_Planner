@@ -43,6 +43,7 @@
                 </Sequence>
             </ReactiveFallback>
             <Action ID="NavigateToPose" depth_lock="" goal="0;0;0.7;0" relative="true" server_name="/auv3/LocomotionServer" server_timeout="" yaw_lock=""/>
+            <!-- <Action ID="ManipulatorService" top_torpedo="false" bottom_torpedo="false" dropper="true" grabber="false" extend_linear="false" retract_linear="false"/> -->
         </Sequence>
     </BehaviorTree>
     <!-- ////////// -->

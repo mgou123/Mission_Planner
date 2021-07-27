@@ -135,6 +135,9 @@ include_directories(
 add_library(mp_adder_bt_node SHARED plugins/action/adder.cpp)
 list(APPEND plugin_libs mp_adder_bt_node)
 
+add_library(mp_multiplier_bt_node SHARED plugins/action/adder.cpp)
+list(APPEND plugin_libs mp_multiplier_bt_node)
+
 add_library(mp_calc_pic_angle_bt_node SHARED plugins/action/calc_pic_angle.cpp)
 list(APPEND plugin_libs mp_calc_pic_angle_bt_node)
 
@@ -146,6 +149,9 @@ list(APPEND plugin_libs mp_set_adjustment_bt_node)
 
 add_library(mp_is_lid_seen_condition_bt_node SHARED plugins/condition/is_lid_seen_condition.cpp)
 list(APPEND plugin_libs mp_is_lid_seen_condition_bt_node)
+
+add_library(mp_is_enough_pic_seen_condition_bt_node SHARED plugins/condition/is_enough_pic_seen_condition.cpp)
+list(APPEND plugin_libs mp_is_enough_pic_seen_condition_bt_node)
 
 add_library(mp_is_pic_centered_condition_bt_node SHARED plugins/condition/is_pic_centered_condition.cpp)
 list(APPEND plugin_libs mp_is_pic_centered_condition_bt_node)

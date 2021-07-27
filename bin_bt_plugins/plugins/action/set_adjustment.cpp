@@ -50,9 +50,9 @@ BT::NodeStatus SetAdjustment::tick()
   float view_center_y = lid.image_height / 2;
   
   if (view_center_x >= lid.centre_x) {
-    x_goal = param_x;
+    x_goal = -param_x;
   } else {
-    x_goal = -param_x; 
+    x_goal = param_x; 
   }
   
   if (view_center_y >= lid.centre_y) {

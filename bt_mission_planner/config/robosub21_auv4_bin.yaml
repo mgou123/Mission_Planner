@@ -1,4 +1,4 @@
-default_mission_planner_bt_xml: auv4/bin_mission_test.xml
+default_mission_planner_bt_xml: auv4/bin_mission2.xml
 plugin_lib_names:
   - mp_navigate_to_pose_bt_node
   - mp_navigate_control_bt_node
@@ -18,6 +18,8 @@ plugin_lib_names:
   - mp_set_adjustment_bt_node
   - mp_is_lid_seen_condition_bt_node
   - mp_is_pic_centered_condition_bt_node
+  - mp_is_enough_pic_seen_condition_bt_node
+  - mp_manipulators_service_bt_node
 
 
 odom_topic: /auv4/nav/odom_ned

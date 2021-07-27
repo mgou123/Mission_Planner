@@ -69,9 +69,10 @@ BT::NodeStatus CalcPicAngle::CalcPicAngle::tick()
   float view_center_y = pic.image_height / 2;
   
   x = ratio * (pic.centre_x - view_center_x);
-  y = ratio * (pic.centre_y - view_center_y);
+  y = - ratio * (pic.centre_y - view_center_y);
 
-  
+  ROS_INFO("x is %f, y is %f", x, y);
+
   // if (abs(view_center_x - pic.centre_x) < center_offset_x) {
   //   y = ratio * (pic.centre_x - view_center_x);
   // } else if (abs(view_center_y - pic.centre_y) < center_offset_y) {

@@ -38,9 +38,9 @@ BT::NodeStatus ChoosePic::tick()
   }
 
   if (gate_side == "Gman") {
-    task_identifier = 0; 
-  } else if (gate_side == "Bootlegger") {
     task_identifier = 1; 
+  } else if (gate_side == "Bootlegger") {
+    task_identifier = 0; 
   } else {
     ROS_ERROR("[ChoosePic] Invalid side of gate!");
   }

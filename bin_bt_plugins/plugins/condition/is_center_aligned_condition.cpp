@@ -1,46 +1,48 @@
 #include <string>
 #include <memory>
 
-#include "bin_bt_plugins/condition/is_pic_centered_condition.hpp"
+#include "bin_bt_plugins/condition/is_center_aligned_condition.hpp"
 
 namespace mp_behavior_tree
 {
-IsPicCenteredCondition::IsPicCenteredCondition(
+IsCenterAlignedCondition::IsCenterAlignedCondition(
     const std::string & condition_name,
     const BT::NodeConfiguration & conf)
   : BT::ConditionNode(condition_name, conf) {}
 
-BT::NodeStatus IsPicCenteredCondition::tick()
+BT::NodeStatus IsCenterAlignedCondition::tick()
 {   
   vision::DetectedObjects objects;
   vision::DetectedObject pic;
   std::string identifier;
-  float center_offset_x; 
+  float center_offset_x;
   float center_offset_y;
+  float x_ratio; 
+  float y_ratio; 
 
   if (!getInput("vision_objects", objects)) {
-    ROS_ERROR("[IsPicCentered] objects not provided!");
+    ROS_ERROR("[IsCenterAligned] objects not provided!");
     return BT::NodeStatus::FAILURE;
   } else {
     getInput("vision_objects", objects);
   }
   
   if (!getInput("pic_identifier", identifier)) {
-    ROS_ERROR("[IsPicCentered] pic_identifier not provided!");
+    ROS_ERROR("[IsCenterAligned] pic_identifier not provided!");
     return BT::NodeStatus::FAILURE;
   } else {
     getInput("pic_identifier", identifier);
   }
 
   if (!getInput("center_offset_x", center_offset_x)) {
-    ROS_ERROR("[IsPicCentered] center_offset_x not provided!");
+    ROS_ERROR("[IsCenterAligned] center_offset_x not provided!");
     return BT::NodeStatus::FAILURE;
   } else {
     getInput("center_offset_x", center_offset_x);
   }
 
   if (!getInput("center_offset_y", center_offset_y)) {
-    ROS_ERROR("[IsPicCentered] center_offset_y not provided!");
+    ROS_ERROR("[IsCenterAligned] center_offset_y not provided!");
     return BT::NodeStatus::FAILURE;
   } else {
     getInput("center_offset_y", center_offset_y);
@@ -55,17 +57,17 @@ BT::NodeStatus IsPicCenteredCondition::tick()
       pic = object;
       float pic_center_x = object.centre_x;
       float pic_center_y = object.centre_y;
-      float view_center_x = object.image_width / 2;
-      float view_center_y = object.image_height / 2;
+      float target_x = object.image_width * x_ratio;
+      float target_y = object.image_height * y_ratio;
       ROS_INFO("pic_center_x %f", pic_center_x);
       ROS_INFO("pic_center_y %f", pic_center_y);
-      ROS_INFO("view_center_x %f", view_center_x);
-      ROS_INFO("view_center_y %f", view_center_y);
-      if (abs(view_center_x - pic_center_x) < center_offset_x && abs(view_center_y - pic_center_y) < center_offset_y) {
-        ROS_INFO("pic is centered");
+      ROS_INFO("target_x %f", target_x);
+      ROS_INFO("target_xy %f", target_y);
+      if (abs(target_x - pic_center_x) < center_offset_x && abs(target_y - pic_center_y) < center_offset_y) {
+        ROS_INFO("pic is aligned");
         return BT::NodeStatus::SUCCESS;
       } else {
-        ROS_INFO("pic is not centered");
+        ROS_INFO("pic is not aligned");
         return BT::NodeStatus::FAILURE;
       }
     }
@@ -80,5 +82,5 @@ BT::NodeStatus IsPicCenteredCondition::tick()
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<mp_behavior_tree::IsPicCenteredCondition>("IsPicCentered");
+  factory.registerNodeType<mp_behavior_tree::IsCenterAlignedCondition>("IsCenterAligned");
 }

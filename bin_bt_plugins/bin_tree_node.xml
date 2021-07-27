@@ -33,11 +33,22 @@
       <output_port name="result">calculated result</output_port>
     </Action>
 
+    <Action ID="Multiplier">
+      <input_port name="orig_value">value before multiplying</input_port>
+      <input_port name="value_mul">value to multiply</input_port>
+      <output_port name="result">calculated result</output_port>
+    </Action>
+
     <!-- ############################### CONDITION NODES ############################## -->
 
     <Condition ID="IsLidSeen">
       <input_port name="vision_objects">Detected Objects</input_port>
       <input_port name="lid_num">larger than or equal to lid_num of lids are seen</input_port>
+    </Condition>
+
+    <Condition ID="IsEnoughPicSeen">
+      <input_port name="vision_objects">Detected Objects</input_port>
+      <input_port name="pic_num">larger than or equal to pic_num of pics are seen</input_port>
     </Condition>
 
     <Condition ID="IsPicCentered">
@@ -46,6 +57,23 @@
       <input_port name="center_offset_x">allowed offset to center on x-axis</input_port>
       <input_port name="center_offset_y">allowed offset to center on y-axis</input_port>
     </Condition>
+
+    <Condition ID="IsCenterAligned">
+      <input_port name="vision_objects">Detected Objects</input_port>
+      <input_port name="pic_identifier">Which pic to go</input_port>
+      <input_port name="center_offset_x">allowed offset to center on x-axis</input_port>
+      <input_port name="center_offset_y">allowed offset to center on y-axis</input_port>
+      <input_port name="x_ratio">target relative ratio of x</input_port>
+      <input_port name="y_ratio">target relative ratio of y</input_port>
+    </Condition>
+
+    <Condition ID="IsAreaEnough">
+      <input_port name="vision_objects">Detected Objects</input_port>
+      <input_port name="pic_identifier">Which pic to go</input_port>
+      <input_port name="area">area benchmark</input_port>
+    </Condition>
+
+    
     <!-- ############################### CONTROL NODES ################################ -->
 
     <!-- ############################### DECORATOR NODES ############################## -->

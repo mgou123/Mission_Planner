@@ -18,7 +18,7 @@ plugin_lib_names:
   - mp_set_adjustment_bt_node
   - mp_is_lid_seen_condition_bt_node
   - mp_is_pic_centered_condition_bt_node
-
+  - mp_manipulators_service_bt_node
 
 odom_topic: /auv3/nav/odom_ned
 transform_tolerance: 0.1
