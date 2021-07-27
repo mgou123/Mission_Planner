@@ -1,6 +1,7 @@
 <root main_tree_to_execute="MainTree">
-  <include ros_pkg="bt_mission_planner" path="behavior_trees/robosub21/gate_task_sim.xml"/> -->
+  <include ros_pkg="bt_mission_planner" path="behavior_trees/robosub21/gate_task_sim.xml"/>
   <include ros_pkg="bt_mission_planner" path="behavior_trees/robosub21/buoy_task_sim.xml"/>
+  <include ros_pkg="bt_mission_planner" path="behavior_trees/robosub21/torpedo_task_sim.xml"/>
 
   <BehaviorTree ID="MainTree">
     <Sequence>
@@ -41,6 +42,16 @@
       <NavigateToPose server_name="{locomotion_server_name}" goal="10;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
       <NavigateToPose server_name="{locomotion_server_name}" goal="0;1" depth_lock="{standard_depth}" />
 
+      <!-- Run torpedo task -->
+      <SubTree ID="TorpedoTaskTree" node="node" 
+      vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" 
+      server_name="locomotion_server_name" pose_topic_name="pose_topic_name" 
+      standard_depth="standard_depth" fixed_yaw="standard_yaw" />
+
+      <!-- Move Back -->
+      <NavigateToPose server_name="{locomotion_server_name}" goal="-2;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
+
+      <!-- Travel to bin task -->
       <ControllerService service_name="/auv3/controller" enable="false" />
     </Sequence>
   </BehaviorTree>

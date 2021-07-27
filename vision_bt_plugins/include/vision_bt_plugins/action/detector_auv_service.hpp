@@ -26,7 +26,8 @@ public:
     {
         return providedBasicPorts(
         {
-            BT::InputPort<std::vector<std::string>>("objects", "names of objects to be detected")
+            BT::InputPort<std::vector<std::string>>("objects", "names of objects to be detected"),
+            BT::InputPort<bool>("enable", "True to enable vision. False to disable. Defaults to True")
         });
     }
 };

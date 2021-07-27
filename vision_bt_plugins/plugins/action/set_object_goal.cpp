@@ -44,9 +44,13 @@ BT::NodeStatus SetObjectGoal::tick() {
       geometry_msgs::PoseStamped output_pose;
       output_pose.pose.position.x = (double)(object.rel_coords[0]);
       output_pose.pose.position.y = (double)(object.rel_coords[1]);
-      output_pose.pose.position.z = (double)(object.rel_coords[2]);
+      output_pose.pose.position.z = (double)(-object.world_coords[2]); // Flip this sign to negative
+      
       setOutput("goal", output_pose);
-      setOutput("absolute_depth", (double)(object.world_coords[2]));
+      setOutput("absolute_depth", (double)(-object.world_coords[2]));
+      ROS_INFO("[SetObjectGoal]: Depth is : %f", (double)(-object.world_coords[2]));
+
+
       setOutput("absolute_yaw", (double)(object.angle));
 
       return BT::NodeStatus::SUCCESS;

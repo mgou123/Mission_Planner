@@ -14,22 +14,30 @@ DetectorAUVService::DetectorAUVService(
 
 void DetectorAUVService::on_tick() {
     std::vector<std::string> objects;
+    bool toEnable;
 
     getInput("objects", objects);
+    if (!getInput("enable", toEnable)){
+      toEnable = true;
+      ROS_WARN("[DetectorAUVService]: No status given. Call defaults to Enable");
+    }
+
     if (!objects.size()) {
-      ROS_WARN("No objects provided in input port! Setting all object fields to false..");
+      ROS_WARN("[DetectorAUVService]: No objects provided in input port! Setting all object fields to false..");
       return;
     }
+    
     yaml_req_ = "{";
     for (auto object : objects) {
-      yaml_req_ += "'" + object + "':true, ";  
+      // yaml_req_ += "'" + object + "':true, ";
+      yaml_req_ += "'" + object + "':" + (toEnable ? "true" : "false") + ", ";  
     }
     yaml_req_ += "}";
 }
 
 BT::NodeStatus DetectorAUVService::on_success() {
   if(!yaml_req_.empty()) {
-    ROS_INFO("Service call completed. Response: %s", yaml_res_.c_str());
+    ROS_INFO("[DetectorAUVService]: Service call completed. Response: %s", yaml_res_.c_str());
   }
   return BT::NodeStatus::SUCCESS;
 }

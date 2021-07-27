@@ -171,6 +171,9 @@ list(APPEND plugin_libs mp_navigate_to_pose_bt_node)
 add_library(mp_manipulators_service_bt_node SHARED plugins/action/manipulators_service.cpp)
 list(APPEND plugin_libs mp_manipulators_service_bt_node)
 
+add_library(mp_modify_goal_bt_node SHARED plugins/action/modify_goal.cpp)
+list(APPEND plugin_libs mp_modify_goal_bt_node)
+
 foreach(bt_plugin ${plugin_libs})
   add_dependencies(${bt_plugin} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
   target_link_libraries(${bt_plugin}

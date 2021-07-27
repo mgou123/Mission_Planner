@@ -21,6 +21,13 @@
       <input_port name="retract_linear">True to close grabber, false to disable it</input_port>
     </Action>
 
+    <Action ID="ModifyGoal">
+      <input_port name="original_pose">Original Pose. Geometry Msg PoseStamped</input_port> 
+      <input_port name="zeroed_components">Components to be zeroed. Accepts x,y,z only. Comma-separated</input_port> 
+      <input_port name="modifying_pose">Modifying Pose to be added to Original Pose. Geometry Msg PoseStamped</input_port> 
+      <output_port name="final_pose">Final Pose. Geometry Msg PoseStamped</output_port>
+    </Action>
+
     <!-- ############################### CONDITION NODES ############################## -->
     
     <!-- ############################### CONTROL NODES ################################ -->

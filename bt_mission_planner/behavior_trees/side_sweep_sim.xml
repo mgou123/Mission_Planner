@@ -1,0 +1,17 @@
+ <root main_tree_to_execute = "SideSweepTree" >
+    <BehaviorTree ID="SideSweepTree">
+        <Sequence>
+            <Repeat num_cycles="3">
+                <NavigateToPose server_name="{server_name}" goal="0;0;0;-5" depth_lock="{depth}" yaw_tolerance="1"/>
+            </Repeat>
+
+            <NavigateToPose server_name="{server_name}" goal="0;0" yaw_lock="{original_yaw}" depth_lock="{depth}" yaw_tolerance="1"/>
+
+            <Repeat num_cycles="3">
+                <NavigateToPose server_name="{server_name}" goal="0;0;0;5" depth_lock="{depth}" yaw_tolerance="1"/>
+            </Repeat>
+
+            <NavigateToPose server_name="{server_name}" goal="0;0" yaw_lock="{original_yaw}" depth_lock="{depth}" yaw_tolerance="1" />
+        </Sequence>
+    </BehaviorTree>
+</root>
