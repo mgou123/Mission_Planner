@@ -1,0 +1,9 @@
+<root main_tree_to_execute = "TorpedoTaskTree" >
+  <BehaviorTree ID="TorpedoTaskTree">
+    <ManipulatorsService
+      service_name="/auv3/manipulators"
+      top_torpedo="false"
+      bottom_torpedo="false"
+      dropper="false" grabber="true" extend_linear="false" retract_linear="false" />
+  </BehaviorTree>
+</root>

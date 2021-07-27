@@ -1,0 +1,32 @@
+ <root main_tree_to_execute = "BuoyTaskTree" >
+    <include ros_pkg="bt_mission_planner" path="behavior_trees/side_sweep.xml"/>
+    <BehaviorTree ID="BuoyTaskTree">
+        <Sequence>
+            <SetBlackboard output_key="vision_target" value="badge"/>
+            <!-- How to make this into a list lol -->
+            <DetectorAUVService service_name="{vision_service_name}" objects="badge"/>
+
+            <ReactiveFallback>
+                <Sequence>
+                    <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+                    <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
+                </Sequence>
+                <SubTree ID="SideSweepTree" node="node" server_name="server_name" original_yaw="fixed_yaw" depth="standard_depth" />
+            </ReactiveFallback>
+
+            <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
+            <NavigateToPose server_name="{server_name}" goal="0;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
+
+            <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="20.0" />
+            <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_target}" goal="{object_goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
+
+            <Inverter>
+                <Timeout msec="60000">
+                <NavigateToPose server_name="{server_name}" goal="{object_goal}" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}"/>
+                </Timeout>
+            </Inverter>
+
+
+        </Sequence>
+    </BehaviorTree>
+</root>
