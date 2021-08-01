@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="BehaviorTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="BehaviorTree">
+        <Sequence>
+            <Action ID="ControllerService" enable="true" service_name="/auv3/controller"/>
+            <SetBlackboard output_key="vision_topic" value="/auv3/vision/external/detected"/>
+            <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
+            <SetBlackboard output_key="trial_dis" value="0.4"/>
+            <Action ID="DetectorAUVService" objects="bin" service_name="/auv3/vision/detector"/>
+            <ReactiveFallback>
+                <Sequence>
+                    <Action ID="UpdateDetectedObjects" queue_size="" result="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Condition ID="IsLidSeen" lid_num="1" vision_objects="{vision_detected}"/>
+                </Sequence>
+                <Repeat num_cycles="5">
+                    <Sequence>
+                        <Action ID="NavigateControl" depth="0.5" forward="{trial_dis}" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0.0"/>
+                        <Action ID="NavigateControl" depth="0.5" forward="0.0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="30"/>
+                        <Action ID="Adder" orig_value="{trial_dis}" result="{trial_dis}" value_added="0.1"/>
+                    </Sequence>
+                </Repeat>
+            </ReactiveFallback>
+            <ReactiveFallback>
+                <Sequence>
+                    <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Condition ID="IsLidSeen" lid_num="2" vision_objects="{vision_detected}"/>
+                </Sequence>
+                <Sequence>
+                    <Action ID="SetAdjustment" param_x="0.03" param_y="0.03" vision_objects="{vision_detected}" x_goal="adjust_x" y_goal="adjust_y"/>
+                    <Action ID="NavigateControl" depth="0.5" forward="{adjust_x}" server_name="" server_timeout="/auv3/LocomotionServer" sideways="{adjust_y}" yaw="0.0"/>
+                </Sequence>
+            </ReactiveFallback>
+            <Action ID="ChoosePic" pic_identifier="pic" gate_side="Bootlegger" vision_objects="{vision_detected}"/>
+            <ReactiveFallback>
+                <Sequence>
+                    <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Condition ID="IsPicCentered" center_offset_x="15" center_offset_y="15" pic_identifier="{pic}" vision_objects="{vision_detected}"/>
+                </Sequence>
+                <Sequence>
+                    <Action ID="CalcPicAngle" pic_identifier="{pic}" ratio="0.01" vision_objects="{vision_detected}" x_goal="go_pic_x" y_goal="go_pic_y" yaw_goal="go_pic_yaw"/>
+                    <Action ID="NavigateControl" depth="0.5" forward="{go_pic_y}" server_name="/auv3/LocomotionServer" server_timeout="" sideways="{go_pic_x}" yaw="{go_pic_yaw}"/>
+                </Sequence>
+            </ReactiveFallback>
+            <Action ID="NavigateToPose" depth_lock="" goal="0;0;0.7;0" relative="true" server_name="/auv3/LocomotionServer" server_timeout="" yaw_lock=""/>
+            <Action ID="ManipulatorService" top_torpedo="false" bottom_torpedo="false" dropper="true" grabber="false" extend_linear="false" retract_linear="false"/>
+        </Sequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <TreeNodesModel>
+        <Action ID="Adder">
+            <input_port name="orig_value">value before adding</input_port>
+            <output_port name="result">calculated result</output_port>
+            <input_port name="value_added">value to add</input_port>
+        </Action>
+        <Action ID="CalcPicAngle">
+            <input_port name="center_offset_x">allowed offset to center on x-axis</input_port>
+            <input_port name="center_offset_y">allowed offset to center on y-axis</input_port>
+            <input_port name="pic_identifier">Which pic to go</input_port>
+            <input_port name="ratio">ratio between camera pixel value and real-world coordinate</input_port>
+            <input_port name="vision_objects">Detected Objects</input_port>
+            <output_port name="x_goal">sideways move</output_port>
+            <output_port name="y_goal">forward move</output_port>
+            <output_port name="yaw_goal">yaw move</output_port>
+        </Action>
+        <Action ID="ChoosePic">
+            <output_port name="pic_identifier">the pic chosen to throw the ball</output_port>
+            <input_port name="vision_objects">Detected Objects</input_port>
+        </Action>
+        <Action ID="ControllerService">
+            <input_port name="enable">True to enable controls, false to disable controls</input_port>
+            <input_port name="service_name">Name of service</input_port>
+        </Action>
+        <Action ID="ConvertOdomToPose">
+            <input_port name="odom_pose">Pose as a nav_msgs::Odometry message</input_port>
+            <output_port name="pose">Pose as a geometry_msgs::PoseStamped message</output_port>
+        </Action>
+        <Action ID="DetectorAUVService">
+            <input_port name="objects">Names of objects to be detected</input_port>
+            <input_port name="service_name">Name of service</input_port>
+        </Action>
+        <Decorator ID="DynamicTimeout">
+            <input_port name="add_sec">Additional time carried over from previous node</input_port>
+            <output_port name="extra_sec">Time left over at this node</output_port>
+            <input_port name="sec">After a certain amount of time, halt() the child if it's still running</input_port>
+        </Decorator>
+        <Action ID="FindBuoy">
+            <output_port name="depth">Depth</output_port>
+            <output_port name="forward">Forward</output_port>
+            <output_port name="sideways">Sideways</output_port>
+            <input_port name="target_identity">Target as goal</input_port>
+            <input_port name="vision_objects">Detected Objects</input_port>
+            <output_port name="yaw">Yaw</output_port>
+        </Action>
+        <Action ID="GetYawBetweenPoses">
+            <output_port name="absolute yaw">Absolute yaw to turn to the target pose from the source pose</output_port>
+            <output_port name="relative_yaw">Relative yaw to turn to the target pose from the source pose</output_port>
+            <input_port name="source_pose">Initial starting pose</input_port>
+            <input_port name="target_pose">Final pose</input_port>
+        </Action>
+        <Condition ID="IsDistanceTraveled">
+            <input_port name="distance">Distance to check if passed</input_port>
+            <input_port name="pose">Latest robot pose</input_port>
+        </Condition>
+        <Condition ID="IsGoalReached">
+            <input_port name="goal">Destination</input_port>
+            <input_port name="pose">Latest robot pose</input_port>
+        </Condition>
+        <Condition ID="IsGoalUpdated">
+            <input_port name="goal">Destination</input_port>
+        </Condition>
+        <Condition ID="IsLidSeen">
+            <input_port name="lid_num">larger than or equal to lid_num of lids are seen</input_port>
+            <input_port name="vision_objects">Detected Objects</input_port>
+        </Condition>
+        <Condition ID="IsPicCentered">
+            <input_port name="center_offset_x">allowed offset to center on x-axis</input_port>
+            <input_port name="center_offset_y">allowed offset to center on y-axis</input_port>
+            <input_port name="pic_identifier">Which pic to go</input_port>
+            <input_port name="vision_objects">Detected Objects</input_port>
+        </Condition>
+        <Condition ID="IsPoseUpdated">
+            <input_port name="pose">Latest robot pose</input_port>
+        </Condition>
+        <Condition ID="IsTimeExpired">
+            <input_port name="seconds">Time to check if expired</input_port>
+        </Condition>
+        <Action ID="MoveForwardDemo">
+            <output_port name="goal">Goal</output_port>
+            <input_port name="pose">Pose</input_port>
+        </Action>
+        <Action ID="NavigateControl">
+            <input_port name="depth">Depth</input_port>
+            <input_port name="forward">Forward</input_port>
+            <input_port name="server_name">Action server name</input_port>
+            <input_port name="server_timeout">Timeout for action server to respond</input_port>
+            <input_port name="sideways">Sideways</input_port>
+            <input_port name="yaw">yaw</input_port>
+        </Action>
+        <Action ID="NavigateToPose">
+            <input_port name="depth_lock">Depth to lock to. If specified, relative depth in pose will be ignored.</input_port>
+            <input_port name="goal">Destination to plan to</input_port>
+            <input_port name="relative">Set to true to use relative coordinates</input_port>
+            <input_port name="server_name">Action server name</input_port>
+            <input_port name="server_timeout">Timeout for action server to respond</input_port>
+            <input_port name="yaw_lock">Yaw to lock to. If specified, relative yaw in pose will be ignored.</input_port>
+        </Action>
+        <Action ID="SetAdjustment">
+            <input_port name="param_x">x unit movement</input_port>
+            <input_port name="param_y">y unit movement</input_port>
+            <input_port name="vision_objects">Detected Objects</input_port>
+            <output_port name="x_goal">sideways move</output_port>
+            <output_port name="y_goal">forward move</output_port>
+        </Action>
+        <Action ID="SetRelativeGoal">
+            <input_port name="base_frame">Base frame</input_port>
+            <input_port name="global_frame">Global frame</input_port>
+            <output_port name="global_goal">Port to set goal to</output_port>
+            <input_port name="pose">Current pose</input_port>
+            <input_port name="relative_goal">Relative pose goal (refer to bt conversions for specification)</input_port>
+        </Action>
+        <Action ID="SplitPoseComponents">
+            <input_port name="pose">Geometry pose</input_port>
+            <output_port name="x">x value</output_port>
+            <output_port name="y">y value</output_port>
+            <output_port name="yaw">yaw value</output_port>
+            <output_port name="z">z value</output_port>
+        </Action>
+        <Action ID="UpdateDetectedObjects">
+            <input_port name="queue_size">Topic queue size </input_port>
+            <output_port name="result">Name of output port to write to</output_port>
+            <input_port name="timeout_sec">Timeout for waiting for message publish</input_port>
+            <input_port name="topic_name">Topic name</input_port>
+        </Action>
+        <Action ID="UpdatePose">
+            <output_port name="depth">Port to write depth value to</output_port>
+            <input_port name="queue_size">Topic queue size </input_port>
+            <output_port name="result">Output port to write message result to</output_port>
+            <input_port name="timeout_sec">Timeout for waiting for message publish</input_port>
+            <input_port name="topic_name">Topic name</input_port>
+        </Action>
+    </TreeNodesModel>
+    <!-- ////////// -->
+</root>
+

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<root>
+  <TreeNodesModel>
+    <!-- ############################### ACTION NODES ################################# -->
+    <Action ID="FindBuoy">
+        <input_port name="vision_objects">Detected Objects</input_port>
+        <input_port name="target_identity">Target as goal</input_port>
+        <output_port name="forward">Forward</output_port>
+        <output_port name="sideways">Sideways</output_port>
+        <output_port name="depth">Depth</output_port>
+        <output_port name="yaw">Yaw</output_port>
+    </Action>
+
+    <!-- ############################### CONDITION NODES ############################## -->
+    
+    <!-- ############################### CONTROL NODES ################################ -->
+
+    <!-- ############################### DECORATOR NODES ############################## -->
+
+  </TreeNodesModel>
+</root>

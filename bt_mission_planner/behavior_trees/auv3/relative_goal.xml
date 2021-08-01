@@ -2,18 +2,26 @@
   <BehaviorTree ID="MainTree">
     <Sequence>
       <ControllerService service_name="/auv3/controller" enable="true"/>
-      <DetectorAUVService service_name="/auv/vision/detector" objects="buoy,red_buoy,green_buoy"/>
       <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
+      
+      <ReactiveFallback>
+        <IsTimeExpired seconds="10"/>
+        <NavigateToPose server_name="/auv3/LocomotionServer" goal="0;0;0.8;0" relative="true"/>
+      </ReactiveFallback>
 
-      <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{current_depth}"/>
+      <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}"/>
       <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
       
-      <Repeat num_cycles="4">
-        <ReactiveSequence>
-          <NavigateToPose server_name="/auv3/LocomotionServer" goal="2;0" relative="true" depth_lock="{current_depth}"/>
-          <NavigateToPose server_name="/auv3/LocomotionServer" goal="0;0;0;90" relative="true" depth_lock="{current_depth}"/>
-        </ReactiveSequence>
-      </Repeat>
+      <ReactiveSequence>
+        <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}"/>
+        <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+        <NavigateToPose server_name="/auv3/LocomotionServer" goal="2;0;0.8;0" relative="true"/>
+        <NavigateToPose server_name="/auv3/LocomotionServer" goal="0;1;0.8;0" relative="true"/>
+        <NavigateToPose server_name="/auv3/LocomotionServer" goal="2;0;0.8;0" relative="true"/>
+        <Repeat num_cycles="4">
+          <NavigateToPose server_name="/auv3/LocomotionServer" goal="0;0;0.8;90" relative="true"/>
+        </Repeat>
+      </ReactiveSequence>
       <ControllerService service_name="/auv3/controller" enable="false" />
     </Sequence>
   </BehaviorTree>

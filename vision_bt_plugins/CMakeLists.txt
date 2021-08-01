@@ -131,8 +131,8 @@ include_directories(
 add_library(mp_detector_auv_service_bt_node SHARED plugins/action/detector_auv_service.cpp)
 list(APPEND plugin_libs mp_detector_auv_service_bt_node)
 
-add_library(mp_ml_detector_service_bt_node SHARED plugins/action/ml_detector_service.cpp)
-list(APPEND plugin_libs mp_ml_detector_service_bt_node)
+# add_library(mp_ml_detector_service_bt_node SHARED plugins/action/ml_detector_service.cpp)
+# list(APPEND plugin_libs mp_ml_detector_service_bt_node)
 
 add_library(mp_update_detected_objects_bt_node SHARED plugins/action/update_detected_objects.cpp)
 list(APPEND plugin_libs mp_update_detected_objects_bt_node)
