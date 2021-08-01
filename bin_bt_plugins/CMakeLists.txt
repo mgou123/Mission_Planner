@@ -144,6 +144,9 @@ list(APPEND plugin_libs mp_calc_pic_angle_bt_node)
 add_library(mp_choose_pic_bt_node SHARED plugins/action/choose_pic.cpp)
 list(APPEND plugin_libs mp_choose_pic_bt_node)
 
+add_library(mp_calc_cover_setpoint_bt_node SHARED plugins/action/calc_cover_setpoint.cpp)
+list(APPEND plugin_libs mp_calc_cover_setpoint_bt_node)
+
 add_library(mp_set_adjustment_bt_node SHARED plugins/action/set_adjustment.cpp)
 list(APPEND plugin_libs mp_set_adjustment_bt_node)
 
@@ -155,6 +158,18 @@ list(APPEND plugin_libs mp_is_enough_pic_seen_condition_bt_node)
 
 add_library(mp_is_pic_centered_condition_bt_node SHARED plugins/condition/is_pic_centered_condition.cpp)
 list(APPEND plugin_libs mp_is_pic_centered_condition_bt_node)
+
+add_library(mp_is_center_aligned_condition_bt_node SHARED plugins/condition/is_center_aligned_condition.cpp)
+list(APPEND plugin_libs mp_is_center_aligned_condition_bt_node)
+
+add_library(mp_is_handle_flat_condition_bt_node SHARED plugins/condition/is_handle_flat_condition.cpp)
+list(APPEND plugin_libs mp_is_handle_flat_condition_bt_node)
+
+add_library(mp_is_full_bin_seen_condition_bt_node SHARED plugins/condition/is_full_bin_seen_condition.cpp)
+list(APPEND plugin_libs mp_is_full_bin_seen_condition_bt_node)
+
+add_library(mp_is_part_bin_seen_condition_bt_node SHARED plugins/condition/is_part_bin_seen_condition.cpp)
+list(APPEND plugin_libs mp_is_part_bin_seen_condition_bt_node)
 
 foreach(bt_plugin ${plugin_libs})
   add_dependencies(${bt_plugin} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

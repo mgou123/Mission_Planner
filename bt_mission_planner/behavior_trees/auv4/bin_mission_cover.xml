@@ -9,6 +9,8 @@
             <SetBlackboard output_key="trial_dis" value="0.6"/>
             <Action ID="DetectorAUVService" objects="bin" service_name="/auv4/vision/detector"/>
                     <Action ID="NavigateControl" depth="0.3" forward="{go_pic_y}" server_name="/auv4/LocomotionServer" server_timeout="" sideways="{go_pic_x}" yaw="{go_pic_yaw}"/>
+            
+            <!-- Move in spiral until seeing one lid -->
             <ReactiveFallback>
                 <Sequence>
                     <Action ID="UpdateDetectedObjects" queue_size="" result="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
@@ -22,6 +24,22 @@
                     </Sequence>
                 </Repeat>
             </ReactiveFallback>
+
+            <!-- ensure that a full handle is in sight-->
+            <Action ID="CalcPicAngle" pic_identifier="Lid" ratio="0.001" vision_objects="{vision_detected}" x_goal="go_pic_x" y_goal="go_pic_y" yaw_goal="go_pic_yaw"/>
+            
+            <!-- turn until handle is horizontal -->
+            <ReactiveFallback>
+                <Action ID="IsHandleFlat" vision_objects="{vision_detected}" flat_ratio="0.2"/>
+                <Action ID="NavigateControl" depth="0.3" forward="0.0" server_name="/auv4/LocomotionServer" server_timeout="" sideways="0.0" yaw="180"/>
+            </ReactiveFallback>
+            
+            <!-- adjust position until a full bin is seen -->
+            <ReactiveFallback>
+                 <Action ID="IsFullBinSeen" vision_objects="{vision_detected}" flat_ratio="0.2"/>
+
+            </ReactiveFallback>
+
             <ReactiveFallback>
                 <Sequence>
                     <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
@@ -38,14 +56,12 @@
                     </Repeat>
                 </Sequence>
             </ReactiveFallback>
-            
-            
-            
             <Action ID="ChoosePic" pic_identifier="pic" gate_side="Gman" vision_objects="{vision_detected}"/>
             <ReactiveFallback>
                 <Sequence>
                     <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
-                    <Condition ID="IsPicCentered" center_offset_x="30" center_offset_y="30" pic_identifier="{pic}" vision_objects="{vision_detected}"/>
+                    <!-- <Condition ID="IsPicCentered" center_offset_x="30" center_offset_y="30" pic_identifier="{pic}" vision_objects="{vision_detected}"/> -->
+                    <Condition ID="IsCenterAligned" pic_identifier="{pic}" vision_objects="{vision_detected}" center_offset_x="30" center_offset_y="30" x_ratio="0.4" y_ratio="0.5"/>
                 </Sequence>
                 <Sequence>
                     <!-- <Action ID="CalcPicAngle" pic_identifier="{pic}" ratio="-0.06" vision_objects="{vision_detected}" x_goal="go_pic_x" y_goal="go_pic_y" yaw_goal="go_pic_yaw"/>
@@ -63,10 +79,9 @@
                 </Sequence>
             </ReactiveFallback>
             <Action ID="NavigateToPose" depth_lock="" goal="0;0;1.1;0" relative="true" server_name="/auv4/LocomotionServer" server_timeout="" yaw_lock=""/>
-            <Action ID="ManipulatorsService" top_torpedo="false" bottom_torpedo="false" dropper="true" grabber="false" extend_linear="false" retract_linear="false"/>
+            <Action ID="ManipulatorsService" service_name="/auv4/manipulators" top_torpedo="false" bottom_torpedo="false" dropper="true" grabber="false" extend_linear="false" retract_linear="false"/>
         </Sequence>
     </BehaviorTree>
-
     <!-- ////////// -->
     <TreeNodesModel>
         <Action ID="Adder">

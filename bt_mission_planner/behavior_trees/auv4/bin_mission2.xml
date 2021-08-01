@@ -42,7 +42,8 @@
             <ReactiveFallback>
                 <Sequence>
                     <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
-                    <Condition ID="IsPicCentered" center_offset_x="30" center_offset_y="30" pic_identifier="{pic}" vision_objects="{vision_detected}"/>
+                    <!-- <Condition ID="IsPicCentered" center_offset_x="30" center_offset_y="30" pic_identifier="{pic}" vision_objects="{vision_detected}"/> -->
+                    <Condition ID="IsCenterAligned" pic_identifier="{pic}" vision_objects="{vision_detected}" center_offset_x="30" center_offset_y="30" x_ratio="0.4" y_ratio="0.5"/>
                 </Sequence>
                 <Sequence>
                     <!-- <Action ID="CalcPicAngle" pic_identifier="{pic}" ratio="-0.06" vision_objects="{vision_detected}" x_goal="go_pic_x" y_goal="go_pic_y" yaw_goal="go_pic_yaw"/>

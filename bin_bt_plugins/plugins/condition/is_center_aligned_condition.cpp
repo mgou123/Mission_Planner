@@ -18,7 +18,7 @@ BT::NodeStatus IsCenterAlignedCondition::tick()
   float center_offset_x;
   float center_offset_y;
   float x_ratio; 
-  float y_ratio; 
+  float y_ratio;
 
   if (!getInput("vision_objects", objects)) {
     ROS_ERROR("[IsCenterAligned] objects not provided!");

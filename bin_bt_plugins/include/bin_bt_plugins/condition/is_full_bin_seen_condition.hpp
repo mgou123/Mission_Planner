@@ -1,8 +1,9 @@
-#ifndef BIN_BT_PLUGINS__CONDITION__IS_PIC_CENTERED_CONDITION_
-#define BIN_BT_PLUGINS__CONDITION__IS_PIC_CENTERED_CONDITION_
+#ifndef BIN_BT_PLUGINS__CONDITION__IS_FULL_BIN_SEEN_CONDITION_HPP_
+#define BIN_BT_PLUGINS__CONDITION__IS_FULL_BIN_SEEN_CONDITION_HPP_
 
 #include <memory>
 #include <string>
+#include <iostream>
 
 #include "ros/ros.h"
 #include "vision/DetectedObjects.h"
@@ -10,14 +11,14 @@
 
 namespace mp_behavior_tree
 {
-class IsPicCenteredCondition : public BT::ConditionNode 
+class IsFullBinSeenCondition : public BT::ConditionNode 
 {
 public:
-    IsPicCenteredCondition(
+    IsFullBinSeenCondition(
         const std::string & condition_name,
         const BT::NodeConfiguration & conf);
         
-    ~IsPicCenteredCondition() {};
+    ~IsFullBinSeenCondition() {};
 
     BT::NodeStatus tick() override;
 
@@ -25,9 +26,7 @@ public:
     {
         return {
             BT::InputPort<vision::DetectedObjects>("vision_objects", "Detected Objects"),
-            BT::InputPort<std::string>("pic_identifier", "Which pic to go"),
-            BT::InputPort<float>("center_offset_x", "allowed offset to center on x-axis"),
-            BT::InputPort<float>("center_offset_y", "allowed offset to center on y-axis")
+            BT::InputPort<float>("area_benchmark", "area benchmark that can be considered fully seen bin"),
         };
     }
 };
