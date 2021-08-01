@@ -42,7 +42,7 @@
 
       <!-- Align with vision_main_target's Small Hole (Hardcoded Values)-->
       <ModifyGoal original_pose="{goal}" zeroed_components="x" final_pose="{goal}"/>
-      <ModifyGoal original_pose="{goal}" modifying_pose="0;-0.05;-0.1" final_pose="{goal}"/> 
+      <ModifyGoal original_pose="{goal}" modifying_pose="0;0.05;-0.15" final_pose="{goal}"/> 
       <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{temp_yaw}"/>
 
       <!-- Re-acquire proper range -->
