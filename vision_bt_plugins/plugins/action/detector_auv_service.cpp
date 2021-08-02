@@ -38,7 +38,7 @@ void DetectorAUVService::on_tick() {
 BT::NodeStatus DetectorAUVService::on_success() {
   if(!yaml_req_.empty()) {
     ROS_INFO("[DetectorAUVService]: Service call completed. Response: %s", yaml_res_.c_str());
-  }
+  } 
   return BT::NodeStatus::SUCCESS;
 }
 

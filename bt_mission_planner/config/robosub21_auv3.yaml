@@ -1,4 +1,4 @@
-default_mission_planner_bt_xml: auv3/robosub21_sim.xml
+default_mission_planner_bt_xml: auv3/test_sim.xml
 plugin_lib_names:
   - mp_navigate_to_pose_bt_node
   - mp_set_relative_goal_bt_node

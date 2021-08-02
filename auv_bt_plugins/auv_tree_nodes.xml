@@ -28,6 +28,13 @@
       <output_port name="final_pose">Final Pose. Geometry Msg PoseStamped</output_port>
     </Action>
 
+    <Action ID="CalcPicAngle">
+      <input_port name="vision_objects">Detected Objects</input_port>
+      <input_port name="target">Which object to go to</input_port>
+      <input_port name="ratio">Ratio</input_port>
+      <output_port name="goal">Output Goal. Geometry Msg PoseStamped</output_port>
+    </Action>
+
     <!-- ############################### CONDITION NODES ############################## -->
     
     <!-- ############################### CONTROL NODES ################################ -->

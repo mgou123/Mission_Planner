@@ -49,9 +49,12 @@ BT::NodeStatus SetObjectGoal::tick() {
       setOutput("goal", output_pose);
       setOutput("absolute_depth", (double)(-object.world_coords[2]));
       ROS_INFO("[SetObjectGoal]: Depth is : %f", (double)(-object.world_coords[2]));
+      ROS_INFO("[SetObjectGoal]: Yaw is : %f", (double)(object.angle));
+      ROS_INFO("[SetObjectGoal]: World Yaw is : %f", (double)(object.world_yaw));
+      std::cout << object.angle << std::endl;
+      std::cout << object.world_yaw << std::endl;
 
-
-      setOutput("absolute_yaw", (double)(object.angle));
+      setOutput("absolute_yaw", (double)(object.world_yaw));
 
       return BT::NodeStatus::SUCCESS;
     }
