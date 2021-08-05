@@ -31,7 +31,7 @@
       <SubTree ID="TorpedoTaskTree" node="node" 
       vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" 
       server_name="locomotion_server_name" pose_topic_name="pose_topic_name" 
-      standard_depth="standard_depth" fixed_yaw="standard_yaw" />
+      standard_depth="standard_depth" fixed_yaw="fixed_yaw" />
 
       <!-- Move Back -->
       <!-- <NavigateToPose server_name="{locomotion_server_name}" goal="-2;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" /> -->

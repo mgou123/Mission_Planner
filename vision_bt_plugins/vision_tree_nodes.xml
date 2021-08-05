@@ -21,7 +21,14 @@
       <output_port name="absolute_yaw">Yaw of object</output_port>
     </Action>
 
-
+    <Action ID="ComputeGoal">
+      <input_port name="vision_objects">Objects detected by vision pipeline as a vision::DetectedObjects message</input_port>
+      <input_port name="target_identity">Target to be made as goal. String</input_port>
+      <input_port name="main_target">Main Target to extract range from. GeometryMsgs::Pose</input_port>
+      <output_port name="goal">Goal to move to</output_port>
+      <output_port name="absolute_depth">Depth of object</output_port>
+      <output_port name="absolute_yaw">Yaw of object</output_port>
+    </Action>
 
     <!-- ############################### CONDITION NODES ############################## -->
     

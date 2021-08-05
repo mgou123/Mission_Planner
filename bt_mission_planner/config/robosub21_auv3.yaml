@@ -16,6 +16,7 @@ plugin_lib_names:
   - mp_set_object_goal_bt_node
   - mp_manipulators_service_bt_node
   - mp_modify_goal_bt_node
+  - mp_compute_goal_bt_node
 
 odom_topic: /auv3/nav/odom_ned
 transform_tolerance: 0.1
@@ -24,4 +25,4 @@ bt_loop_duration: 10
 default_server_timeout: 20
 enable_groot_monitoring: false
 groot_zmq_publisher_port: 1666
-groot_zmq_server_port: 1667 
+groot_zmq_server_port: 1667

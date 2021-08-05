@@ -22,6 +22,7 @@ void NavigateToPose::on_tick() {
     geometry_msgs::PoseStamped goal_pose_stamped;
     double depth;
     double roll, pitch, yaw;
+    bool rel;
 
     if (!getInput("goal", goal_pose_stamped)) {
         ROS_ERROR("[NavigateToPose] goal not provided!");
@@ -53,12 +54,17 @@ void NavigateToPose::on_tick() {
       goal_.yaw_rel = true;
     } 
 
+    if (!getInput("yaw_lock_relative", rel)) {
+      ROS_WARN("[NavigateToPose]: yaw_lock_relative not passed. Defaults to false");
+      rel = false;
+    }
+
     if (getInput("depth_lock", depth)) {
         goal_.depth_setpoint = depth;
     }
 
     if (getInput("yaw_lock", yaw)) {
-      goal_.yaw_rel = false;
+      goal_.yaw_rel = rel;
       goal_.yaw_setpoint = yaw;
     }
 

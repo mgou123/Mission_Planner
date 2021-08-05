@@ -140,6 +140,9 @@ list(APPEND plugin_libs mp_update_detected_objects_bt_node)
 add_library(mp_set_object_goal_bt_node SHARED plugins/action/set_object_goal.cpp)
 list(APPEND plugin_libs mp_set_object_goal_bt_node)
 
+add_library(mp_compute_goal_bt_node SHARED plugins/action/compute_goal.cpp)
+list(APPEND plugin_libs mp_compute_goal_bt_node)
+
 foreach(bt_plugin ${plugin_libs})
   add_dependencies(${bt_plugin} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
   target_link_libraries(${bt_plugin}
