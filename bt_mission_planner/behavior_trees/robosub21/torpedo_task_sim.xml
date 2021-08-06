@@ -23,7 +23,7 @@
       </ReactiveFallback>
 
       <!-- TODO: YAW ALIGNMENT HERE -->
-      <NavigateToPose server_name="{server_name}" goal="0;0;0;0" yaw_lock="-90" depth_lock="{standard_depth}" />
+      <NavigateToPose server_name="{server_name}" goal="0;0;0;0" yaw_lock="0" depth_lock="{standard_depth}" />
 
       <!-- Go To Hole TODO: Make this modular for target_identity-->
       <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>

@@ -27,9 +27,9 @@ namespace mp_behavior_tree {
           final_pose.pose.position.y = original_pose.pose.position.y + modifying_pose.pose.position.y;
           final_pose.pose.position.z = original_pose.pose.position.z + modifying_pose.pose.position.z; 
 
-          std::cout << "Original Pose is " << original_pose.pose.position.x << ", " << original_pose.pose.position.y << ", " << original_pose.pose.position.z;
-          std::cout << "Modifying Pose is " << modifying_pose.pose.position.x << ", " << modifying_pose.pose.position.y << ", " << modifying_pose.pose.position.z;
-          std::cout << "Final Pose is " << final_pose.pose.position.x << ", " << final_pose.pose.position.y << ", " << final_pose.pose.position.z;
+          std::cout << "Original Pose is " << original_pose.pose.position.x << ", " << original_pose.pose.position.y << ", " << original_pose.pose.position.z << std::endl;
+          std::cout << "Modifying Pose is " << modifying_pose.pose.position.x << ", " << modifying_pose.pose.position.y << ", " << modifying_pose.pose.position.z << std::endl;
+          std::cout << "Final Pose is " << final_pose.pose.position.x << ", " << final_pose.pose.position.y << ", " << final_pose.pose.position.z << std::endl;
 
           setOutput("final_pose", final_pose);
           return BT::NodeStatus::SUCCESS;

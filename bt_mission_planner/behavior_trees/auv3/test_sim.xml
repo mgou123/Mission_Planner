@@ -22,10 +22,10 @@
       <!-- Goal X: 4 - 6 -->
       <!-- Goal Y: 4 - 6 -->
       <!-- Goal Yaw: -90 +-15 -->
-      <!-- <NavigateToPose relative="false" server_name="{locomotion_server_name}" goal="5;5;0.8" yaw_lock="-75"/> -->
+      <NavigateToPose relative="false" server_name="{locomotion_server_name}" goal="1;-13;0.9" yaw_lock="{standard_yaw}"/>
 
       <!-- Submerge AUV to correct depth-->
-      <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
+      <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;0" yaw_lock="{standard_yaw}" depth_lock="{standard_depth}" />
 
       <!-- Run torpedo task -->
       <SubTree ID="TorpedoTaskTree" node="node" 
