@@ -1,0 +1,22 @@
+<root main_tree_to_execute = "AlignCamTree" >
+  <BehaviorTree ID="AlignCamTree">
+    <Repeat num_cycles="3">
+      <Sequence>
+        <RetryUntilSuccesful num_attempts="-1">
+          <Sequence>
+            <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+            <ComputeGoal vision_objects="{detected_objects}" target_identity="Bootlegger Small Hole" main_target="bootlegger" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
+          </Sequence>
+        </RetryUntilSuccesful>
+
+        <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
+        <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+
+        <ModifyGoal original_pose="{pose}" zeroed_components="x,y" final_pose="{pose}" />
+        <ModifyGoal original_pose="{goal}" zeroed_components="x" final_pose="{goal}"/>
+        <ModifyGoal original_pose="{goal}" modifying_pose="{pose}" final_pose="{goal}"/>
+        <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" />
+      </Sequence>
+    </Repeat>
+  </BehaviorTree>
+</root>

@@ -37,10 +37,9 @@
                standard_depth="standard_depth" fixed_yaw="standard_yaw" />
       
       <!-- Travel to torpedo task -->
-      <NavigateToPose server_name="{locomotion_server_name}" goal="-2;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
+      <NavigateToPose server_name="{locomotion_server_name}" goal="-1;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
       <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;-90" depth_lock="{standard_depth}" />
-      <NavigateToPose server_name="{locomotion_server_name}" goal="10;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
-      <NavigateToPose server_name="{locomotion_server_name}" goal="0;1.5" depth_lock="{standard_depth}" />
+      <NavigateToPose server_name="{locomotion_server_name}" goal="9;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
 
       <!-- Run torpedo task -->
       <SubTree ID="TorpedoTaskTree" node="node" 

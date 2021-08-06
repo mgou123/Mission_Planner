@@ -19,10 +19,10 @@
       <SetBlackboard output_key="{standard_yaw}" value="0" />
 
       <!-- Randomise landing position -->
-      <!-- Goal X: 4 -->
+      <!-- Goal X: 4 - 6 -->
       <!-- Goal Y: 4 - 6 -->
       <!-- Goal Yaw: -90 +-15 -->
-      <NavigateToPose relative="false" server_name="{locomotion_server_name}" goal="4;4;0.8" yaw_lock="-75"/>
+      <!-- <NavigateToPose relative="false" server_name="{locomotion_server_name}" goal="5;5;0.8" yaw_lock="-75"/> -->
 
       <!-- Submerge AUV to correct depth-->
       <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />

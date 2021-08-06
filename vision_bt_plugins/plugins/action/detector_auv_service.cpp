@@ -16,7 +16,17 @@ void DetectorAUVService::on_tick() {
     std::vector<std::string> objects;
     bool toEnable;
 
-    getInput("objects", objects);
+    try {
+      getInput("objects", objects);
+    } catch (const std::bad_cast& e) {
+      std::string object;
+      getInput("objects", object);
+      objects.push_back(object);
+    } catch (const std::exception& e) {
+      ROS_ERROR("[DetectorAUVService]: An exception occured");
+      std::cout << e.what() << std::endl;
+    }
+
     if (!getInput("enable", toEnable)){
       toEnable = true;
       ROS_WARN("[DetectorAUVService]: No status given. Call defaults to Enable");

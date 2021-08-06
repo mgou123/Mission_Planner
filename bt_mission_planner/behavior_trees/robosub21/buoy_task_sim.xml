@@ -3,9 +3,9 @@
   <BehaviorTree ID="BuoyTaskTree">
     <Sequence>
       <SetBlackboard output_key="vision_target" value="badge"/>
-      <!-- How to make this into a list lol -->
       <DetectorAUVService service_name="{vision_service_name}" objects="badge"/>
 
+      <!-- Sweeping to find Target -->
       <ReactiveFallback>
           <Sequence>
               <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
