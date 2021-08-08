@@ -6,9 +6,9 @@
 namespace mp_behavior_tree
 {
   ComputeGoal::ComputeGoal(
-      const std::string &xml_tag_name,
-      const BT::NodeConfiguration &conf)
-      : BT::SyncActionNode(xml_tag_name, conf) {}
+    const std::string& xml_tag_name,
+    const BT::NodeConfiguration& conf)
+    : BT::SyncActionNode(xml_tag_name, conf) {}
 
   BT::NodeStatus ComputeGoal::tick()
   {
@@ -26,7 +26,7 @@ namespace mp_behavior_tree
     {
       ROS_ERROR("[ComputeGoal] objects not provided!");
       return BT::NodeStatus::FAILURE;
-    } 
+    }
 
     if (objects.detected.size() <= 0)
     {
@@ -43,7 +43,7 @@ namespace mp_behavior_tree
     {
       ROS_ERROR("[ComputeGoal] Main target not provided!");
       return BT::NodeStatus::FAILURE;
-    } 
+    }
 
     // Finding main_target
     ROS_INFO("[ComputeGoal] Finding %s", main_target.c_str());
@@ -53,7 +53,7 @@ namespace mp_behavior_tree
       ROS_INFO("[ComputeGoal]: Found? : %d", object.name.compare(main_target) == 0);
       if (object.name.compare(main_target) == 0) {
         targetFoundFlag = 1;
-        range = (double) object.rel_coords[0];        
+        range = (double)object.rel_coords[0];
       }
     }
 
@@ -98,8 +98,8 @@ namespace mp_behavior_tree
         }
         else if (object.move_coords == 4)
         { // theta phi
-          double theta = (double) object.rel_coords[0];
-          double phi = (double) object.rel_coords[1];
+          double theta = (double)object.rel_coords[0];
+          double phi = (double)object.rel_coords[1];
 
           double sidemove = range * std::tan(theta * 3.14159265 / 180.0);
           double height = -1 * range * std::tan(phi * 3.14159265 / 180.0);

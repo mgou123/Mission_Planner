@@ -22,22 +22,20 @@
       <!-- Goal X: 4 - 6 -->
       <!-- Goal Y: 4 - 6 -->
       <!-- Goal Yaw: -90 +-15 -->
-      <NavigateToPose relative="false" server_name="{locomotion_server_name}" goal="1;-13;0.9" yaw_lock="{standard_yaw}"/>
 
       <!-- Submerge AUV to correct depth-->
       <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;0" yaw_lock="{standard_yaw}" depth_lock="{standard_depth}" />
 
-      <!-- Run torpedo task -->
-      <SubTree ID="TorpedoTaskTree" node="node" 
-      vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" 
-      server_name="locomotion_server_name" pose_topic_name="pose_topic_name" 
-      standard_depth="standard_depth" fixed_yaw="fixed_yaw" />
+      <!-- For Buoy -->
+      <NavigateToPose relative="false" server_name="{locomotion_server_name}" goal="2;12;0.9" yaw_lock="{standard_yaw}"/>
+      <SubTree ID="BuoyTaskTree" node="node" vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="fixed_yaw" />
+
+      <!-- For Torpedo -->
+      <!-- <NavigateToPose relative="false" server_name="{locomotion_server_name}" goal="1;-13" yaw_lock="{standard_yaw}" depth_lock="{standard_depth}"/> -->
+      <!-- <SubTree ID="TorpedoTaskTree" node="node" vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="fixed_yaw" /> -->
 
       <!-- Move Back -->
-      <!-- <NavigateToPose server_name="{locomotion_server_name}" goal="-2;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" /> -->
-
-      <!-- Travel to bin task -->
-      <!-- <ControllerService service_name="/auv3/controller" enable="false" /> -->
+      <NavigateToPose server_name="{locomotion_server_name}" goal="-2;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
     </Sequence>
   </BehaviorTree>
 </root>

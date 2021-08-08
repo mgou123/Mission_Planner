@@ -6,9 +6,9 @@
 namespace mp_behavior_tree
 {
   SetObjectGoal::SetObjectGoal(
-      const std::string &xml_tag_name,
-      const BT::NodeConfiguration &conf)
-      : BT::SyncActionNode(xml_tag_name, conf) {}
+    const std::string& xml_tag_name,
+    const BT::NodeConfiguration& conf)
+    : BT::SyncActionNode(xml_tag_name, conf) {}
 
   BT::NodeStatus SetObjectGoal::tick()
   {

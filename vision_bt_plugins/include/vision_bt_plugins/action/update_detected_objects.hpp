@@ -8,25 +8,25 @@
 
 namespace mp_behavior_tree
 {
-class UpdateDetectedObjects : public BtTopicSubNode<vision::DetectedObjects>
-{
-public:
-    UpdateDetectedObjects(
-        const std::string & xml_tag_name,
-        const std::string &topic_name,
-        const BT::NodeConfiguration &conf);
-
-    // mandatory to define this method
-    static BT::PortsList providedPorts()
+    class UpdateDetectedObjects : public BtTopicSubNode<vision::DetectedObjects>
     {
-        return providedBasicPorts({
-            BT::InputPort<std::string>("prefix", "Prefix for blackboard key of each detected object")
-        });
-    }
+    public:
+        UpdateDetectedObjects(
+            const std::string& xml_tag_name,
+            const std::string& topic_name,
+            const BT::NodeConfiguration& conf);
 
-    BT::NodeStatus on_success() override;
+        // mandatory to define this method
+        static BT::PortsList providedPorts()
+        {
+            return providedBasicPorts({
+                BT::InputPort<std::string>("prefix", "Prefix for blackboard key of each detected object")
+                });
+        }
 
-};
+        BT::NodeStatus on_success() override;
+
+    };
 
 } // namespace mp_behavior_tree
 

@@ -10,24 +10,24 @@
 namespace mp_behavior_tree
 {
 
-class MLDetectorService : public BtServiceNode<bbauv_msgs::MLDetector>
-{
-public:
-    MLDetectorService(
-        const std::string & xml_tag_name,
-        const std::string & service_name,
-        const BT::NodeConfiguration & conf);
-    
-    void on_tick() override;
-
-    static BT::PortsList providedPorts()
+    class MLDetectorService : public BtServiceNode<bbauv_msgs::MLDetector>
     {
-        return providedBasicPorts(
+    public:
+        MLDetectorService(
+            const std::string& xml_tag_name,
+            const std::string& service_name,
+            const BT::NodeConfiguration& conf);
+
+        void on_tick() override;
+
+        static BT::PortsList providedPorts()
         {
-            BT::InputPort<std::string>("detector", "Name of detector")
-        });
-    }
-};
+            return providedBasicPorts(
+                {
+                    BT::InputPort<std::string>("detector", "Name of detector")
+                });
+        }
+    };
 
 }
 

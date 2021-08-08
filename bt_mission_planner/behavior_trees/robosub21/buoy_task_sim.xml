@@ -1,29 +1,43 @@
-<root main_tree_to_execute = "BuoyTaskTree" >
-  <include ros_pkg="bt_mission_planner" path="behavior_trees/side_sweep.xml"/>
+<root main_tree_to_execute = "BuoyTaskTree">
+  <include ros_pkg="bt_mission_planner" path="behavior_trees/side_sweep_sim.xml"/>
   <BehaviorTree ID="BuoyTaskTree">
     <Sequence>
       <SetBlackboard output_key="vision_target" value="badge"/>
-      <DetectorAUVService service_name="{vision_service_name}" objects="badge"/>
+      <DetectorAUVService service_name="{vision_service_name}" objects="badge" enable="{true}"/>
 
       <!-- Sweeping to find Target -->
       <ReactiveFallback>
-          <Sequence>
-              <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
-              <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
-          </Sequence>
-          <SubTree ID="SideSweepTree" node="node" server_name="server_name" original_yaw="fixed_yaw" depth="standard_depth" />
+        <Sequence>
+          <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+          <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
+        </Sequence>
+        <SubTree ID="SideSweepTree" node="node" server_name="server_name" original_yaw="fixed_yaw" depth="standard_depth" />
       </ReactiveFallback>
 
-      <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
-      <NavigateToPose server_name="{server_name}" goal="0;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
+      <!-- TODO: YAW ALIGNMENT HERE -->
+      <NavigateToPose server_name="{server_name}" goal="0;0;0;0" yaw_lock="0" depth_lock="{standard_depth}" />
+      <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
+      <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+      <SplitPoseComponents pose="{pose}" yaw="{current_yaw}" z="{current_depth}"/>
 
-      <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="20.0" />
-      <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_target}" goal="{object_goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
+      <!-- Sidemove alignment -->
+      <ModifyGoal original_pose="{goal}" zeroed_components="x,z" final_pose="{goal}"/>
+      <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" depth_lock="{current_depth}"/>
 
+      <!-- Re-acquire Target -->
+      <RetryUntilSuccesful num_attempts="-1">
+        <Sequence>
+          <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+          <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
+        </Sequence>
+      </RetryUntilSuccesful>
+      <ModifyGoal original_pose="{goal}" zeroed_components="y,z" final_pose="{goal}"/>
+
+      <!-- Move to Target -->
       <Inverter>
-          <Timeout msec="60000">
-          <NavigateToPose server_name="{server_name}" goal="{object_goal}" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}"/>
-          </Timeout>
+        <Timeout msec="60000">
+          <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" depth_lock="{current_depth}"/>
+        </Timeout>
       </Inverter>
 
       <DetectorAUVService service_name="{vision_service_name}" objects="badge" enable="false"/>

@@ -19,7 +19,7 @@
       <SetBlackboard output_key="{standard_yaw}" value="0" />
 
       <!-- [SIM ONLY] Teleport to starting position -->
-      <NavigateToPose relative="false" server_name="{locomotion_server_name}" goal="6.5;-11.5;0.9" yaw_lock="{standard_yaw}"/>
+      <NavigateToPose relative="false" server_name="{locomotion_server_name}" goal="-11.5;6;0.9" yaw_lock="{standard_yaw}"/>
 
       <!-- Submerge AUV to correct depth-->
       <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
@@ -29,26 +29,23 @@
 
       <!-- Run gate task-->
       <SubTree ID="GateTaskTree" node="node" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" />
-      
+
       <!-- Travel to buoy task -->
-      <NavigateToPose server_name="{locomotion_server_name}" goal="0;7" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
-      
+      <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;90" depth_lock="{standard_depth}"/>
+      <NavigateToPose server_name="{locomotion_server_name}" goal="7;0" depth_lock="{standard_depth}" />
+      <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;-90" depth_lock="{standard_depth}"/>
+
       <!-- Run buoy task -->
-      <SubTree ID="BuoyTaskTree" node="node" 
-               vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" 
-               server_name="locomotion_server_name" pose_topic_name="pose_topic_name" 
-               standard_depth="standard_depth" fixed_yaw="standard_yaw" />
-      
+      <SubTree ID="BuoyTaskTree" node="node" vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" />
+
       <!-- Travel to torpedo task -->
       <NavigateToPose server_name="{locomotion_server_name}" goal="-1;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
       <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;-90" depth_lock="{standard_depth}" />
-      <NavigateToPose server_name="{locomotion_server_name}" goal="15;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
+      <NavigateToPose server_name="{locomotion_server_name}" goal="20;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
+      <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;90" depth_lock="{standard_depth}" />
 
       <!-- Run torpedo task -->
-      <SubTree ID="TorpedoTaskTree" node="node" 
-      vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" 
-      server_name="locomotion_server_name" pose_topic_name="pose_topic_name" 
-      standard_depth="standard_depth" fixed_yaw="standard_yaw" />
+      <SubTree ID="TorpedoTaskTree" node="node" vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" />
 
       <!-- Move Back -->
       <NavigateToPose server_name="{locomotion_server_name}" goal="-2;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
