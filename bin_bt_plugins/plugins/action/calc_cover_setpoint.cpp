@@ -85,7 +85,7 @@ BT::NodeStatus CalcCoverSetpoint::CalcCoverSetpoint::tick()
       ROS_ERROR("Not enough lids seen");
       return BT::NodeStatus::FAILURE;
     } else {
-      drop_forward = - pre_direction;
+      drop_forward = - pre_direction / abs(pre_direction);
     }
   } else {
     if (lid_1.centre_y > lid_2.centre_y) {

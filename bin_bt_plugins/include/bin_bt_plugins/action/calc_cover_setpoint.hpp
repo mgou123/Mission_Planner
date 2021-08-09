@@ -28,9 +28,9 @@ public:
             BT::InputPort<float>("lift_ratio_x", "relative x ratio of picking point"),
             BT::InputPort<float>("lift_ratio_y", "relatvie y ratio of picking point"),
             BT::InputPort<float>("pre_direction", "previous direction to throw the cover if this is the second cover, 0 if this is the first cover"),
-            BT::OutputPort<float>("drop_pose_1_x", "relative x position to drop first cover"),
-            BT::OutputPort<float>("drop_pose_1_y", "relative y position to drop first cover"),
-            BT::OutputPort<float>("drop_pose", "relative position to drop cover"),
+            BT::OutputPort<float>("lift_pose_1_x", "relative sideways position to lift first cover"),
+            BT::OutputPort<float>("lift_pose_1_y", "relative forward position to lift first cover"),
+            BT::OutputPort<float>("drop_pose_1", "relative forward position to drop first cover"),
         };
     }
 
