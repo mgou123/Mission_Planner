@@ -1,5 +1,5 @@
-#ifndef BIN_BT_PLUGINS__CONDITION__IS_PIC_CENTERED_CONDITION_
-#define BIN_BT_PLUGINS__CONDITION__IS_PIC_CENTERED_CONDITION_
+#ifndef BIN_BT_PLUGINS__CONDITION__IS_CENTER_ALIGNED_CONDITION_
+#define BIN_BT_PLUGINS__CONDITION__IS_CENTER_ALIGNED_CONDITION_
 
 #include <memory>
 #include <string>
@@ -10,14 +10,14 @@
 
 namespace mp_behavior_tree
 {
-class IsPicCenteredCondition : public BT::ConditionNode 
+class IsHandleFlatCondition : public BT::ConditionNode 
 {
 public:
-    IsPicCenteredCondition(
+    IsHandleFlatCondition(
         const std::string & condition_name,
         const BT::NodeConfiguration & conf);
         
-    ~IsPicCenteredCondition() {};
+    ~IsHandleFlatCondition() {};
 
     BT::NodeStatus tick() override;
 
@@ -25,9 +25,7 @@ public:
     {
         return {
             BT::InputPort<vision::DetectedObjects>("vision_objects", "Detected Objects"),
-            BT::InputPort<std::string>("pic_identifier", "Which pic to go"),
-            BT::InputPort<float>("center_offset_x", "allowed offset to center on x-axis"),
-            BT::InputPort<float>("center_offset_y", "allowed offset to center on y-axis")
+            BT::InputPort<float>("flat_ratio", "ratio between height and width of bounding box of handle that can be considered flat"),
         };
     }
 };

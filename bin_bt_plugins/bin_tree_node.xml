@@ -39,6 +39,17 @@
       <output_port name="result">calculated result</output_port>
     </Action>
 
+    <Action ID="CalcCoverSetpoint">
+      <input_port name="vision_objects">Detected Objects</input_port>
+      <input_port name="ratio">ration between real world distance and number of pixels</input_port>
+      <input_port name="lift_ratio_x">relative x ratio of picking point</input_port>
+      <input_port name="lift_ratio_y">relative y ratio of picking point</input_port>
+      <input_port name="pre_direction">previous direction to throw the cover if this is the second cover, 0 if this is the first cover</input_port>
+      <output_port name="lift_pose_1_x">relative sideways position to lift first cover</output_port>
+      <output_port name="lift_pose_1_y">relative forward position to lift first cover</output_port>
+      <output_port name="drop_pose_1">relative forward position to drop first cover</output_port>
+    </Action>
+
     <!-- ############################### CONDITION NODES ############################## -->
 
     <Condition ID="IsLidSeen">
@@ -73,7 +84,25 @@
       <input_port name="area">area benchmark</input_port>
     </Condition>
 
-    
+    <Condition ID="IsHandleFlat">
+      <input_port name="vision_objects">Detected Objects</input_port>
+      <input_port name="flat_ratio">ratio between height and width of bounding box of handle that can be considered flat</input_port>
+    </Condition>
+
+    <Condition ID="IsFullBinSeen">
+      <input_port name="vision_objects">Detected Objects</input_port>
+      <input_port name="area_benchmark">area benchmark that can be considered fully seen bin</input_port>
+    </Condition>
+
+    <Condition ID="IsPartBinSeen">
+      <input_port name="vision_objects">Detected Objects</input_port>
+    </Condition>
+
+    <Condition ID="IsFullBinSeen">
+      <input_port name="vision_objects">Detected Objects</input_port>
+      <input_port name="width_benchmark">width benchmark that can be considered good to close grabber</input_port>
+    </Condition>
+
     <!-- ############################### CONTROL NODES ################################ -->
 
     <!-- ############################### DECORATOR NODES ############################## -->

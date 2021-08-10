@@ -20,7 +20,10 @@ plugin_lib_names:
   - mp_is_pic_centered_condition_bt_node
   - mp_is_enough_pic_seen_condition_bt_node
   - mp_manipulators_service_bt_node
-
+  - mp_is_center_aligned_condition_bt_node
+  - mp_is_handle_flat_condition_bt_node
+  - mp_calc_cover_setpoint_bt_node
+  - mp_is_part_bin_seen_condition_bt_node
 
 odom_topic: /auv4/nav/odom_ned
 transform_tolerance: 0.1

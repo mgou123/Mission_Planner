@@ -18,7 +18,7 @@ BT::NodeStatus IsCenterAlignedCondition::tick()
   float center_offset_x;
   float center_offset_y;
   float x_ratio; 
-  float y_ratio; 
+  float y_ratio;
 
   if (!getInput("vision_objects", objects)) {
     ROS_ERROR("[IsCenterAligned] objects not provided!");
@@ -48,7 +48,7 @@ BT::NodeStatus IsCenterAlignedCondition::tick()
     getInput("center_offset_y", center_offset_y);
   }
 
-  // ROS_INFO("is picture centered running");
+  ROS_INFO("is center aligned running");
   ROS_INFO("looking for %s", identifier.c_str());
 
   for (auto object : objects.detected) {
@@ -62,7 +62,7 @@ BT::NodeStatus IsCenterAlignedCondition::tick()
       ROS_INFO("pic_center_x %f", pic_center_x);
       ROS_INFO("pic_center_y %f", pic_center_y);
       ROS_INFO("target_x %f", target_x);
-      ROS_INFO("target_xy %f", target_y);
+      ROS_INFO("target_y %f", target_y);
       if (abs(target_x - pic_center_x) < center_offset_x && abs(target_y - pic_center_y) < center_offset_y) {
         ROS_INFO("pic is aligned");
         return BT::NodeStatus::SUCCESS;
