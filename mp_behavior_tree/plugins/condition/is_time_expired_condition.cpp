@@ -39,13 +39,16 @@ IsTimeExpiredCondition::~IsTimeExpiredCondition()
 
 BT::NodeStatus IsTimeExpiredCondition::tick() {
     if (status() == BT::NodeStatus::IDLE) {
-        start_ = ros::Time::now();
-        return BT::NodeStatus::FAILURE;
+      ROS_INFO("[IsTimeExpired]: Hi");
+      start_ = ros::Time::now();
+      return BT::NodeStatus::FAILURE;
     }
 
     double elapsed = (ros::Time::now() - start_).toSec();
-    if (elapsed < period_) {
-        return BT::NodeStatus::FAILURE;
+    ROS_INFO("[IsTimeExpired]: Elapsed: %f", elapsed);
+    if (elapsed < period_)
+    {
+      return BT::NodeStatus::FAILURE;
     }
 
     start_ = ros::Time::now();

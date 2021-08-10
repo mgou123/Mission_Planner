@@ -11,6 +11,14 @@
         <input_port name="depth_lock">Depth to lock to. If specified, relative depth in pose will be ignored.</input_port>
         <input_port name="relative">Set to true to use relative coordinates</input_port>
     </Action>
+    <Action ID="NavigateControl">
+        <input_port name="server_name">Action server name</input_port>
+        <input_port name="server_timeout">Timeout for action server to respond</input_port>
+        <input_port name="forward">Forward</input_port>
+        <input_port name="sideways">Sideways</input_port>
+        <input_port name="depth">Depth</input_port>
+        <input_port name="yaw">yaw</input_port>
+    </Action>
 
     <Action ID="ManipulatorsService">
       <input_port name="service_name">Name of service</input_port>

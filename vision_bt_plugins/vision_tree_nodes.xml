@@ -5,7 +5,8 @@
     <Action ID="UpdateDetectedObjects">
       <input_port name="topic_name">Topic name</input_port>
       <input_port name="queue_size">Topic queue size </input_port>
-      <input_port name="output_key">Name of output port to write to</input_port>
+      <input_port name="timeout_sec">Timeout for waiting for message publish</input_port>
+      <output_port name="result">Name of output port to write to</output_port>
     </Action>
 
     <Action ID="DetectorAUVService">
