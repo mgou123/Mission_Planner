@@ -15,11 +15,11 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   tf2
   tf2_geometry_msgs
-  nav_utils
   geometry_msgs
   nav_msgs
   std_msgs
   sensor_msgs
+  bb_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -38,11 +38,11 @@ catkin_package(
     tf2
     tf2_geometry_msgs
     behaviortree_cpp_v3
-    nav_utils
     geometry_msgs
     nav_msgs
     sensor_msgs
     std_msgs
+    bb_msgs
   DEPENDS system_lib
 )
 

@@ -5,7 +5,7 @@ namespace mp_behavior_tree
 UpdateDetectedObjects::UpdateDetectedObjects(
         const std::string & xml_tag_name,
         const std::string &topic_name,
-        const BT::NodeConfiguration &conf) : BtTopicSubNode<vision::DetectedObjects>(xml_tag_name, topic_name, conf) {
+        const BT::NodeConfiguration &conf) : BtTopicSubNode<bb_msgs::DetectedObjects>(xml_tag_name, topic_name, conf) {
     
     node_ = config().blackboard->get<std::shared_ptr<ros::NodeHandle>>("node");
 }
@@ -14,7 +14,7 @@ BT::NodeStatus UpdateDetectedObjects::on_success() {
     std::string prefix = "";
     if (getInput("prefix", prefix)) {
         for (auto object : result_->detected) {
-            config().blackboard->set<vision::DetectedObject>(prefix + "_" + object.name, object);
+            config().blackboard->set<bb_msgs::DetectedObject>(prefix + "_" + object.name, object);
         }
     }
 

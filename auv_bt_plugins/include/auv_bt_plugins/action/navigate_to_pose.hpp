@@ -4,9 +4,9 @@
 #include <string>
 
 #include "geometry_msgs/PoseStamped.h"
-#include "nav_utils/LocomotionAction.h"
-#include "nav_utils/LocomotionGoal.h"
-#include "nav_utils/LocomotionResult.h"
+#include "bb_msgs/LocomotionAction.h"
+#include "bb_msgs/LocomotionGoal.h"
+#include "bb_msgs/LocomotionResult.h"
 #include "mp_behavior_tree/bt_action_node.hpp"
 
 // mp wrapper for Locomotion action
@@ -14,9 +14,9 @@ namespace mp_behavior_tree
 {
 
 class NavigateToPose 
-: public BtActionNode<nav_utils::LocomotionAction, 
-                      nav_utils::LocomotionGoal, 
-                      nav_utils::LocomotionResult>
+: public BtActionNode<bb_msgs::LocomotionAction, 
+                      bb_msgs::LocomotionGoal, 
+                      bb_msgs::LocomotionResult>
 {
 public:
     NavigateToPose(

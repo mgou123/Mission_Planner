@@ -10,7 +10,7 @@ ManipulatorsService::ManipulatorsService(
     const std::string & xml_tag_name,
     const std::string & service_name,
     const BT::NodeConfiguration & conf)
-  : BtServiceNode<bbauv_msgs::Manipulators>(xml_tag_name, service_name, conf) {}
+  : BtServiceNode<bb_msgs::Manipulators>(xml_tag_name, service_name, conf) {}
 
 void ManipulatorsService::on_tick() {
     getInput("top_torpedo", srv_->request.top_torpedo);

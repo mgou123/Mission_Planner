@@ -4,12 +4,12 @@
 #include <string>
 #include <ros/ros.h>
 #include "mp_behavior_tree/bt_service_node.hpp"
-#include "bbauv_msgs/Manipulators.h"
+#include "bb_msgs/Manipulators.h"
 
 namespace mp_behavior_tree
 {
 
-class ManipulatorsService : public BtServiceNode<bbauv_msgs::Manipulators>
+class ManipulatorsService : public BtServiceNode<bb_msgs::Manipulators>
 {
 public:
     ManipulatorsService(
