@@ -12,8 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf2
   tf2_geometry_msgs
   geometry_msgs
-  nav_utils
-  bbauv_msgs
+  bb_msgs
   mp_behavior_tree
 )
 
@@ -116,8 +115,7 @@ catkin_package(
     tf2
     tf2_geometry_msgs
     geometry_msgs
-    nav_utils
-    bbauv_msgs
+    bb_msgs
     mp_behavior_tree
   DEPENDS system_lib
 )

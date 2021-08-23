@@ -12,7 +12,7 @@ namespace mp_behavior_tree
 
   BT::NodeStatus SetObjectGoal::tick()
   {
-    vision::DetectedObjects objects;
+    bb_msgs::DetectedObjects objects;
     std::string target_identity;
     // -1: not found (empty)
     // 0: not found (default behavior)

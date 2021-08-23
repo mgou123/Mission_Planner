@@ -3,8 +3,8 @@
 
 
 #include "ros/ros.h"
-#include "vision/DetectedObjects.h"
-#include "vision/DetectedObject.h"
+#include "bb_msgs/DetectedObjects.h"
+#include "bb_msgs/DetectedObject.h"
 
 #include "geometry_msgs/PoseStamped.h"
 #include "behaviortree_cpp_v3/condition_node.h"

@@ -52,7 +52,7 @@
   <depend>roscpp</depend>
   <depend>mp_behavior_tree</depend>
   <depend>vision</depend>
-  <depend>bbauv_msgs</depend>
+  <depend>bb_msgs</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

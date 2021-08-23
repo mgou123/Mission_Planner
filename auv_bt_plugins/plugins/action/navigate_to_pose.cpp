@@ -13,9 +13,9 @@ NavigateToPose::NavigateToPose(
     const std::string & xml_tag_name,
     const std::string & action_name,
     const BT::NodeConfiguration & conf)
-  : BtActionNode<nav_utils::LocomotionAction, 
-                 nav_utils::LocomotionGoal, 
-                 nav_utils::LocomotionResult>(xml_tag_name, action_name, conf) {}
+  : BtActionNode<bb_msgs::LocomotionAction, 
+                 bb_msgs::LocomotionGoal, 
+                 bb_msgs::LocomotionResult>(xml_tag_name, action_name, conf) {}
 
 void NavigateToPose::on_tick() {
     tf2::Quaternion quat;
