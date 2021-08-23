@@ -3,11 +3,11 @@
 
 #include <ros/ros.h>
 #include "mp_behavior_tree/bt_service_node.hpp"
-#include "nav_utils/Controller.h"
+#include "bb_msgs/Controller.h"
 
 namespace mp_behavior_tree
 {
-class ControllerService : public BtServiceNode<nav_utils::Controller>
+class ControllerService : public BtServiceNode<bb_msgs::Controller>
 {
 public:
     ControllerService(

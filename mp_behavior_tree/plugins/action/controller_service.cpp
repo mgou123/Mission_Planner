@@ -6,7 +6,7 @@ ControllerService::ControllerService(
     const std::string & xml_tag_name,
     const std::string & service_name,
     const BT::NodeConfiguration & conf)
-  : BtServiceNode<nav_utils::Controller>(xml_tag_name, service_name, conf) {}
+  : BtServiceNode<bb_msgs::Controller>(xml_tag_name, service_name, conf) {}
 
 void ControllerService::on_tick() {
     bool flag;
