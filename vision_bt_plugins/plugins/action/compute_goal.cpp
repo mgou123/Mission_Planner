@@ -12,7 +12,7 @@ namespace mp_behavior_tree
 
   BT::NodeStatus ComputeGoal::tick()
   {
-    vision::DetectedObjects objects;
+    bb_msgs::DetectedObjects objects;
     std::string target_identity;
     std::string main_target;
     double range;

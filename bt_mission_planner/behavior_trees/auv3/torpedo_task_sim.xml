@@ -1,0 +1,55 @@
+<root main_tree_to_execute="MainTree">
+    <include ros_pkg="bt_mission_planner" path="behavior_trees/robosub21/torpedo_task_sim.xml"/>
+
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+            <ControllerService service_name="/auv3/controller" enable="true"/>
+            <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
+            <SetBlackboard output_key="vision_topic_name" value="/auv3/vision/detected" />
+            <SetBlackboard output_key="vision_service_name" value="/auv3/vision/detector" />
+            <SetBlackboard output_key="locomotion_server_name" value="/auv3/LocomotionServer" />
+
+            <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
+            <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+            <SplitPoseComponents pose="{pose}" yaw="{standard_yaw}" />
+
+            <SetBlackboard output_key="{standard_depth}" value="0.9" />
+            <SetBlackboard output_key="{standard_yaw}" value="-80" />
+
+            <!-- [SIM ONLY] Teleport to starting position -->
+            <NavigateToPose relative="false" server_name="{locomotion_server_name}" goal="4;4;0.9" yaw_lock="{standard_yaw}"/>
+
+            <!-- Submerge AUV to correct depth-->
+            <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
+
+            <!-- Travel to gate task -->
+            <!-- <NavigateToPose server_name="{locomotion_server_name}" goal="10;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" /> -->
+
+            <!-- Run gate task-->
+            <!-- <SubTree ID="GateTaskTree" node="node" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" /> -->
+
+            <!-- Travel to buoy task -->
+            <!-- <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;90" depth_lock="{standard_depth}"/>
+            <NavigateToPose server_name="{locomotion_server_name}" goal="7;0" depth_lock="{standard_depth}" />
+            <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;-90" depth_lock="{standard_depth}"/> -->
+
+            <!-- Run buoy task -->
+            <!-- <SubTree ID="BuoyTaskTree" node="node" vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" /> -->
+
+            <!-- Travel to torpedo task -->
+            <!-- <NavigateToPose server_name="{locomotion_server_name}" goal="-1;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
+            <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;-90" depth_lock="{standard_depth}" />
+            <NavigateToPose server_name="{locomotion_server_name}" goal="20;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
+            <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;90" depth_lock="{standard_depth}" /> -->
+
+            <!-- Run torpedo task -->
+            <SubTree ID="TorpedoTaskTree" node="node" vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" />
+
+            <!-- Move Back -->
+            <NavigateToPose server_name="{locomotion_server_name}" goal="-2;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
+
+            <!-- Travel to bin task -->
+            <ControllerService service_name="/auv3/controller" enable="false" />
+        </Sequence>
+    </BehaviorTree>
+</root>

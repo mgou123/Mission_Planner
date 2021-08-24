@@ -6,43 +6,47 @@
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 
-
 namespace mp_behavior_tree
 {
 
-NavigateControl::NavigateControl(
-    const std::string & xml_tag_name,
-    const std::string & action_name,
-    const BT::NodeConfiguration & conf)
-  : BtActionNode<nav_utils::LocomotionAction, 
-                 nav_utils::LocomotionGoal, 
-                 nav_utils::LocomotionResult>(xml_tag_name, action_name, conf) {}
+  NavigateControl::NavigateControl(
+      const std::string &xml_tag_name,
+      const std::string &action_name,
+      const BT::NodeConfiguration &conf)
+      : BtActionNode<bb_msgs::LocomotionAction,
+                     bb_msgs::LocomotionGoal,
+                     bb_msgs::LocomotionResult>(xml_tag_name, action_name, conf) {}
 
-void NavigateControl::on_tick() {
+  void NavigateControl::on_tick()
+  {
     tf2::Quaternion quat;
     float forward, sideways, depth, yaw;
 
     double x, y, z;
     bool movement_rel = true;
 
-    if (!getInput("forward", forward)) {
-        ROS_WARN("[NavigateControl] forward not provided! Station-keeping!");
-        forward = 0;
+    if (!getInput("forward", forward))
+    {
+      ROS_WARN("[NavigateControl] forward not provided! Station-keeping!");
+      forward = 0;
     }
 
-    if (!getInput("sideways", sideways)) {
-        ROS_WARN("[NavigateControl] sideways not provided! Station-keeping!");
-        sideways = 0;
+    if (!getInput("sideways", sideways))
+    {
+      ROS_WARN("[NavigateControl] sideways not provided! Station-keeping!");
+      sideways = 0;
     }
 
-    if (!getInput("depth", depth)) {
-        ROS_WARN("[NavigateControl] depth not provided! Station-keeping!");
-        depth = 0;
+    if (!getInput("depth", depth))
+    {
+      ROS_WARN("[NavigateControl] depth not provided! Station-keeping!");
+      depth = 0;
     }
 
-    if (!getInput("yaw", yaw)) {
-        ROS_WARN("[NavigateControl] yaw not provided! Station-keeping!");
-        yaw = 0;
+    if (!getInput("yaw", yaw))
+    {
+      ROS_WARN("[NavigateControl] yaw not provided! Station-keeping!");
+      yaw = 0;
     }
 
     ROS_WARN("[NavigateControl] Sending to Controls!");
@@ -56,11 +60,11 @@ void NavigateControl::on_tick() {
     goal_.yaw_rel = true;
     goal_.movement_rel = true;
     goal_.controller_state = 0;
-}
+  }
 
-void NavigateControl::on_wait_for_result() {
-
-}
+  void NavigateControl::on_wait_for_result()
+  {
+  }
 
 } // namespace mp_behavior_tree
 
@@ -68,12 +72,12 @@ void NavigateControl::on_wait_for_result() {
 BT_REGISTER_NODES(factory)
 {
   BT::NodeBuilder builder =
-    [](const std::string & name, const BT::NodeConfiguration & config)
-    {
-      return std::make_unique<mp_behavior_tree::NavigateControl>(
+      [](const std::string &name, const BT::NodeConfiguration &config)
+  {
+    return std::make_unique<mp_behavior_tree::NavigateControl>(
         name, "Locomotion", config);
-    };
+  };
 
   factory.registerBuilder<mp_behavior_tree::NavigateControl>(
-    "NavigateControl", builder);
+      "NavigateControl", builder);
 }

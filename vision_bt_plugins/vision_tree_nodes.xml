@@ -15,7 +15,7 @@
     </Action>
 
     <Action ID="SetObjectGoal">
-      <input_port name="vision_objects">Objects detected by vision pipeline as a vision::DetectedObjects message</input_port>
+      <input_port name="vision_objects">Objects detected by vision pipeline as a bb_msgs::DetectedObjects message</input_port>
       <input_port name="target_identity">Target to be made as goal. String</input_port>
       <output_port name="goal">Goal to move to</output_port>
       <output_port name="absolute_depth">Depth of object</output_port>
@@ -32,7 +32,7 @@
     </Action>
 
     <!-- ############################### CONDITION NODES ############################## -->
-    
+
     <!-- ############################### CONTROL NODES ################################ -->
 
     <!-- ############################### DECORATOR NODES ############################## -->
