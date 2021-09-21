@@ -1,4 +1,4 @@
-default_mission_planner_bt_xml: auv3/torpedo_task_sim_v2.xml
+default_mission_planner_bt_xml: auv3/torpedo_task_v2.xml
 plugin_lib_names:
   - mp_navigate_to_pose_bt_node
   - mp_set_relative_goal_bt_node
