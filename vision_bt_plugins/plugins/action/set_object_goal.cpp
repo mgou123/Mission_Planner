@@ -56,7 +56,7 @@ namespace mp_behavior_tree
 
           setOutput("goal", output_pose);
           setOutput("absolute_depth", (double)(-object.world_coords[2]));
-          setOutput("absolute_yaw", (double)(object.angle));
+          setOutput("absolute_yaw", (double)(object.world_yaw));
 
           ROS_INFO("[SetObjectGoal]: Forward move is : %f", (double)(object.rel_coords[0]));
           ROS_INFO("[SetObjectGoal]: Sidemove is : %f", (double)(object.rel_coords[1]));
