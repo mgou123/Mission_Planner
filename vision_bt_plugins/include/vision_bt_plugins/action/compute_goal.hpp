@@ -13,8 +13,8 @@ namespace mp_behavior_tree
     {
     public:
         ComputeGoal(
-            const std::string& xml_tag_name,
-            const BT::NodeConfiguration& conf);
+            const std::string &xml_tag_name,
+            const BT::NodeConfiguration &conf);
 
         ~ComputeGoal() {}
 
@@ -24,6 +24,7 @@ namespace mp_behavior_tree
                 BT::InputPort<bb_msgs::DetectedObjects>("vision_objects", "Objects detected by vision pipeline as a bb_msgs::DetectedObjects message"),
                 BT::InputPort<std::string>("target_identity", "Target to be made as goal. String"),
                 BT::InputPort<std::string>("main_target", "Main target for which range is extracted"),
+                BT::InputPort<geometry_msgs::PoseStamped>("range", "Range to main_target. Used only if main_target is not given. Type is pose but will only consider range"),
                 BT::OutputPort<geometry_msgs::PoseStamped>("goal", "Goal to move to"),
                 BT::OutputPort<double>("absolute_depth", "Depth of object"),
                 BT::OutputPort<double>("absolute_yaw", "Yaw of object"),

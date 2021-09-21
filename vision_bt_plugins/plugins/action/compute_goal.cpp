@@ -6,15 +6,16 @@
 namespace mp_behavior_tree
 {
   ComputeGoal::ComputeGoal(
-    const std::string& xml_tag_name,
-    const BT::NodeConfiguration& conf)
-    : BT::SyncActionNode(xml_tag_name, conf) {}
+      const std::string &xml_tag_name,
+      const BT::NodeConfiguration &conf)
+      : BT::SyncActionNode(xml_tag_name, conf) {}
 
   BT::NodeStatus ComputeGoal::tick()
   {
     bb_msgs::DetectedObjects objects;
     std::string target_identity;
     std::string main_target;
+    geometry_msgs::PoseStamped goalRange;
     double range;
 
     // -1: not found (empty)
@@ -41,28 +42,45 @@ namespace mp_behavior_tree
 
     if (!getInput("main_target", main_target))
     {
-      ROS_ERROR("[ComputeGoal] Main target not provided!");
-      return BT::NodeStatus::FAILURE;
+      ROS_WARN("[ComputeGoal] Main target not provided! Defaulting to given range");
     }
 
-    // Finding main_target
-    ROS_INFO("[ComputeGoal] Finding %s", main_target.c_str());
-    for (auto object : objects.detected)
+    if (!main_target.empty())
     {
-      ROS_INFO("[ComputeGoal]: Object Name: %s", object.name.c_str());
-      ROS_INFO("[ComputeGoal]: Found? : %d", object.name.compare(main_target) == 0);
-      if (object.name.compare(main_target) == 0) {
-        targetFoundFlag = 1;
-        range = (double)object.rel_coords[0];
-      }
-    }
+      // Finding main_target
+      ROS_INFO("[ComputeGoal] Finding %s", main_target.c_str());
+      for (auto object : objects.detected)
+      {
+        std::string name = object.name;
+        bool isMainTarget = object.name.compare(main_target) == 0;
 
-    if (targetFoundFlag == -1) {
-      ROS_ERROR("[ComputeGoal]: Main Target not found!");
+        ROS_INFO("[ComputeGoal]: Object Name: %s", name.c_str());
+        ROS_INFO("[ComputeGoal]: Found? : %d", isMainTarget);
+        if (isMainTarget)
+        {
+          targetFoundFlag = 1;
+          range = (double)object.rel_coords[0];
+        }
+      }
+
+      if (targetFoundFlag == -1)
+      {
+        ROS_ERROR("[ComputeGoal]: Main Target not found!");
+        return BT::NodeStatus::FAILURE;
+      }
+
+      targetFoundFlag = -1;
+    }
+    else if (getInput("range", goalRange))
+    {
+      targetFoundFlag = 1;
+      range = goalRange.pose.position.x;
+    }
+    else
+    {
+      ROS_ERROR("[ComputeGoal] Range is also not provided!");
       return BT::NodeStatus::FAILURE;
     }
-
-    targetFoundFlag = -1;
 
     // Finding target_identity
     ROS_INFO("[ComputeGoal] Finding %s", target_identity.c_str());
@@ -70,6 +88,7 @@ namespace mp_behavior_tree
     {
       ROS_INFO("[ComputeGoal]: Object Name: %s", object.name.c_str());
       ROS_INFO("[ComputeGoal]: Found? : %d", object.name.compare(target_identity) == 0);
+      // TODO: Check that hole belong's to main_target
       if (object.name.compare(target_identity) == 0)
       {
         targetFoundFlag = 1; // As expected
@@ -101,8 +120,8 @@ namespace mp_behavior_tree
           double theta = (double)object.rel_coords[0];
           double phi = (double)object.rel_coords[1];
 
-          double sidemove = range * std::tan(theta * 3.14159265 / 180.0);
-          double height = -1 * range * std::tan(phi * 3.14159265 / 180.0);
+          double sidemove = range * std::tan((theta + 1e-5) * 3.14159265 / 180.0);
+          double height = -1 * range * std::tan((phi + 1e-5) * 3.14159265 / 180.0);
 
           output_pose.pose.position.x = 0;
           output_pose.pose.position.y = sidemove;
