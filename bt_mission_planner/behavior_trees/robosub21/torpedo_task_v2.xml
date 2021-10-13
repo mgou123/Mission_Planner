@@ -47,6 +47,7 @@
 
       <!-- Move forward until 1.5 meter away from vision_main_target -->
       <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
+
       <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
       <SplitPoseComponents pose="{pose}" yaw="{current_yaw}" z="{current_depth}" />
 
@@ -55,7 +56,8 @@
       <NavigateToPose server_name="{server_name}" goal="{buoy_goal}" yaw_lock="{current_yaw}" depth_lock="{current_depth}" yaw_tolerance="1"/>
 
       <!-- Align with hole -->
-      <SetBlackboard output_key="range" value="1.5;0;0"/>
+      <!-- Set to 1.5 but actually one meter because of base_link to front -->
+      <SetBlackboard output_key="range" value="1;0;0"/>
 
       <Repeat num_cycles="1">
         <Sequence>
@@ -77,15 +79,15 @@
           <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" yaw_tolerance="1"/>
 
           <!-- Approach Hole -->
-          <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
-          <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
-          <SplitPoseComponents pose="{pose}" z="{current_depth}" />
-
-          <ModifyGoal original_pose="{goal}" zeroed_components="x" final_pose="{goal}"/>
-          <ModifyGoal original_pose="{goal}" modifying_pose="0.5;0;0" final_pose="{goal}"/>
-          <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" yaw_tolerance="1"/>
-
-          <ModifyGoal original_pose="{range}" modifying_pose="-0.5;0;0" final_pose="{range}"/>
+          <!-- <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/> -->
+          <!-- <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" /> -->
+          <!-- <SplitPoseComponents pose="{pose}" z="{current_depth}" /> -->
+          <!--  -->
+          <!-- <ModifyGoal original_pose="{goal}" zeroed_components="x" final_pose="{goal}"/> -->
+          <!-- <ModifyGoal original_pose="{goal}" modifying_pose="0.5;0;0" final_pose="{goal}"/> -->
+          <!-- <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" yaw_tolerance="1"/> -->
+          <!--  -->
+          <!-- <ModifyGoal original_pose="{range}" modifying_pose="-0.5;0;0" final_pose="{range}"/> -->
         </Sequence>
       </Repeat>
 
