@@ -13,7 +13,7 @@ ChoosePic::ChoosePic(
 
 BT::NodeStatus ChoosePic::tick()
 {   
-  vision::DetectedObjects objects; 
+  bb_msgs::DetectedObjects objects; 
   std::string gate_side;
   int task_identifier;
   int count_gman;
@@ -74,20 +74,24 @@ BT::NodeStatus ChoosePic::tick()
       if (area_one != 0) {
         setOutput("pic_identifier", "Barrel");
         pic_chosen = "Barrel";
+        ROS_INFO("choose pic running, pic chosen is %s", pic_chosen);
         return BT::NodeStatus::SUCCESS;
       } else {
         setOutput("pic_identifier", "Wiskey Bottle");
         pic_chosen = "Wiskey Bottle";
+        ROS_INFO("choose pic running, pic chosen is %s", pic_chosen);
         return BT::NodeStatus::SUCCESS;
       }
     } else {
       if (area_one > area_two) {
         setOutput("pic_identifier", "Barrel");
         pic_chosen = "Barrel";
+        ROS_INFO("choose pic running, pic chosen is %s", pic_chosen);
         return BT::NodeStatus::SUCCESS;
       } else {
         setOutput("pic_identifier", "Wiskey Bottle");
         pic_chosen = "Wiskey Bottle";
+        ROS_INFO("choose pic running, pic chosen is %s", pic_chosen);
         return BT::NodeStatus::SUCCESS;
       }
     }
@@ -99,20 +103,24 @@ BT::NodeStatus ChoosePic::tick()
       if ( area_one != 0) {
         setOutput("pic_identifier", "Notepad");
         pic_chosen = "Notepad";
+        ROS_INFO("choose pic running, pic chosen is %s", pic_chosen);
         return BT::NodeStatus::SUCCESS;
       } else {
         setOutput("pic_identifier", "Telephone");
         pic_chosen = "Telephone";
+        ROS_INFO("choose pic running, pic chosen is %s", pic_chosen);
         return BT::NodeStatus::SUCCESS;
       }
     } 
     if (area_one > area_two) {
       setOutput("pic_identifier", "Notepad");
       pic_chosen = "Notepad";
+      ROS_INFO("choose pic running, pic chosen is %s", pic_chosen);
       return BT::NodeStatus::SUCCESS;
     } else {
       setOutput("pic_identifier", "Telephone");
       pic_chosen = "Telephone";
+      ROS_INFO("choose pic running, pic chosen is %s", pic_chosen);
       return BT::NodeStatus::SUCCESS;
     }
   } 

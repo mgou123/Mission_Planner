@@ -1,4 +1,4 @@
-default_mission_planner_bt_xml: auv3/bin_mission2.xml
+default_mission_planner_bt_xml: auv3/bin_mission2_pool.xml
 plugin_lib_names:
   - mp_navigate_to_pose_bt_node
   - mp_navigate_control_bt_node
@@ -18,7 +18,12 @@ plugin_lib_names:
   - mp_set_adjustment_bt_node
   - mp_is_lid_seen_condition_bt_node
   - mp_is_pic_centered_condition_bt_node
+  - mp_is_enough_pic_seen_condition_bt_node
   - mp_manipulators_service_bt_node
+  - mp_is_center_aligned_condition_bt_node
+  - mp_is_handle_flat_condition_bt_node
+  - mp_calc_cover_setpoint_bt_node
+  - mp_is_part_bin_seen_condition_bt_node
 
 odom_topic: /auv3/nav/odom_ned
 transform_tolerance: 0.1

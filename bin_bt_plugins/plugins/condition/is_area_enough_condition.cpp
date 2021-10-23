@@ -12,7 +12,7 @@ IsAreaEnoughCondition::IsAreaEnoughCondition(
 
 BT::NodeStatus IsAreaEnoughCondition::tick()
 {   
-  vision::DetectedObjects objects;
+  bb_msgs::DetectedObjects objects;
   std::string identifier;
   float area = 0;
   bool passed = true; 

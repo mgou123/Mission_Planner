@@ -13,7 +13,7 @@ IsFullBinSeenCondition::IsFullBinSeenCondition(
 
 BT::NodeStatus IsFullBinSeenCondition::tick()
 {   
-  vision::DetectedObjects objects; 
+  bb_msgs::DetectedObjects objects; 
   float area_benchmark;
   int x_min = 10000; 
   int x_max = 0; 

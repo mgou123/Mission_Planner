@@ -13,9 +13,9 @@ CalcCoverSetpoint::CalcCoverSetpoint(
 
 BT::NodeStatus CalcCoverSetpoint::CalcCoverSetpoint::tick()
 {   
-  vision::DetectedObjects objects;
-  vision::DetectedObject lid_1;
-  vision::DetectedObject lid_2;
+  bb_msgs::DetectedObjects objects;
+  bb_msgs::DetectedObject lid_1;
+  bb_msgs::DetectedObject lid_2;
   int pre_direction; 
   float lift_ratio_x;
   float lift_ratio_y;

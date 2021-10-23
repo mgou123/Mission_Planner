@@ -13,7 +13,7 @@ IsPartBinSeenCondition::IsPartBinSeenCondition(
 
 BT::NodeStatus IsPartBinSeenCondition::tick()
 {   
-  vision::DetectedObjects objects; 
+  bb_msgs::DetectedObjects objects; 
   int count = 0; 
 
   if (!getInput("vision_objects", objects)) {

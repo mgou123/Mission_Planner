@@ -1,58 +1,58 @@
 #include <string>
 #include <memory>
 
-#include "bin_bt_plugins/condition/is_handle_flat_condition.hpp"
+#include "bin_bt_plugins/condition/is_cover_flat_condition.hpp"
 
 namespace mp_behavior_tree
 {
-IsHandleFlatCondition::IsHandleFlatCondition(
+IsCoverFlatCondition::IsCoverFlatCondition(
     const std::string & condition_name,
     const BT::NodeConfiguration & conf)
   : BT::ConditionNode(condition_name, conf) {}
 
-BT::NodeStatus IsHandleFlatCondition::tick()
+BT::NodeStatus IsCoverFlatCondition::tick()
 {   
   bb_msgs::DetectedObjects objects;
-  bb_msgs::DetectedObject handle_1;
-  bb_msgs::DetectedObject handle_2;
-  float flat_ratio; 
+  bb_msgs::DetectedObject cover_1;
+  bb_msgs::DetectedObject cover_2;
+  float angle_range; 
   int count = 0;
 
   if (!getInput("vision_objects", objects)) {
-    ROS_ERROR("[IsHandleFlat] objects not provided!");
+    ROS_ERROR("[IsCoverFlat] objects not provided!");
     return BT::NodeStatus::FAILURE;
   } else {
     getInput("vision_objects", objects);
   }
 
-  if (!getInput("flat_ratio", flat_ratio)) {
-    ROS_ERROR("[IsHandleFlat] flat_ratio not provided!");
+  if (!getInput("angle_range", angle_range)) {
+    ROS_ERROR("[IsCoverFlat] angle_range not provided!");
     return BT::NodeStatus::FAILURE;
   } else {
-    getInput("flat_ratio", objects);
+    getInput("angle_range", objects);
   }
 
-  ROS_INFO("Is handle flat running");
+  ROS_INFO("Is cover flat running");
 
   for (auto object : objects.detected) {
     //ROS_INFO("1");
-    if (object.name.compare("Handle") == 0) {
+    if (object.name.compare("cover") == 0) {
       if (count == 0) {
         count ++;
-        handle_1 = object; 
+        cover_1 = object; 
       } else if (count == 1) {
         count ++;
-        handle_2 = object;
+        cover_2 = object;
       }
     }
   }
   
   if (count < 2) {
-    ROS_INFO("not enough handles seen");
+    ROS_INFO("not enough covers seen");
     return BT::NodeStatus::FAILURE;
   }
 
-  if (handle_1.bbox_height / handle_1.bbox_width < flat_ratio && handle_2.bbox_height / handle_2.bbox_width < flat_ratio) {
+  if (cover_1.bbox_height / cover_1.bbox_width < angle_range && cover_2.bbox_height / cover_2.bbox_width < angle_range) {
     return BT::NodeStatus::SUCCESS;
   } else {
     return BT::NodeStatus::FAILURE;
@@ -64,5 +64,5 @@ BT::NodeStatus IsHandleFlatCondition::tick()
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<mp_behavior_tree::IsHandleFlatCondition>("IsHandleFlat");
+  factory.registerNodeType<mp_behavior_tree::IsCoverFlatCondition>("IsCoverFlat");
 }

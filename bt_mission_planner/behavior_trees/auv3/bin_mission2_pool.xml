@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="BehaviorTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="BehaviorTree">
+        <Sequence>
+            <Action ID="ControllerService" enable="true" service_name="/auv3/controller"/>
+            <SetBlackboard output_key="vision_topic" value="/auv3/vision/external/detected"/>
+            <SetBlackboard output_key="cover_vision_topic" value="/auv3/vision/detected"/>
+            <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
+            <SetBlackboard output_key="trial_dis" value="1.0"/>
+            <Action ID="DetectorAUVService" objects="bin" service_name="/auv3/vision/detector"/>
+            
+            <ReactiveFallback>
+                <Sequence>
+                    <Action ID="UpdateDetectedObjects" queue_size="" result="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Condition ID="IsPartBinSeen" vision_objects="{vision_detected}"/>
+                </Sequence>
+                <Repeat num_cycles="50">
+                    <Sequence>
+                        <Action ID="NavigateControl" depth="0.3" forward="{trial_dis}" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0.0"/>
+                        <Action ID="NavigateControl" depth="0.3" forward="0.0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="90"/>
+                        <Action ID="Adder" orig_value="{trial_dis}" result="{trial_dis}" value_added="0.2"/>
+                    </Sequence>
+                </Repeat>
+            </ReactiveFallback>
+            
+            <ReactiveFallback>
+                <Sequence>
+                    <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Condition ID="IsEnoughPicSeen" pic_num="4" vision_objects="{vision_detected}"/>
+                </Sequence>
+                <Sequence>
+
+                    <!-- Move forward, backwards and spin until see 4 pics -->
+                    <Action ID="NavigateControl" depth="0.3" forward="0.6" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                    <Repeat num_cycles="10">
+                        <Sequence>
+                            <Action ID="NavigateControl" depth="0.3" forward="0.0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="30"/>
+                            <Action ID="NavigateControl" depth="0.3" forward="1.0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                            <Action ID="NavigateControl" depth="0.3" forward="-2.0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                            <Action ID="NavigateControl" depth="0.3" forward="1.0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                        </Sequence>
+                    </Repeat>
+                    
+                    <!-- Move squarely until see 4 pics -->
+                    <!-- <Sequence>
+                        <Action ID="NavigateControl" depth="0.3" forward="0.3" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                        <Action ID="NavigateControl" depth="0.3" forward="0.4" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                        <Action ID="NavigateControl" depth="0.3" forward="-0.6" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                        <Action ID="NavigateControl" depth="0.3" forward="-0.8" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                        <Action ID="NavigateControl" depth="0.3" forward="0.6" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                        <Action ID="NavigateControl" depth="0.3" forward="0.4" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                    </Sequence> -->
+
+                </Sequence>
+            </ReactiveFallback>
+            <Action ID="ChoosePic" pic_identifier="pic" gate_side="Gman" vision_objects="{vision_detected}"/>
+            
+            <!-- <ReactiveFallback>
+                <Sequence>
+                    <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Condition ID="IsPicCentered" center_offset_x="30" center_offset_y="30" pic_identifier="{pic}" vision_objects="{vision_detected}"/>
+                </Sequence>
+                <Sequence>
+                    <Action ID="CalcPicAngle" pic_identifier="{pic}" ratio="0.004" vision_objects="{vision_detected}" x_goal="go_pic_x" y_goal="go_pic_y" yaw_goal="go_pic_yaw"/>
+                    <Action ID="NavigateControl" depth="0.3" forward="{go_pic_y}" server_name="/auv3/LocomotionServer" server_timeout="" sideways="{go_pic_x}" yaw="{go_pic_yaw}"/>
+                </Sequence>
+            </ReactiveFallback> -->
+            <Action ID="CalcPicAngle" pic_identifier="{pic}" ratio="0.002" vision_objects="{vision_detected}" x_goal="go_pic_x" y_goal="go_pic_y" yaw_goal="go_pic_yaw"/>
+            <Action ID="NavigateControl" depth="0.3" forward="{go_pic_y}" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0" yaw="0"/>
+            <Action ID="NavigateControl" depth="0.3" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="{go_pic_x}" yaw="0"/>
+            <Action ID="NavigateToPose" depth_lock="" goal="0;-0.2;0.8;0" relative="true" server_name="/auv3/LocomotionServer" server_timeout="" yaw_lock="true"/>
+            <Action ID="ManipulatorsService" service_name="/auv3/manipulators" top_torpedo="false" bottom_torpedo="false" dropper="true" grabber="false" extend_linear="false" retract_linear="false"/>
+        </Sequence>
+    </BehaviorTree>
+</root>

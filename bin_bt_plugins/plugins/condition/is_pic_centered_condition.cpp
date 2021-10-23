@@ -12,8 +12,8 @@ IsPicCenteredCondition::IsPicCenteredCondition(
 
 BT::NodeStatus IsPicCenteredCondition::tick()
 {   
-  vision::DetectedObjects objects;
-  vision::DetectedObject pic;
+  bb_msgs::DetectedObjects objects;
+  bb_msgs::DetectedObject pic;
   std::string identifier;
   float center_offset_x; 
   float center_offset_y;

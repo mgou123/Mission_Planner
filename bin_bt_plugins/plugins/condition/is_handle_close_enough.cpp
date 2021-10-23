@@ -12,7 +12,7 @@ IsHandleCloseEnoughCondition::IsHandleCloseEnoughCondition(
 
 BT::NodeStatus IsHandleCloseEnoughCondition::tick()
 {   
-  vision::DetectedObjects objects;
+  bb_msgs::DetectedObjects objects;
   float width_benchmark; 
 
   if (!getInput("vision_objects", objects)) {

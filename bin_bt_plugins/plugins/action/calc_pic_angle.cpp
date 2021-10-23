@@ -3,7 +3,6 @@
 
 #include "bin_bt_plugins/action/calc_pic_angle.hpp"
 
-
 namespace mp_behavior_tree
 {
 
@@ -14,8 +13,8 @@ CalcPicAngle::CalcPicAngle(
 
 BT::NodeStatus CalcPicAngle::CalcPicAngle::tick()
 {   
-  vision::DetectedObjects objects;
-  vision::DetectedObject pic;
+  bb_msgs::DetectedObjects objects;
+  bb_msgs::DetectedObject pic;
   std::string identifier;
   float center_offset_x; 
   float center_offset_y; 
@@ -68,6 +67,8 @@ BT::NodeStatus CalcPicAngle::CalcPicAngle::tick()
   float view_center_x = pic.image_width / 2;
   float view_center_y = pic.image_height / 2;
   
+  ROS_INFO("looking for %s", identifier);
+
   x = ratio * (pic.centre_x - view_center_x);
   y = - ratio * (pic.centre_y - view_center_y);
 

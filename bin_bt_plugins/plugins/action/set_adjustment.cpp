@@ -12,8 +12,8 @@ namespace mp_behavior_tree
 
 BT::NodeStatus SetAdjustment::tick()
 {   
-  vision::DetectedObjects objects;
-  vision::DetectedObject lid;
+  bb_msgs::DetectedObjects objects;
+  bb_msgs::DetectedObject lid;
   float param_x; 
   float param_y;
   float x_goal;

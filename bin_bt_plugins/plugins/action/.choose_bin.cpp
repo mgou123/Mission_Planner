@@ -13,7 +13,7 @@ ChoosePic::ChoosePic(
 
 BT::NodeStatus ChoosePic::tick()
 {   
-  vision::DetectedObjects objects; 
+  bb_msgs::DetectedObjects objects; 
   std::string gate_side;
   int task_identifier;
   int count_gman;
