@@ -13,7 +13,7 @@ ChoosePic::ChoosePic(
 
 BT::NodeStatus ChoosePic::tick()
 {   
-  vision::DetectedObjects objects; 
+  std::vector<bb_msgs::DetectedObject> objects; 
   std::string gate_side;
   int task_identifier;
   int count_gman;
@@ -45,7 +45,7 @@ BT::NodeStatus ChoosePic::tick()
     ROS_ERROR("[ChoosePic] Invalid side of gate!");
   }
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
     pic_num += 1; 
     if (task_identifier == 0) {
       if (object.name == "Barrel") {

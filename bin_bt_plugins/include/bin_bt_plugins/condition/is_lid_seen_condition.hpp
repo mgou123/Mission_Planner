@@ -6,7 +6,7 @@
 #include <iostream>
 
 #include "ros/ros.h"
-#include "vision/DetectedObjects.h"
+#include "bb_msgs/DetectedObject.h"
 #include "behaviortree_cpp_v3/condition_node.h"
 
 namespace mp_behavior_tree
@@ -25,7 +25,7 @@ public:
     static BT::PortsList providedPorts()
     {
         return {
-            BT::InputPort<vision::DetectedObjects>("vision_objects", "Detected Objects"),
+            BT::InputPort<std::vector<bb_msgs::DetectedObject>>("vision_objects", "Detected Objects"),
             BT::InputPort<int>("lid_num", "larger than or equal to lid_num of lids are seen"),
         };
     }

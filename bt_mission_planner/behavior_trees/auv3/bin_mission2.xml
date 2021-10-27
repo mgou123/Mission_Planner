@@ -12,7 +12,7 @@
             <!-- Move in spiral until seeing one lid -->
             <ReactiveFallback>
                 <Sequence>
-                    <Action ID="UpdateDetectedObjects" queue_size="" result="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Action ID="UpdateDetectedObjects" queue_size="" objects="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
                     <Condition ID="IsLidSeen" lid_num="1" vision_objects="{vision_detected}"/>
                 </Sequence>
                 <Repeat num_cycles="5">
@@ -26,7 +26,7 @@
             
             <ReactiveFallback>
                 <Sequence>
-                    <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Action ID="UpdateDetectedObjects" queue_size="" objects="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
                     <Condition ID="IsLidSeen" lid_num="2" vision_objects="{vision_detected}"/>
                 </Sequence>
                 <Sequence>
@@ -37,7 +37,7 @@
             <Action ID="ChoosePic" pic_identifier="pic" gate_side="Bootlegger" vision_objects="{vision_detected}"/>
             <ReactiveFallback>
                 <Sequence>
-                    <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Action ID="UpdateDetectedObjects" queue_size="" objects="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
                     <Condition ID="IsPicCentered" center_offset_x="15" center_offset_y="15" pic_identifier="{pic}" vision_objects="{vision_detected}"/>
                 </Sequence>
                 <Sequence>

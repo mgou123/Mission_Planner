@@ -19,7 +19,9 @@ namespace mp_behavior_tree
         // mandatory to define this method
         static BT::PortsList providedPorts()
         {
-            return providedBasicPorts({BT::InputPort<std::string>("prefix", "Prefix for blackboard key of each detected object")});
+            return providedBasicPorts({
+                BT::OutputPort<std::vector<bb_msgs::DetectedObject>>("objects", "objects detected")
+            });
         }
 
         BT::NodeStatus on_success() override;

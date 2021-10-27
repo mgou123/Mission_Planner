@@ -12,8 +12,8 @@ IsCenterAlignedCondition::IsCenterAlignedCondition(
 
 BT::NodeStatus IsCenterAlignedCondition::tick()
 {   
-  vision::DetectedObjects objects;
-  vision::DetectedObject pic;
+  std::vector<bb_msgs::DetectedObject> objects;
+  bb_msgs::DetectedObject pic;
   std::string identifier;
   float center_offset_x;
   float center_offset_y;
@@ -51,7 +51,7 @@ BT::NodeStatus IsCenterAlignedCondition::tick()
   ROS_INFO("is center aligned running");
   ROS_INFO("looking for %s", identifier.c_str());
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
     //ROS_INFO("1");
     if (object.name.compare(identifier) == 0) {
       pic = object;

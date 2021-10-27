@@ -17,6 +17,7 @@ public:
     
     static BT::PortsList providedPorts() {
         return providedBasicPorts({
+            BT::OutputPort<nav_msgs::Odometry>("result", "Odometry output"),
             BT::OutputPort<double>("depth", "Port to write depth value to") // hack job for now to correct for depth
         });
     }

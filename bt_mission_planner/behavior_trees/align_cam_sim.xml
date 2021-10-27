@@ -4,7 +4,7 @@
       <Sequence>
         <RetryUntilSuccesful num_attempts="-1">
           <Sequence>
-            <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+            <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
             <ComputeGoal vision_objects="{detected_objects}" target_identity="Bootlegger Small Hole" main_target="bootlegger" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
           </Sequence>
         </RetryUntilSuccesful>

@@ -15,7 +15,7 @@
             <SetObjectGoal vision_objects="{detected_objects}" target_identity="badge" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
             <NavigateToPose server_name="{server_name}" goal="0;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
 
-            <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="20.0" />
+            <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="20.0" />
             <SetObjectGoal vision_objects="{detected_objects}" target_identity="badge" goal="{object_goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
 
             <NavigateToPose server_name="{server_name}" goal="{object_goal}" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}"/>

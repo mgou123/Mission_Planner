@@ -13,9 +13,9 @@ CalcCoverSetpoint::CalcCoverSetpoint(
 
 BT::NodeStatus CalcCoverSetpoint::CalcCoverSetpoint::tick()
 {   
-  vision::DetectedObjects objects;
-  vision::DetectedObject lid_1;
-  vision::DetectedObject lid_2;
+  std::vector<bb_msgs::DetectedObject> objects;
+  bb_msgs::DetectedObject lid_1;
+  bb_msgs::DetectedObject lid_2;
   int pre_direction; 
   float lift_ratio_x;
   float lift_ratio_y;
@@ -60,7 +60,7 @@ BT::NodeStatus CalcCoverSetpoint::CalcCoverSetpoint::tick()
     getInput("pre_direction", pre_direction);
   }
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
     if (object.name == "Lid" && count == 0) {
       lid_1 = object; 
       count++;

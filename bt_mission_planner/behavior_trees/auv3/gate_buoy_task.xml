@@ -40,7 +40,7 @@
     <Sequence>
       <!-- Hopefully it finds the object... -->
       <RetryUntilSuccesful num_attempts="-1">
-        <UpdateDetectedObjects topic_name="/auv3/vision/detected" result="vision_detected" />
+        <UpdateDetectedObjects topic_name="/auv3/vision/detected" objects="vision_detected" />
       </RetryUntilSuccesful>
       <FindBuoy vision_objects="{vision_detected}" target_identity="badge" forward="{forward}" sideways="{sideways}" depth="{depth}" yaw="{yaw}"/>
   
@@ -48,7 +48,7 @@
       <NavigateControl server_name="/auv3/LocomotionServer" forward="0.0" sideways="0.0" depth="0.7" yaw="{yaw}"/>
 
       <RetryUntilSuccesful num_attempts="-1">
-        <UpdateDetectedObjects topic_name="/auv3/vision/detected" result="vision_detected" />
+        <UpdateDetectedObjects topic_name="/auv3/vision/detected" objects="vision_detected" />
       </RetryUntilSuccesful>
       <FindBuoy vision_objects="{vision_detected}" target_identity="badge" forward="{forward}" sideways="{sideways}" depth="{depth}" yaw="{yaw}"/>
       

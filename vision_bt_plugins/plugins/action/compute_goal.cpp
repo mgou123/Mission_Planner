@@ -12,7 +12,7 @@ namespace mp_behavior_tree
 
   BT::NodeStatus ComputeGoal::tick()
   {
-    bb_msgs::DetectedObjects objects;
+    std::vector<bb_msgs::DetectedObject> objects;
     std::string target_identity;
     std::string main_target;
     geometry_msgs::PoseStamped goalRange;
@@ -29,7 +29,7 @@ namespace mp_behavior_tree
       return BT::NodeStatus::FAILURE;
     }
 
-    if (objects.detected.size() <= 0)
+    if (objects.size() <= 0)
     {
       ROS_WARN("[ComputeGoal] no objects received from vision!");
       return BT::NodeStatus::FAILURE;
@@ -49,7 +49,7 @@ namespace mp_behavior_tree
     {
       // Finding main_target
       ROS_INFO("[ComputeGoal] Finding %s", main_target.c_str());
-      for (auto object : objects.detected)
+      for (auto object : objects)
       {
         std::string name = object.name;
         bool isMainTarget = object.name.compare(main_target) == 0;
@@ -84,7 +84,7 @@ namespace mp_behavior_tree
 
     // Finding target_identity
     ROS_INFO("[ComputeGoal] Finding %s", target_identity.c_str());
-    for (auto object : objects.detected)
+    for (auto object : objects)
     {
       ROS_INFO("[ComputeGoal]: Object Name: %s", object.name.c_str());
       ROS_INFO("[ComputeGoal]: Found? : %d", object.name.compare(target_identity) == 0);

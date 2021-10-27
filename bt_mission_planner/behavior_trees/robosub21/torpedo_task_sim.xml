@@ -16,7 +16,7 @@
       <!-- Find vision_main_target -->
       <ReactiveFallback>
         <Sequence>
-          <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+          <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
           <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_main_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
         </Sequence>
         <SubTree ID="SideSweepTree" node="node" server_name="server_name" original_yaw="{object_yaw}" depth="standard_depth" />
@@ -35,7 +35,7 @@
         <Sequence>
           <RetryUntilSuccesful num_attempts="-1">
             <Sequence>
-              <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+              <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
               <ComputeGoal vision_objects="{detected_objects}" target_identity="{vision_target}" main_target="{vision_main_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
             </Sequence>
           </RetryUntilSuccesful>
@@ -56,7 +56,7 @@
 
       <RetryUntilSuccesful num_attempts="-1">
         <Sequence>
-          <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+          <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
           <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_main_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
         </Sequence>
       </RetryUntilSuccesful>
@@ -69,7 +69,7 @@
         <Sequence>
           <RetryUntilSuccesful num_attempts="-1">
             <Sequence>
-              <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+              <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
               <ComputeGoal vision_objects="{detected_objects}" target_identity="{vision_target}" main_target="{vision_main_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
             </Sequence>
           </RetryUntilSuccesful>
@@ -90,7 +90,7 @@
 
       <RetryUntilSuccesful num_attempts="-1">
         <Sequence>
-          <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+          <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
           <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_main_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
         </Sequence>
       </RetryUntilSuccesful>

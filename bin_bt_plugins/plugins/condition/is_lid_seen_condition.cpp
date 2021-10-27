@@ -15,7 +15,7 @@ BT::NodeStatus IsLidSeenCondition::tick()
 {   
   int lid_num = 0; 
   int count = 0;
-  vision::DetectedObjects objects; 
+  std::vector<bb_msgs::DetectedObject> objects; 
 
   if (!getInput("vision_objects", objects)) {
       ROS_ERROR("[IsLidSeen] objects not provided!");
@@ -31,7 +31,7 @@ BT::NodeStatus IsLidSeenCondition::tick()
       getInput("lid_num", lid_num);
   }
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
       if (object.name == "Lid") {
           ROS_INFO("one more lid");
           count = count + 1;

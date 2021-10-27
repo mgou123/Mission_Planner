@@ -12,7 +12,7 @@ IsAreaEnoughCondition::IsAreaEnoughCondition(
 
 BT::NodeStatus IsAreaEnoughCondition::tick()
 {   
-  vision::DetectedObjects objects;
+  std::vector<bb_msgs::DetectedObject> objects;
   std::string identifier;
   float area = 0;
   bool passed = true; 
@@ -42,7 +42,7 @@ BT::NodeStatus IsAreaEnoughCondition::tick()
   // ROS_INFO("is picture centered running");
   ROS_INFO("checking area of %s", identifier.c_str());
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
     //ROS_INFO("1");
     detected = true;
     if (object.name.compare(identifier) == 0) {

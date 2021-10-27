@@ -13,7 +13,7 @@ IsPartBinSeenCondition::IsPartBinSeenCondition(
 
 BT::NodeStatus IsPartBinSeenCondition::tick()
 {   
-  vision::DetectedObjects objects; 
+  std::vector<bb_msgs::DetectedObject> objects; 
   int count = 0; 
 
   if (!getInput("vision_objects", objects)) {
@@ -23,7 +23,7 @@ BT::NodeStatus IsPartBinSeenCondition::tick()
       getInput("vision_objects", objects);
   }
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
     count++; 
   }
 
