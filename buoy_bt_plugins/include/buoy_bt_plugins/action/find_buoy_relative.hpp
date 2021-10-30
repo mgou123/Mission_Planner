@@ -2,7 +2,7 @@
 #define BUOY_BT_PLUGINS__PLUGINS__ACTION__FIND_BUOY_RELATIVE_HPP_
 
 #include <ros/ros.h>
-#include "vision/DetectedObjects.h"
+#include "bb_msgs/DetectedObject.h"
 #include <behaviortree_cpp_v3/action_node.h>
 
 namespace mp_behavior_tree
@@ -18,7 +18,7 @@ public :
     static BT::PortsList providedPorts() 
     {
         return {
-            BT::InputPort<vision::DetectedObjects>("vision_objects", "Objects detected by vision pipeline as a vision::DetectedObjects message"),
+            BT::InputPort<std::vector<bb_msgs::DetectedObject>>("vision_objects", "Objects detected by vision pipeline as a bb_msgs::DetectedObject vector"),
             BT::InputPort<std::string>("target_identity", "Target to be made as goal. String"),
             BT::OutputPort<float>("forward", "Forward as float"),
             BT::OutputPort<float>("sideways", "Sideways as float"),

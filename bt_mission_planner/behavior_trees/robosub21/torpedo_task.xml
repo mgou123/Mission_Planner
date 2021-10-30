@@ -3,7 +3,7 @@
   <BehaviorTree ID="TorpedoTaskTree">
     <Sequence>
       <SetBlackboard output_key="vision_main_target" value="bootlegger"/>
-      <SetBlackboard output_key="vision_target" value="bootlegger_big_hole"/>
+      <SetBlackboard output_key="vision_target" value="Bootlegger Big Hole"/>
       <DetectorAUVService service_name="{vision_service_name}" objects="bootlegger" enable="true"/>
 
       <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
@@ -14,29 +14,32 @@
       <SetBlackboard output_key="goal" value="0;0" />
 
       <!-- Find vision_main_target -->
-      <ReactiveFallback>
-        <Sequence>
-          <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
-          <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_main_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
-        </Sequence>
-        <SubTree ID="SideSweepTree" node="node" server_name="server_name" original_yaw="{object_yaw}" depth="standard_depth" />
-      </ReactiveFallback>
+      <Timeout msec="10000">
+        <ReactiveFallback>
+          <Sequence>
+            <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
+            <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_main_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
+          </Sequence>
+          <SubTree ID="SideSweepTree" node="node" server_name="server_name" original_yaw="{object_yaw}" depth="standard_depth" />
+        </ReactiveFallback>
+      </Timeout>
 
-      <!-- TODO: YAW ALIGNMENT HERE -->
-      <NavigateToPose server_name="{server_name}" goal="0;0;0;0" yaw_lock="{object_yaw}" yaw_lock_relative="true" depth_lock="{standard_depth}" />
+      <!-- Align yaw -->
+      <NavigateToPose server_name="{server_name}" goal="0;0;0;0" yaw_lock="{object_yaw}" depth_lock="{standard_depth}" yaw_tolerance="1"/>
 
-      <!-- Go To Hole TODO: Make this modular for target_identity-->
+
+      <!-- Go To Hole -->
       <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
       <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
       <SplitPoseComponents pose="{pose}" yaw="{current_yaw}"/>
 
       <!-- Cam centering Round 1: Will bring vehicle to 2m in front of hole -->
-      <Repeat num_cycles="3">
+      <Repeat num_cycles="2">
         <Sequence>
           <RetryUntilSuccesful num_attempts="-1">
             <Sequence>
-              <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
-              <ComputeGoal vision_objects="{detected_objects}" target_identity="Bootlegger Big Hole" main_target="bootlegger" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
+              <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
+              <ComputeGoal vision_objects="{detected_objects}" target_identity="{vision_target}" main_target="{vision_main_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
             </Sequence>
           </RetryUntilSuccesful>
 
@@ -46,7 +49,7 @@
           <ModifyGoal original_pose="{pose}" zeroed_components="x,y" final_pose="{pose}" />
           <ModifyGoal original_pose="{goal}" zeroed_components="x" final_pose="{goal}"/>
           <ModifyGoal original_pose="{goal}" modifying_pose="{pose}" final_pose="{goal}"/>
-          <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" />
+          <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" yaw_tolerance="1"/>
         </Sequence>
       </Repeat>
 
@@ -56,7 +59,7 @@
 
       <RetryUntilSuccesful num_attempts="-1">
         <Sequence>
-          <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+          <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
           <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_main_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
         </Sequence>
       </RetryUntilSuccesful>
@@ -64,13 +67,13 @@
       <ModifyGoal original_pose="{goal}" modifying_pose="-2;0;0" final_pose="{goal}"/>
       <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" depth_lock="{current_depth}"/>
 
-      <!-- Cam Centering Round 2 -->
-      <Repeat num_cycles="3">
+      <!-- Cam Centering Round 2: Better camera aligning at close range-->
+      <Repeat num_cycles="2">
         <Sequence>
           <RetryUntilSuccesful num_attempts="-1">
             <Sequence>
-              <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
-              <ComputeGoal vision_objects="{detected_objects}" target_identity="Bootlegger Big Hole" main_target="bootlegger" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
+              <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
+              <ComputeGoal vision_objects="{detected_objects}" target_identity="{vision_target}" main_target="{vision_main_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
             </Sequence>
           </RetryUntilSuccesful>
 
@@ -80,7 +83,9 @@
           <ModifyGoal original_pose="{pose}" zeroed_components="x,y" final_pose="{pose}" />
           <ModifyGoal original_pose="{goal}" zeroed_components="x" final_pose="{goal}"/>
           <ModifyGoal original_pose="{goal}" modifying_pose="{pose}" final_pose="{goal}"/>
-          <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" />
+          <Timeout msec="10000">
+            <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" />
+          </Timeout>
         </Sequence>
       </Repeat>
 
@@ -90,13 +95,15 @@
 
       <RetryUntilSuccesful num_attempts="-1">
         <Sequence>
-          <UpdateDetectedObjects topic_name="{vision_topic_name}" result="{detected_objects}" timeout_sec="10.0" />
+          <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
           <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_main_target}" goal="{goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
         </Sequence>
       </RetryUntilSuccesful>
       <ModifyGoal original_pose="{goal}" zeroed_components="y,z" final_pose="{goal}"/>
       <ModifyGoal original_pose="{goal}" modifying_pose="-1;0;0" final_pose="{goal}"/>
-      <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" depth_lock="{current_depth}"/>
+      <Timeout>
+        <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}" depth_lock="{current_depth}"/>
+      </Timeout>
 
       <!-- [NO TORPEDO SHOOTING]: Shoots torpedo here -->
       <!-- <Repeat num_cycles="10">
@@ -106,7 +113,7 @@
       </Repeat> -->
 
       <!-- Disable Vision -->
-      <DetectorAUVService service_name="{vision_service_name}" objects="bootlegger_big_hole,bootlegger" enable="false"/>
+      <DetectorAUVService service_name="{vision_service_name}" objects="bootlegger" enable="false"/>
     </Sequence>
   </BehaviorTree>
 </root>

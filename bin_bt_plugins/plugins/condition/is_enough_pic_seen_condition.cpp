@@ -15,8 +15,8 @@ BT::NodeStatus IsEnoughPicSeenCondition::tick()
 {   
   int pic_num = 0; 
   int count = 0; 
-  bb_msgs::DetectedObjects objects; 
-
+  std::vector<bb_msgs::DetectedObject> objects;
+  
   if (!getInput("vision_objects", objects)) {
       ROS_ERROR("[EnoughPicSeen] objects not provided!");
       return BT::NodeStatus::FAILURE;
@@ -31,7 +31,7 @@ BT::NodeStatus IsEnoughPicSeenCondition::tick()
       getInput("pic_num", pic_num);
   }
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
       count += 1; 
   }
 

@@ -13,7 +13,7 @@ CalcPicAngle::CalcPicAngle(
 
 BT::NodeStatus CalcPicAngle::CalcPicAngle::tick()
 {   
-  bb_msgs::DetectedObjects objects;
+  std::vector<bb_msgs::DetectedObject> objects;
   bb_msgs::DetectedObject pic;
   std::string identifier;
   float center_offset_x; 
@@ -58,7 +58,7 @@ BT::NodeStatus CalcPicAngle::CalcPicAngle::tick()
   //   getInput("center_offset_y", center_offset_y);
   // }
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
     if (object.name == identifier) {
       pic = object;
     }

@@ -12,7 +12,7 @@ FindBuoy::FindBuoy(
   : BT::SyncActionNode(xml_tag_name, conf) {}
 
 BT::NodeStatus FindBuoy::tick() {
-  vision::DetectedObjects objects;
+  std::vector<bb_msgs::DetectedObject> objects;
   std::string target_identity;
   // -1: not found (empty)
   // 0: not found (default behavior)
@@ -26,7 +26,7 @@ BT::NodeStatus FindBuoy::tick() {
     getInput("vision_objects", objects);
   }
 
-  if (objects.detected.size() <= 0) {
+  if (objects.size() <= 0) {
     ROS_WARN("[FindBuoy] no objects received from vision!");
     return BT::NodeStatus::FAILURE;
   }
@@ -36,7 +36,7 @@ BT::NodeStatus FindBuoy::tick() {
   }
 
   ROS_INFO("[FindBuoy] Finding %s", target_identity.c_str());
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
     ROS_INFO("[FindBuoy]: Object Name: %s", object.name.c_str());
     ROS_INFO("[FindBuoy]: Found? : %d", object.name.compare(target_identity) == 0);
     if (object.name.compare(target_identity) == 0)
@@ -54,7 +54,7 @@ BT::NodeStatus FindBuoy::tick() {
   ROS_WARN("[FindBuoy]: No correct object found!");
 
   // if (targetFoundFlag == -1) {
-  //   vision::DetectedObject defaultTarget = objects.detected[0];  // Default to first element
+  //   bb_msgs::DetectedObject defaultTarget = objects.detected[0];  // Default to first element
   //   setOutput("forward", defaultTarget.rel_coords[0]);
   //   setOutput("sideways", defaultTarget.rel_coords[1]);
   //   setOutput("depth", defaultTarget.rel_coords[2]);

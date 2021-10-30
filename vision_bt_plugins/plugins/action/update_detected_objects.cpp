@@ -14,14 +14,13 @@ namespace mp_behavior_tree
     BT::NodeStatus UpdateDetectedObjects::on_success()
     {
         std::string prefix = "";
-        if (getInput("prefix", prefix))
-        {
-            for (auto object : result_->detected)
-            {
-                config().blackboard->set<bb_msgs::DetectedObject>(prefix + "_" + object.name, object);
-            }
+        std::vector<bb_msgs::DetectedObject> objects;
+        for (auto object : result_->detected) {
+            objects.push_back(object);
         }
 
+        setOutput("objects", objects);
+    
         return BT::NodeStatus::SUCCESS;
     }
 

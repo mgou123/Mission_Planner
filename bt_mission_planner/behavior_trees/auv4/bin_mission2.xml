@@ -11,7 +11,7 @@
             
             <ReactiveFallback>
                 <Sequence>
-                    <Action ID="UpdateDetectedObjects" queue_size="" result="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Action ID="UpdateDetectedObjects" queue_size="" objects="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
                     <Condition ID="IsPartBinSeen" vision_objects="{vision_detected}"/>
                 </Sequence>
                 <Repeat num_cycles="50">
@@ -25,7 +25,7 @@
             
             <ReactiveFallback>
                 <Sequence>
-                    <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Action ID="UpdateDetectedObjects" queue_size="" objects="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
                     <Condition ID="IsEnoughPicSeen" pic_num="4" vision_objects="{vision_detected}"/>
                 </Sequence>
                 <Sequence>
@@ -57,7 +57,7 @@
             
             <ReactiveFallback>
                 <Sequence>
-                    <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Action ID="UpdateDetectedObjects" queue_size="" objects="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
                     <Condition ID="IsPicCentered" center_offset_x="30" center_offset_y="30" pic_identifier="{pic}" vision_objects="{vision_detected}"/>
                 </Sequence>
                 <Sequence>

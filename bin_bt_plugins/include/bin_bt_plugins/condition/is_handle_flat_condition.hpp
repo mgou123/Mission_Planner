@@ -5,7 +5,7 @@
 #include <string>
 
 #include "ros/ros.h"
-#include "bb_msgs/DetectedObjects.h"
+#include "bb_msgs/DetectedObject.h"
 #include "behaviortree_cpp_v3/condition_node.h"
 
 namespace mp_behavior_tree
@@ -23,8 +23,7 @@ public:
 
     static BT::PortsList providedPorts()
     {
-        return {
-            BT::InputPort<bb_msgs::DetectedObjects>("vision_objects", "Detected Objects"),
+            BT::InputPort<std::vector<bb_msgs::DetectedObject>>("vision_objects", "Detected Objects"),
             BT::InputPort<float>("flat_ratio", "ratio between height and width of bounding box of handle that can be considered flat"),
         };
     }

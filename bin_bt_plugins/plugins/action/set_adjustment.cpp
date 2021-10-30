@@ -12,7 +12,7 @@ namespace mp_behavior_tree
 
 BT::NodeStatus SetAdjustment::tick()
 {   
-  bb_msgs::DetectedObjects objects;
+  std::vector<bb_msgs::DetectedObject> objects;
   bb_msgs::DetectedObject lid;
   float param_x; 
   float param_y;
@@ -40,7 +40,7 @@ BT::NodeStatus SetAdjustment::tick()
     getInput("param_y", param_y);
   }
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
     if (object.name == "Lid") {
       lid = object; 
     }

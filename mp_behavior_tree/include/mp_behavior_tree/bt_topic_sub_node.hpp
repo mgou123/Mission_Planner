@@ -33,7 +33,6 @@ public:
             BT::InputPort<std::string>("topic_name", "Topic name"),
             BT::InputPort<int>("queue_size", 10, "Topic queue size"),
             BT::InputPort<double>("timeout_sec", 2.0, "Timeout for waiting for message publish"),
-            BT::OutputPort<TopicT>("result", "Output port to write message result to"),
         };
 
         basic.insert(addition.begin(), addition.end());
@@ -104,7 +103,6 @@ public:
             ROS_ERROR("[TopicSubNode] Unable to receive messages from topic %s", topic_name_.c_str());
             return on_failure();
         } else {
-            setOutput("result", *result_);
             return on_success();
         }
     }

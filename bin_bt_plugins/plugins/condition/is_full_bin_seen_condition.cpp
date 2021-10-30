@@ -13,7 +13,7 @@ IsFullBinSeenCondition::IsFullBinSeenCondition(
 
 BT::NodeStatus IsFullBinSeenCondition::tick()
 {   
-  bb_msgs::DetectedObjects objects; 
+  std::vector<bb_msgs::DetectedObject> objects; 
   float area_benchmark;
   int x_min = 10000; 
   int x_max = 0; 
@@ -34,7 +34,7 @@ BT::NodeStatus IsFullBinSeenCondition::tick()
       getInput("area_benchmark", area_benchmark);
   }
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
       if (object.centre_x - object.bbox_width / 2 < x_min) {
         x_min = object.centre_x - object.bbox_width / 2;
       } 

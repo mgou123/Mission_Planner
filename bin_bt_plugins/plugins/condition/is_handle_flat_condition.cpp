@@ -12,7 +12,7 @@ IsHandleFlatCondition::IsHandleFlatCondition(
 
 BT::NodeStatus IsHandleFlatCondition::tick()
 {   
-  bb_msgs::DetectedObjects objects;
+  std::vector<bb_msgs::DetectedObject> objects;
   bb_msgs::DetectedObject handle_1;
   bb_msgs::DetectedObject handle_2;
   float flat_ratio; 
@@ -34,7 +34,7 @@ BT::NodeStatus IsHandleFlatCondition::tick()
 
   ROS_INFO("Is handle flat running");
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
     //ROS_INFO("1");
     if (object.name.compare("Handle") == 0) {
       if (count == 0) {

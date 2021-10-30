@@ -12,7 +12,7 @@ namespace mp_behavior_tree
 
   BT::NodeStatus SetObjectGoal::tick()
   {
-    bb_msgs::DetectedObjects objects;
+    std::vector<bb_msgs::DetectedObject> objects;
     std::string target_identity;
     // -1: not found (empty)
     // 0: not found (default behavior)
@@ -25,7 +25,7 @@ namespace mp_behavior_tree
       return BT::NodeStatus::FAILURE;
     }
 
-    if (objects.detected.size() <= 0)
+    if (objects.size() <= 0)
     {
       ROS_WARN("[SetObjectGoal] no objects received from vision!");
       return BT::NodeStatus::FAILURE;
@@ -37,7 +37,7 @@ namespace mp_behavior_tree
     }
 
     ROS_INFO("[SetObjectGoal] Finding %s", target_identity.c_str());
-    for (auto object : objects.detected)
+    for (auto object : objects)
     {
       ROS_INFO("[SetObjectGoal]: Object Name: %s", object.name.c_str());
       ROS_INFO("[SetObjectGoal]: Found? : %d", object.name.compare(target_identity) == 0);
@@ -56,7 +56,7 @@ namespace mp_behavior_tree
 
           setOutput("goal", output_pose);
           setOutput("absolute_depth", (double)(-object.world_coords[2]));
-          setOutput("absolute_yaw", (double)(object.angle));
+          setOutput("absolute_yaw", (double)(object.world_yaw));
 
           ROS_INFO("[SetObjectGoal]: Forward move is : %f", (double)(object.rel_coords[0]));
           ROS_INFO("[SetObjectGoal]: Sidemove is : %f", (double)(object.rel_coords[1]));

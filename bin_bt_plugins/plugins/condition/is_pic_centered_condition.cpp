@@ -12,7 +12,7 @@ IsPicCenteredCondition::IsPicCenteredCondition(
 
 BT::NodeStatus IsPicCenteredCondition::tick()
 {   
-  bb_msgs::DetectedObjects objects;
+  std::vector<bb_msgs::DetectedObject> objects;
   bb_msgs::DetectedObject pic;
   std::string identifier;
   float center_offset_x; 
@@ -49,7 +49,7 @@ BT::NodeStatus IsPicCenteredCondition::tick()
   ROS_INFO("is picture centered running");
   ROS_INFO("looking for %s", identifier.c_str());
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
     //ROS_INFO("1");
     if (object.name.compare(identifier) == 0) {
       pic = object;

@@ -14,7 +14,7 @@
             <!-- Move in spiral until seeing one lid -->
             <ReactiveFallback>
                 <Sequence>
-                    <Action ID="UpdateDetectedObjects" queue_size="" result="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Action ID="UpdateDetectedObjects" queue_size="" objects="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
                     <Condition ID="IsLidSeen" lid_num="1" vision_objects="{vision_detected}"/>
                 </Sequence>
                 <Repeat num_cycles="50">
@@ -52,7 +52,7 @@
             <Action ID="ChoosePic" pic_identifier="pic" gate_side="Gman" vision_objects="{vision_detected}"/>
             <ReactiveFallback>
                 <Sequence>
-                    <Action ID="UpdateDetectedObjects" queue_size="" result="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
+                    <Action ID="UpdateDetectedObjects" queue_size="" objects="{vision_detected}" timeout_sec="" topic_name="{vision_topic}"/>
                     <Condition ID="IsCenterAligned" pic_identifier="{pic}" vision_objects="{vision_detected}" center_offset_x="30" center_offset_y="30" x_ratio="0.6" y_ratio="0.5"/>
                 </Sequence>
                 <Sequence>

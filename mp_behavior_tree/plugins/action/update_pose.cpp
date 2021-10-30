@@ -12,6 +12,7 @@ UpdatePose::UpdatePose(
 }
 
 BT::NodeStatus UpdatePose::on_success() {
+    setOutput("result", *result_);
     setOutput("depth", result_->pose.pose.position.z);
     return BT::NodeStatus::SUCCESS;
 }

@@ -6,7 +6,7 @@
 #include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 
 #include "ros/ros.h"
-#include "bb_msgs/DetectedObjects.h"
+#include "bb_msgs/DetectedObject.h"
 #include "behaviortree_cpp_v3/action_node.h"
 
 namespace mp_behavior_tree
@@ -23,7 +23,7 @@ public:
     static BT::PortsList providedPorts()
     {
         return {
-            BT::InputPort<bb_msgs::DetectedObjects>("vision_objects", "Detected Objects"),
+            BT::InputPort<std::vector<bb_msgs::DetectedObject>>("vision_objects", "Detected Objects"),
             BT::InputPort<float>("ratio", "ration between real world distance and number of pixels"),
             BT::InputPort<float>("lift_ratio_x", "relative x ratio of picking point"),
             BT::InputPort<float>("lift_ratio_y", "relatvie y ratio of picking point"),

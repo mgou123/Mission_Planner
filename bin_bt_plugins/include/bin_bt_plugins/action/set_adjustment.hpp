@@ -6,6 +6,7 @@
 
 #include "ros/ros.h"
 #include "bb_msgs/DetectedObjects.h"
+#include "bb_msgs/DetectedObject.h"
 #include "behaviortree_cpp_v3/action_node.h"
 
 namespace mp_behavior_tree
@@ -24,7 +25,7 @@ public:
     static BT::PortsList providedPorts()
     {
         return {
-            BT::InputPort<bb_msgs::DetectedObjects>("vision_objects", "Detected Objects"),
+            BT::InputPort<std::vector<bb_msgs::DetectedObject>>("vision_objects", "Detected Objects"),
             BT::InputPort<float>("param_x", "x unit movement"),
             BT::InputPort<float>("param_y", "x unit movement"),
             BT::OutputPort<float>("x_goal", "sideways move"),

@@ -12,7 +12,7 @@ IsHandleCloseEnoughCondition::IsHandleCloseEnoughCondition(
 
 BT::NodeStatus IsHandleCloseEnoughCondition::tick()
 {   
-  bb_msgs::DetectedObjects objects;
+  std::vector<bb_msgs::DetectedObject> objects;
   float width_benchmark; 
 
   if (!getInput("vision_objects", objects)) {
@@ -31,7 +31,7 @@ BT::NodeStatus IsHandleCloseEnoughCondition::tick()
 
   ROS_INFO("Is handle CloseEnough running");
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
     //ROS_INFO("1");
     if (object.name.compare("Handle") == 0) {
       if (object.bbox_height > width_benchmark) {
