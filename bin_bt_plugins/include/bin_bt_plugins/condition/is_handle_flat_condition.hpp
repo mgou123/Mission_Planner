@@ -1,5 +1,5 @@
-#ifndef BIN_BT_PLUGINS__CONDITION__IS_HANDLE_FLAT_CONDITION_
-#define BIN_BT_PLUGINS__CONDITION__IS_HANDLE_FLAT_CONDITION_
+#ifndef BIN_BT_PLUGINS__CONDITION__IS_COVER_FLAT_CONDITION_
+#define BIN_BT_PLUGINS__CONDITION__IS_COVER_FLAT_CONDITION_
 
 #include <memory>
 #include <string>
@@ -23,11 +23,13 @@ public:
 
     static BT::PortsList providedPorts()
     {
+        return {    
             BT::InputPort<std::vector<bb_msgs::DetectedObject>>("vision_objects", "Detected Objects"),
-            BT::InputPort<float>("flat_ratio", "ratio between height and width of bounding box of handle that can be considered flat"),
+            BT::InputPort<float>("flat_ratio", "ratio between height and width of bounding box of handle that can be considered flat")
         };
-    }
+    }    
 };
+
 
 } // namespace mp_behavior_tree
 

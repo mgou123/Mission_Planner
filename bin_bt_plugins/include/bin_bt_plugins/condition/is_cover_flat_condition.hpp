@@ -24,7 +24,7 @@ public:
     static BT::PortsList providedPorts()
     {
         return {
-            BT::InputPort<bb_msgs::DetectedObjects>("vision_objects", "Detected Objects"),
+            BT::InputPort<std::vector<bb_msgs::DetectedObject>>("vision_objects", "Detected Objects"),
             BT::InputPort<float>("angle_range", "accepted angle range that the cover is considered flat"),
         };
     }

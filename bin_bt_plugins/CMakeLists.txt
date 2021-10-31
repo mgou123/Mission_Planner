@@ -171,6 +171,9 @@ list(APPEND plugin_libs mp_is_full_bin_seen_condition_bt_node)
 add_library(mp_is_part_bin_seen_condition_bt_node SHARED plugins/condition/is_part_bin_seen_condition.cpp)
 list(APPEND plugin_libs mp_is_part_bin_seen_condition_bt_node)
 
+add_library(mp_is_cover_flat_condition_bt_node SHARED plugins/condition/is_cover_flat_condition.cpp)
+list(APPEND plugin_libs mp_is_cover_flat_condition_bt_node)
+
 foreach(bt_plugin ${plugin_libs})
   add_dependencies(${bt_plugin} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
   target_link_libraries(${bt_plugin}

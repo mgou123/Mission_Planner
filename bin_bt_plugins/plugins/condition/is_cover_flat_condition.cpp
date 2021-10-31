@@ -12,7 +12,7 @@ IsCoverFlatCondition::IsCoverFlatCondition(
 
 BT::NodeStatus IsCoverFlatCondition::tick()
 {   
-  bb_msgs::DetectedObjects objects;
+  std::vector<bb_msgs::DetectedObject> objects;
   bb_msgs::DetectedObject cover_1;
   bb_msgs::DetectedObject cover_2;
   float angle_range; 
@@ -34,7 +34,7 @@ BT::NodeStatus IsCoverFlatCondition::tick()
 
   ROS_INFO("Is cover flat running");
 
-  for (auto object : objects.detected) {
+  for (auto object : objects) {
     //ROS_INFO("1");
     if (object.name.compare("cover") == 0) {
       if (count == 0) {
@@ -52,7 +52,7 @@ BT::NodeStatus IsCoverFlatCondition::tick()
     return BT::NodeStatus::FAILURE;
   }
 
-  if (cover_1.bbox_height / cover_1.bbox_width < angle_range && cover_2.bbox_height / cover_2.bbox_width < angle_range) {
+  if (cover_1.angle < angle_range && cover_2.angle < angle_range) {
     return BT::NodeStatus::SUCCESS;
   } else {
     return BT::NodeStatus::FAILURE;
