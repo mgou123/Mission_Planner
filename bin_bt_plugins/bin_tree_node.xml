@@ -55,6 +55,7 @@
     <Condition ID="IsLidSeen">
       <input_port name="vision_objects">Detected Objects</input_port>
       <input_port name="lid_num">larger than or equal to lid_num of lids are seen</input_port>
+      <input_port name="area_benchmark">larger than or equal to lid_num of lids are seen</input_port>
     </Condition>
 
     <Condition ID="IsEnoughPicSeen">
@@ -87,6 +88,13 @@
     <Condition ID="IsHandleFlat">
       <input_port name="vision_objects">Detected Objects</input_port>
       <input_port name="flat_ratio">ratio between height and width of bounding box of handle that can be considered flat</input_port>
+    </Condition>
+
+    <Condition ID="IsCoverFlat">
+      <input_port name="vision_objects">Detected Objects</input_port>
+      <input_port name="angle">accepted angle range that the cover is considered flat</input_port>
+      <input_port name="error_range">tolerated range of error</input_port>
+      <input_port name="detector_name">the name of the detector for the cover</input_port>
     </Condition>
 
     <Condition ID="IsFullBinSeen">

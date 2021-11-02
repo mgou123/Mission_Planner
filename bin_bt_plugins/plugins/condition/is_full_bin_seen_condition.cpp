@@ -15,10 +15,11 @@ BT::NodeStatus IsFullBinSeenCondition::tick()
 {   
   std::vector<bb_msgs::DetectedObject> objects; 
   float area_benchmark;
-  int x_min = 10000; 
-  int x_max = 0; 
-  int y_min = 10000; 
-  int y_max = 0; 
+  float x_min = 10000; 
+  float x_max = 0; 
+  float y_min = 10000; 
+  float y_max = 0; 
+  float area = -1;
 
   if (!getInput("vision_objects", objects)) {
       ROS_ERROR("[FullBinSeen] objects not provided!");
@@ -49,15 +50,20 @@ BT::NodeStatus IsFullBinSeenCondition::tick()
       } 
   }
 
+  ROS_INFO("x_max is %f, x_min is %f, y_max is %f, y_min is %f", x_max, x_min, y_max, y_min);
   if (x_max == 10000 || y_max == 10000) {
     ROS_INFO("no pic seen");
     return BT::NodeStatus::FAILURE;
-  } else if ((y_max - y_min) * (x_max - x_min) >= area_benchmark) {
+  } else {
+    area = (y_max - y_min) * (x_max - x_min);
+    ROS_INFO("area is %f", area);
+    if (area >= area_benchmark) {
       ROS_INFO("see full bin");
       return BT::NodeStatus::SUCCESS;
-  } else {
+    } else {
       ROS_INFO("no full bin");
       return BT::NodeStatus::FAILURE;
+    }  
   }
 }
 

@@ -27,6 +27,7 @@ public:
         return {
             BT::InputPort<std::vector<bb_msgs::DetectedObject>>("vision_objects", "Detected Objects"),
             BT::InputPort<int>("lid_num", "larger than or equal to lid_num of lids are seen"),
+            BT::InputPort<int>("area_benchmark", "larger than or equal to area_benchmark for lid to be considered seen"),
         };
     }
 };

@@ -25,11 +25,13 @@ public:
     {
         return {
             BT::InputPort<std::vector<bb_msgs::DetectedObject>>("vision_objects", "Detected Objects"),
-            BT::InputPort<float>("angle_range", "accepted angle range that the cover is considered flat"),
+            BT::InputPort<float>("angle", "angle aimed"),
+            BT::InputPort<float>("error_range", "tolarated range of error"),
+            BT::InputPort<std::string>("detector_name", "the name of the detector for the cover"),
         };
     }
 };
 
 } // namespace mp_behavior_tree
 
-#endif 
+#endif

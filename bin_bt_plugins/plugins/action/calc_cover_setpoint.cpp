@@ -79,10 +79,10 @@ BT::NodeStatus CalcCoverSetpoint::CalcCoverSetpoint::tick()
   int drop_forward = 1; 
   
   if (count == 0) {
-    ROS_ERROR("Not enough lids seen");
+    ROS_ERROR("Calaulating cover setpoint, Not enough lids seen");
   } else if (count == 1) {
     if (pre_direction == 0) {
-      ROS_ERROR("Not enough lids seen");
+      ROS_ERROR("Calsulating 2nd cover setpoint. Not enough lids seen");
       return BT::NodeStatus::FAILURE;
     } else {
       drop_forward = - pre_direction / abs(pre_direction);
@@ -96,6 +96,8 @@ BT::NodeStatus CalcCoverSetpoint::CalcCoverSetpoint::tick()
   }
 
   drop_pose_1 = drop_forward * 2; 
+  
+  ROS_INFO("lifting at forward %f, sideways %f, dropping at forward %f", lift_pose_1_y, lift_pose_1_x, drop_pose_1);
 
   setOutput("drop_pose_1", drop_pose_1);
   setOutput("lift_pose_1_x", lift_pose_1_x);
