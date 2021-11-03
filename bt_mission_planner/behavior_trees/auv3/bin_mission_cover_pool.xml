@@ -8,14 +8,14 @@
             <SetBlackboard output_key="vision_topic_cover" value="/auv3/vision/detected"/>
             <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
             <SetBlackboard output_key="trial_dis" value="1.0"/>
-            <SetBlackboard output_key="lift_ratio_x" value="0.7"/>
+            <SetBlackboard output_key="lift_ratio_x" value="0.5"/>
             <SetBlackboard output_key="lift_ratio_y" value="0.5"/>
-            <SetBlackboard output_key="picking_depth" value="1.5"/>
-            <SetBlackboard output_key="dropping_depth" value="1.0"/>
-            <SetBlackboard output_key="searching_depth" value="0.3"/>
-            <Action ID="DetectorAUVService" objects="bin_ml_simu_4,bin_cover_real" service_name="/auv3/vision/detector"/>
+            <SetBlackboard output_key="picking_depth" value="0.95"/>
+            <SetBlackboard output_key="dropping_depth" value="0.9"/>
+            <SetBlackboard output_key="searching_depth" value="0.2"/>
+            <Action ID="DetectorAUVService" objects="bin_ml_real_3,bin_cover_real" service_name="/auv3/vision/detector"/>
             
-            <Action ID="NavigateControl" depth="{searching_depth}" forward="-1" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0.0"/>
+            <!-- <Action ID="NavigateControl" depth="{searching_depth}" forward="-1" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0.0"/> -->
             <Action ID="ManipulatorsService" service_name="/auv3/manipulators" top_torpedo="false" bottom_torpedo="false" dropper="false" grabber="false" 
             extend_linear="true" retract_linear="false"/>
             <!-- Move in spiral until seeing one lid -->
@@ -41,7 +41,7 @@
             <ReactiveFallback>
                 <Sequence>
                     <Action ID="UpdateDetectedObjects" queue_size="" objects="cover_detected" timeout_sec="" topic_name="{vision_topic_cover}"/>
-                    <Action ID="IsCoverFlat" vision_objects="{cover_detected}" angle="0" error_range = "10" detector_name = "bin_cover_real"/> 
+                    <Action ID="IsCoverFlat" vision_objects="{cover_detected}" angle="90" error_range = "5" detector_name = "bin_cover_real"/> 
                 </Sequence>
                 <Repeat num_cycles="6">
                     <Action ID="NavigateControl" depth="{searching_depth}" forward="0.0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="20"/>                        
@@ -55,30 +55,30 @@
                     <Action ID="IsFullBinSeen" vision_objects="{vision_detected}" area_benchmark="120000"/>
                 </Sequence>
                 <Sequence>
-                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0.5" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
-                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.9" yaw="0"/>
-                    <Action ID="NavigateControl" depth="{searching_depth}" forward="-1.0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
-                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="-1.8" yaw="0"/>
-                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0.5" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
-                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.9" yaw="0"/>
+                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0.3" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.3" yaw="0"/>
+                    <Action ID="NavigateControl" depth="{searching_depth}" forward="-0.6" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="-0.6" yaw="0"/>
+                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0.3" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.3" yaw="0"/>
                 </Sequence>
             </ReactiveFallback>
             <Action ID="UpdatePose" topic_name="/auv3/nav/odom_ned" result="center_pose_odom" depth="center_depth"/>
             <Action ID="ConvertOdomToPose" odom_pose="{center_pose_odom}" pose="{center_pose}"/>
 
             <!--lift and drop covers one by one--> 
-            <Action ID="CalcCoverSetpoint" vision_objects="{vision_detected}" ratio="0.002" lift_ratio_x="{lift_ratio_x}" lift_ratio_y="{lift_ratio_y}" pre_direction="0" 
+            <Action ID="CalcCoverSetpoint" vision_objects="{vision_detected}" ratio="0.002" lift_ratio_x="{lift_ratio_x}" lift_ratio_y="{lift_ratio_y}" pre_direction="1"
                 lift_pose_1_x="lift_pose_1_x" lift_pose_1_y="lift_pose_1_y" drop_pose_1="drop_pose_1"/>
             <Action ID="NavigateControl" depth="{picking_depth}" forward="{lift_pose_1_y}" server_name="/auv3/LocomotionServer" server_timeout="" sideways="{lift_pose_1_x}" yaw="0"/>
-            <!-- <NavigateToPose server_name="/auv3/LocomotionServer" goal="0;0;0;0" relative="true" depth_lock="{picking_depth}"/> -->
+            <NavigateToPose server_name="/auv3/LocomotionServer" goal="0.05;-0.15;0;0" relative="true" depth_lock="1.05"/>
             <Action ID="ManipulatorsService" service_name="/auv3/manipulators" top_torpedo="false" bottom_torpedo="false" dropper="false" grabber="false" 
                 extend_linear="false" retract_linear="true"/>
             <Action ID="NavigateControl" depth="{dropping_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0" yaw="0"/>
-            <Action ID="NavigateControl" depth="{dropping_depth}" forward="{drop_pose_1}" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0" yaw="0"/>
+            <Action ID="NavigateControl" depth="{dropping_depth}" forward="1.2" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0" yaw="0"/>
             <Action ID="ManipulatorsService" service_name="/auv3/manipulators" top_torpedo="false" bottom_torpedo="false" dropper="false" grabber="false" 
                 extend_linear="true" retract_linear="false"/>
             
-            <NavigateToPose server_name="/auv3/LocomotionServer" goal="{center_pose}" relative="false" depth_lock="0.3"/>
+            <NavigateToPose server_name="/auv3/LocomotionServer" goal="{center_pose}" relative="false" depth_lock="0.2"/>
             <Action ID="CalcCoverSetpoint" vision_objects="{vision_detected}" ratio="0.004" lift_ratio_x="{lift_ratio_x}" lift_ratio_y="{lift_ratio_y}" pre_direction="{drop_pose_1}" 
                 lift_pose_1_x="lift_pose_2_x" lift_pose_1_y="lift_pose_2_y" drop_pose_1="drop_pose_2"/>
             <Action ID="NavigateControl" depth="{picking_depth}" forward="{lift_pose_2_y}" server_name="/auv3/LocomotionServer" server_timeout="" sideways="{lift_pose_2_x}" yaw="0"/>
@@ -86,10 +86,10 @@
             <Action ID="ManipulatorsService" service_name="/auv3/manipulators" top_torpedo="false" bottom_torpedo="false" dropper="false" grabber="false" 
                 extend_linear="false" retract_linear="true"/>
             <Action ID="NavigateControl" depth="{dropping_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0" yaw="0"/>
-            <Action ID="NavigateControl" depth="{dropping_depth}" forward="{drop_pose_2}" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0" yaw="0"/>
+            <Action ID="NavigateControl" depth="{dropping_depth}" forward="1.2" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0" yaw="0"/>
             <Action ID="ManipulatorsService" service_name="/auv3/manipulators" top_torpedo="false" bottom_torpedo="false" dropper="false" grabber="false" 
                 extend_linear="true" retract_linear="false"/>
-            <NavigateToPose server_name="/auv3/LocomotionServer" goal="{center_pose}" relative="false" depth_lock="0.3"/>
+            <NavigateToPose server_name="/auv3/LocomotionServer" goal="{center_pose}" relative="false" depth_lock="0.2"/>
 
             <!--choose a picture to drop the ball -->
             <Action ID="ChoosePic" pic_identifier="pic" gate_side="Gman" vision_objects="{vision_detected}"/>

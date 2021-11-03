@@ -1,4 +1,4 @@
 <launch>
   <rosparam file="$(find bt_mission_planner)/config/robosub21_auv3_bin.yaml" />
-  <node name="mission_planner" pkg="bt_mission_planner" type="mission_planner_node" respawn="true" output="screen"/>
+  <node launch-prefix="xterm -e gdb --args" name="mission_planner" pkg="bt_mission_planner" type="mission_planner_node" respawn="true" output="screen"/>
 </launch>

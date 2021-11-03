@@ -74,7 +74,7 @@ BT::NodeStatus CalcCoverSetpoint::CalcCoverSetpoint::tick()
   float image_centre_y = lid_1.image_height / 2;
   
   lift_pose_1_x = (lid_1.centre_x - lid_1.bbox_width / 2 + lift_ratio_x * lid_1.bbox_width - image_centre_x) * ratio; 
-  lift_pose_1_y = (lid_1.centre_y - lid_1.bbox_height / 2 + lift_ratio_y * lid_1.bbox_height - image_centre_y) * ratio; 
+  lift_pose_1_y = - (lid_1.centre_y - lid_1.bbox_height / 2 + lift_ratio_y * lid_1.bbox_height - image_centre_y) * ratio; 
 
   int drop_forward = 1; 
   
