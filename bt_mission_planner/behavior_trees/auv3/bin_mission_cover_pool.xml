@@ -7,7 +7,7 @@
             <SetBlackboard output_key="vision_topic" value="/auv3/vision/external/detected"/>
             <SetBlackboard output_key="vision_topic_cover" value="/auv3/vision/detected"/>
             <SetBlackboard output_key="pose_topic_name" value="/auv3/nav/odom_ned"/>
-            <SetBlackboard output_key="trial_dis" value="1.0"/>
+            <SetBlackboard output_key="trial_dis" value="1.2"/>
             <SetBlackboard output_key="lift_ratio_x" value="0.5"/>
             <SetBlackboard output_key="lift_ratio_y" value="0.5"/>
             <SetBlackboard output_key="picking_depth" value="0.95"/>
@@ -22,13 +22,13 @@
             <ReactiveFallback>
                 <Sequence>
                     <Action ID="UpdateDetectedObjects" queue_size="" objects="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
-                    <Condition ID="IsLidSeen" lid_num="1" vision_objects="{vision_detected}" area_benchmark="11000"/>
+                    <Condition ID="IsLidSeen" lid_num="1" vision_objects="{vision_detected}" area_benchmark="20000"/>
                 </Sequence>
                 <Repeat num_cycles="50">
                     <Sequence>
                         <Action ID="NavigateControl" depth="{searching_depth}" forward="{trial_dis}" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0.0"/>
                         <Action ID="NavigateControl" depth="{searching_depth}" forward="0.0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="90"/>
-                        <Action ID="Adder" orig_value="{trial_dis}" result="{trial_dis}" value_added="0.2"/>
+                        <Action ID="Adder" orig_value="{trial_dis}" result="{trial_dis}" value_added="0.4"/>
                     </Sequence>
                 </Repeat>
             </ReactiveFallback>
@@ -43,7 +43,7 @@
                     <Action ID="UpdateDetectedObjects" queue_size="" objects="cover_detected" timeout_sec="" topic_name="{vision_topic_cover}"/>
                     <Action ID="IsCoverFlat" vision_objects="{cover_detected}" angle="90" error_range = "5" detector_name = "bin_cover_real"/> 
                 </Sequence>
-                <Repeat num_cycles="6">
+                <Repeat num_cycles="9">
                     <Action ID="NavigateControl" depth="{searching_depth}" forward="0.0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="20"/>                        
                 </Repeat>
             </ReactiveFallback>
@@ -52,15 +52,15 @@
             <ReactiveFallback>
                 <Sequence>
                     <Action ID="UpdateDetectedObjects" queue_size="" objects="vision_detected" timeout_sec="" topic_name="{vision_topic}"/>
-                    <Action ID="IsFullBinSeen" vision_objects="{vision_detected}" area_benchmark="120000"/>
+                    <Action ID="IsFullBinSeen" vision_objects="{vision_detected}" area_benchmark="140000"/>
                 </Sequence>
                 <Sequence>
-                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0.3" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
-                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.3" yaw="0"/>
-                    <Action ID="NavigateControl" depth="{searching_depth}" forward="-0.6" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
-                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="-0.6" yaw="0"/>
-                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0.3" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
-                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.3" yaw="0"/>
+                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0.5" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.5" yaw="0"/>
+                    <Action ID="NavigateControl" depth="{searching_depth}" forward="-1.0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="-1.0" yaw="0"/>
+                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0.5" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.0" yaw="0"/>
+                    <Action ID="NavigateControl" depth="{searching_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0.5" yaw="0"/>
                 </Sequence>
             </ReactiveFallback>
             <Action ID="UpdatePose" topic_name="/auv3/nav/odom_ned" result="center_pose_odom" depth="center_depth"/>
@@ -70,7 +70,7 @@
             <Action ID="CalcCoverSetpoint" vision_objects="{vision_detected}" ratio="0.002" lift_ratio_x="{lift_ratio_x}" lift_ratio_y="{lift_ratio_y}" pre_direction="1"
                 lift_pose_1_x="lift_pose_1_x" lift_pose_1_y="lift_pose_1_y" drop_pose_1="drop_pose_1"/>
             <Action ID="NavigateControl" depth="{picking_depth}" forward="{lift_pose_1_y}" server_name="/auv3/LocomotionServer" server_timeout="" sideways="{lift_pose_1_x}" yaw="0"/>
-            <NavigateToPose server_name="/auv3/LocomotionServer" goal="0.05;-0.15;0;0" relative="true" depth_lock="1.05"/>
+            <NavigateToPose server_name="/auv3/LocomotionServer" goal="0.12;-0.15;0;0" relative="true" depth_lock="1.05"/>
             <Action ID="ManipulatorsService" service_name="/auv3/manipulators" top_torpedo="false" bottom_torpedo="false" dropper="false" grabber="false" 
                 extend_linear="false" retract_linear="true"/>
             <Action ID="NavigateControl" depth="{dropping_depth}" forward="0" server_name="/auv3/LocomotionServer" server_timeout="" sideways="0" yaw="0"/>

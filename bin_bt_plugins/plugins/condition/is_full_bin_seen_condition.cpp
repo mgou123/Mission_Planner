@@ -51,7 +51,7 @@ BT::NodeStatus IsFullBinSeenCondition::tick()
   }
 
   ROS_INFO("x_max is %f, x_min is %f, y_max is %f, y_min is %f", x_max, x_min, y_max, y_min);
-  if (x_max == 10000 || y_max == 10000) {
+  if (x_min == 10000 || y_min == 10000 || y_max == -1 || x_max == -1) {
     ROS_INFO("no pic seen");
     return BT::NodeStatus::FAILURE;
   } else {
