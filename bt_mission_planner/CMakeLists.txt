@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   roscpp
   auv_bt_plugins
+  asv_bt_plugins
   robosub21_bt_plugins
 )
 
@@ -65,6 +66,7 @@ catkin_package(
   mp_msgs
   roscpp
   auv_bt_plugins
+  asv_bt_plugins
   robosub21_bt_plugins
  DEPENDS system_lib
 )

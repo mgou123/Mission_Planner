@@ -55,6 +55,7 @@
   <depend>roscpp</depend>
   <depend>tf2_ros</depend>
   <depend>auv_bt_plugins</depend>
+  <depend>asv_bt_plugins</depend>
   <depend>robosub21_bt_plugins</depend>
 
 
