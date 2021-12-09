@@ -50,7 +50,11 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
-
+  <depend>mp_behavior_tree</depend>
+  <depend>tf2</depend>
+  <depend>tf2_geometry_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>bb_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
