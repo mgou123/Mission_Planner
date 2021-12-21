@@ -2,12 +2,27 @@
 <root>
   <TreeNodesModel>
     <!-- ############################### ACTION NODES ################################# -->
-    <Action ID="NavigateToPose">
+    <Action ID="NavigateToGeopose">
         <input_port name="server_name">Action server name</input_port>
         <input_port name="server_timeout">Timeout for action server to respond</input_port>
         <input_port name="goal">Destination to plan to</input_port>
         <input_port name="yaw_lock">Yaw to lock to. If specified, relative yaw in pose will be ignored.</input_port>
         <input_port name="relative">Set to true to use relative coordinates<input_port>
+        <output_port name="yaw_output">Output port to write message result to</output_port>
+    </Action>
+
+    <Action ID="UpdateGeopose">
+        <input_port name="topic_name">Topic name</input_port>
+        <input_port name="queue_size">Topic queue size </input_port>
+        <input_port name="timeout_sec">Timeout for waiting for message publish</input_port>
+        <output_port name="geopose">Output port to write message result to</output_port>
+    </Action>
+
+    <Action ID="UpdateGeopose">
+        <input_port name="topic_name">Topic name</input_port>
+        <input_port name="queue_size">Topic queue size </input_port>
+        <input_port name="timeout_sec">Timeout for waiting for message publish</input_port>
+        <output_port name="geopose">Output port to write message result to</output_port>
     </Action>
   </TreeNodesModel>
 </root>

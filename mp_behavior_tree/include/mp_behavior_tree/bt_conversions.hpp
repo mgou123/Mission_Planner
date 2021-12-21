@@ -7,6 +7,7 @@
 #include "geometry_msgs/Point.h"
 #include "geometry_msgs/Quaternion.h"
 #include "geometry_msgs/PoseStamped.h"
+#include "geographic_msgs/GeoPoseStamped.h"
 #include "tf2/LinearMath/Quaternion.h"
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
@@ -105,6 +106,71 @@ inline geometry_msgs::PoseStamped convertFromString(const StringView key)
     pose_stamped.pose.position.x = BT::convertFromString<double>(parts[0]);
     pose_stamped.pose.position.y = BT::convertFromString<double>(parts[1]);
     pose_stamped.pose.position.z = 0;
+    pose_stamped.pose.orientation.x = 0;
+    pose_stamped.pose.orientation.y = 0;
+    pose_stamped.pose.orientation.z = 0;
+    pose_stamped.pose.orientation.w = 1;
+    
+    return pose_stamped;
+
+  } else {
+    throw std::runtime_error("invalid number of fields for PoseStamped attribute)");
+  }
+}
+
+// Parse XML string to geographic_msgs::msg::PoseStamped
+template<>
+inline geographic_msgs::GeoPoseStamped convertFromString(const StringView key)
+{
+  // 7 real numbers separated by semicolons
+  auto parts = BT::splitString(key, ';'); 
+  if (parts.size() == 9) {
+    geographic_msgs::GeoPoseStamped pose_stamped;
+    pose_stamped.header.stamp = ros::Time(BT::convertFromString<int64_t>(parts[0]));
+    pose_stamped.header.frame_id = BT::convertFromString<std::string>(parts[1]);
+    pose_stamped.pose.position.latitude = BT::convertFromString<double>(parts[2]);
+    pose_stamped.pose.position.longitude = BT::convertFromString<double>(parts[3]);
+    pose_stamped.pose.position.altitude = BT::convertFromString<double>(parts[4]);
+    pose_stamped.pose.orientation.x = BT::convertFromString<double>(parts[5]);
+    pose_stamped.pose.orientation.y = BT::convertFromString<double>(parts[6]);
+    pose_stamped.pose.orientation.z = BT::convertFromString<double>(parts[7]);
+    pose_stamped.pose.orientation.w = BT::convertFromString<double>(parts[8]);
+    return pose_stamped;
+  } else if (parts.size() == 7) {
+    geographic_msgs::GeoPoseStamped pose_stamped;
+    pose_stamped.pose.position.latitude = BT::convertFromString<double>(parts[0]);
+    pose_stamped.pose.position.longitude = BT::convertFromString<double>(parts[1]);
+    pose_stamped.pose.position.altitude = BT::convertFromString<double>(parts[2]);
+    pose_stamped.pose.orientation.x = BT::convertFromString<double>(parts[3]);
+    pose_stamped.pose.orientation.y = BT::convertFromString<double>(parts[4]);
+    pose_stamped.pose.orientation.z = BT::convertFromString<double>(parts[5]);
+    pose_stamped.pose.orientation.w = BT::convertFromString<double>(parts[6]);
+    return pose_stamped;
+  } else if (parts.size() == 4) {
+    geographic_msgs::GeoPoseStamped pose_stamped;
+    pose_stamped.pose.position.latitude = BT::convertFromString<double>(parts[0]);
+    pose_stamped.pose.position.longitude = BT::convertFromString<double>(parts[1]);
+    pose_stamped.pose.position.altitude = BT::convertFromString<double>(parts[2]);
+    tf2::Quaternion quat;
+    quat.setRPY(0, 0, BT::convertFromString<double>(parts[3]) / 180.0 * M_PI);
+    quat = quat.normalize();
+    tf2::convert(quat, pose_stamped.pose.orientation);
+    return pose_stamped;
+  } else if (parts.size() == 3) {
+    geographic_msgs::GeoPoseStamped pose_stamped;
+    pose_stamped.pose.position.latitude = BT::convertFromString<double>(parts[0]);
+    pose_stamped.pose.position.longitude = BT::convertFromString<double>(parts[1]);
+    pose_stamped.pose.position.altitude = BT::convertFromString<double>(parts[2]);
+    pose_stamped.pose.orientation.x = 0;
+    pose_stamped.pose.orientation.y = 0;
+    pose_stamped.pose.orientation.z = 0;
+    pose_stamped.pose.orientation.w = 1;
+    return pose_stamped;
+  } else if (parts.size() == 2) { 
+    geographic_msgs::GeoPoseStamped pose_stamped;
+    pose_stamped.pose.position.latitude = BT::convertFromString<double>(parts[0]);
+    pose_stamped.pose.position.longitude = BT::convertFromString<double>(parts[1]);
+    pose_stamped.pose.position.altitude = 0;
     pose_stamped.pose.orientation.x = 0;
     pose_stamped.pose.orientation.y = 0;
     pose_stamped.pose.orientation.z = 0;

@@ -1,0 +1,35 @@
+<root main_tree_to_execute="MainTree">
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+            <ControllerService service_name="/asv/controller" enable="true"/>
+            <SetBlackboard output_key="pose_topic_name" value="/asv/nav/odom_ned"/>
+            <SetBlackboard output_key="locomotion_server_name" value="/asv/LocomotionServer" />
+
+            <SetBlackboard output_key="geopose_topic_name" value="/asv/nav/gps/fix"/>
+            <SetBlackboard output_key="target_topic_name" value="/vrx/station_keeping/goal"/>
+
+            <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
+            <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+            <SplitPoseComponents pose="{pose}" yaw="{standard_yaw}" />
+
+            <UpdateGeopose topic_name="{target_topic_name}" geopose="{target_geopose}" />
+            <UpdateNavsatfix topic_name="{geopose_topic_name}" geopose="{curr_geopose}"/>
+
+            <!-- [SIM ONLY] Teleport to starting position -->
+            <UpdateNavsatfix topic_name="{geopose_topic_name}" geopose="{curr_geopose}"/>
+            <NavigateToGeopose server_name="{locomotion_server_name}" origin="{curr_geopose}" goal="{target_geopose}" yaw_output="{target_yaw}"/>
+            <UpdateNavsatfix topic_name="{geopose_topic_name}" geopose="{curr_geopose}"/>
+            <NavigateToGeopose server_name="{locomotion_server_name}" origin="{curr_geopose}" goal="{target_geopose}" yaw_output="{target_yaw}"/>
+            <UpdateNavsatfix topic_name="{geopose_topic_name}" geopose="{curr_geopose}"/>
+            <NavigateToGeopose server_name="{locomotion_server_name}" origin="{curr_geopose}" goal="{target_geopose}" yaw_output="{target_yaw}"/>
+            <UpdateNavsatfix topic_name="{geopose_topic_name}" geopose="{curr_geopose}"/>
+            <NavigateToGeopose server_name="{locomotion_server_name}" origin="{curr_geopose}" goal="{target_geopose}" yaw_output="{target_yaw}"/>
+            <UpdateNavsatfix topic_name="{geopose_topic_name}" geopose="{curr_geopose}"/>
+            <NavigateToGeopose server_name="{locomotion_server_name}" origin="{curr_geopose}" goal="{target_geopose}" yaw_output="{target_yaw}"/>
+    
+            <NavigateControl server_name="{locomotion_server_name}" forward="0" sideways="0" yaw="180" server_timeout="" depth="0" />
+
+            <ControllerService service_name="/asv/controller" enable="false" />
+        </Sequence>
+    </BehaviorTree>
+</root>

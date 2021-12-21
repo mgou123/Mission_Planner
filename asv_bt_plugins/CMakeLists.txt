@@ -133,8 +133,14 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
-add_library(mp_navigate_to_pose_bt_node SHARED plugins/action/navigate_to_pose.cpp)
-list(APPEND plugin_libs mp_navigate_to_pose_bt_node)
+add_library(mp_navigate_to_geopose_bt_node SHARED plugins/action/navigate_to_geopose.cpp)
+list(APPEND plugin_libs mp_navigate_to_geopose_bt_node)
+
+add_library(mp_update_geopose_bt_node SHARED plugins/action/update_geopose.cpp)
+list(APPEND plugin_libs mp_update_geopose_bt_node)
+
+add_library(mp_update_navsatfix_bt_node SHARED plugins/action/update_navsatfix.cpp)
+list(APPEND plugin_libs mp_update_navsatfix_bt_node)
 
 foreach(bt_plugin ${plugin_libs})
   add_dependencies(${bt_plugin} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
