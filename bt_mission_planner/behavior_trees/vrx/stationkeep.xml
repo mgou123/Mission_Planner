@@ -17,17 +17,8 @@
 
             <!-- [SIM ONLY] Teleport to starting position -->
             <UpdateNavsatfix topic_name="{geopose_topic_name}" geopose="{curr_geopose}"/>
-            <NavigateToGeopose server_name="{locomotion_server_name}" origin="{curr_geopose}" goal="{target_geopose}" yaw_output="{target_yaw}"/>
-            <UpdateNavsatfix topic_name="{geopose_topic_name}" geopose="{curr_geopose}"/>
-            <NavigateToGeopose server_name="{locomotion_server_name}" origin="{curr_geopose}" goal="{target_geopose}" yaw_output="{target_yaw}"/>
-            <UpdateNavsatfix topic_name="{geopose_topic_name}" geopose="{curr_geopose}"/>
-            <NavigateToGeopose server_name="{locomotion_server_name}" origin="{curr_geopose}" goal="{target_geopose}" yaw_output="{target_yaw}"/>
-            <UpdateNavsatfix topic_name="{geopose_topic_name}" geopose="{curr_geopose}"/>
-            <NavigateToGeopose server_name="{locomotion_server_name}" origin="{curr_geopose}" goal="{target_geopose}" yaw_output="{target_yaw}"/>
-            <UpdateNavsatfix topic_name="{geopose_topic_name}" geopose="{curr_geopose}"/>
-            <NavigateToGeopose server_name="{locomotion_server_name}" origin="{curr_geopose}" goal="{target_geopose}" yaw_output="{target_yaw}"/>
-    
-            <NavigateControl server_name="{locomotion_server_name}" forward="0" sideways="0" yaw="180" server_timeout="" depth="0" />
+            <NavigateToGeopose curr_pose="{pose}" origin="{curr_geopose}" goal="{target_geopose}" yaw_output="{target_yaw}" pose_output="{target_pose}"/>
+            <NavigateToPose server_name="{locomotion_server_name}" goal="{target_pose}" yaw_lock="{target_yaw}" yaw_lock_relative="false" forward_tolerance="0.5" sidemove_tolerance="0.5"/>
 
             <ControllerService service_name="/asv/controller" enable="false" />
         </Sequence>

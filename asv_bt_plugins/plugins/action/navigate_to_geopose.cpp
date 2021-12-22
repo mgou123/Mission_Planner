@@ -11,26 +11,32 @@ namespace mp_behavior_tree
 
 NavigateToGeopose::NavigateToGeopose(
     const std::string & xml_tag_name,
-    const std::string & action_name,
     const BT::NodeConfiguration & conf)
-  : BtActionNode<bb_msgs::LocomotionAction, 
-                 bb_msgs::LocomotionGoal, 
-                 bb_msgs::LocomotionResult>(xml_tag_name, action_name, conf) {}
+  : BT::SyncActionNode(xml_tag_name, conf) {}
 
-void NavigateToGeopose::on_tick() {
+BT::NodeStatus NavigateToGeopose::tick() {
     tf2::Quaternion quat;
     geographic_msgs::GeoPoseStamped currGeopose;
     geographic_msgs::GeoPoseStamped targetGeopose;
 
+    geometry_msgs::PoseStamped currPose;
+
     if (!getInput("goal", targetGeopose)) {
         ROS_ERROR("[NavigateToGeopose] goal not provided!");
-        return;
+        return BT::NodeStatus::FAILURE;
     }
 
     if (!getInput("origin", currGeopose)) {
         ROS_ERROR("[NavigateToGeopose] origin not provided!");
-        return;
+        return BT::NodeStatus::FAILURE;
     }
+
+    
+    if (!getInput("curr_pose", currPose)) {
+        ROS_ERROR("[NavigateToGeopose] current pose not provided!");
+        return BT::NodeStatus::FAILURE;
+    }
+
 
     double enu[3];
     
@@ -49,6 +55,25 @@ void NavigateToGeopose::on_tick() {
     ROS_INFO("Forward: %s", std::to_string(enu[1]).c_str());
     ROS_INFO("Sidemove: %s", std::to_string(enu[0]).c_str());
 
+    // Translation to relative
+    geometry_msgs::Vector3 local_geo;
+    local_geo.x = enu[0];
+    local_geo.y = enu[1];
+    local_geo.z = enu[2];
+
+    tf2::Quaternion currQuat;
+    tf2::Vector3 temp_vec;
+    tf2::convert(currPose.pose.orientation, currQuat);
+    tf2::convert(local_geo, temp_vec);
+    temp_vec = tf2::quatRotate(currQuat, temp_vec);
+    tf2::convert(temp_vec, local_geo);
+
+    enu[0] = local_geo.x;
+    enu[1] = local_geo.y;
+    enu[2] = local_geo.z;
+
+    // Translation finished
+
     geometry_msgs::PoseStamped goal_pose_stamped;
     double roll, pitch, yaw;
     bool rel;
@@ -57,44 +82,25 @@ void NavigateToGeopose::on_tick() {
     tf2::convert(targetGeopose.pose.orientation, quat);
     tf2::Matrix3x3(quat).getRPY(roll, pitch, yaw);
 
-    ROS_INFO("Yaw: %s", std::to_string(yaw / M_PI * 180.0).c_str());
+    yaw = 90.0 + yaw / M_PI * 180.0; // This is absolute yaw; the 90 degrees is to offset some frame change
+    ROS_INFO("Abs. Yaw: %s", std::to_string(yaw).c_str());
 
     // Goal is NED
-    goal_.forward_setpoint = enu[1];
-    goal_.sidemove_setpoint = enu[0];
-    goal_.yaw_setpoint = 0; // yaw / M_PI * 180.0;
+    goal_pose_stamped.pose.position.x = enu[1];
+    goal_pose_stamped.pose.position.y = enu[0];
+    goal_pose_stamped.pose.position.z = 0;
 
-    goal_.movement_rel = true;
-    goal_.yaw_rel = true;
+    setOutput("yaw_output", yaw); // Absolute yaw
+    setOutput("pose_output", goal_pose_stamped); // Relative pose
 
-    double sidemove_tolerance, forward_tolerance, yaw_tolerance;
-
-    if (getInput("sidemove_tolerance", sidemove_tolerance)) {
-      goal_.sidemove_tolerance = sidemove_tolerance;
-    }
-
-    if (getInput("forward_tolerance", forward_tolerance)) {
-      goal_.forward_tolerance = forward_tolerance;
-    }
-
-    if (getInput("yaw_tolerance", yaw_tolerance)) {
-      goal_.yaw_tolerance = yaw_tolerance;
-    }
-
-    setOutput("yaw_output", yaw / M_PI * 180.0);
+    return BT::NodeStatus::SUCCESS;
 }
 
 } // namespace mp_behavior_tree
 
 #include "behaviortree_cpp_v3/bt_factory.h"
-BT_REGISTER_NODES(factory) {
-  BT::NodeBuilder builder =
-    [](const std::string & name, const BT::NodeConfiguration & config)
-    {
-      return std::make_unique<mp_behavior_tree::NavigateToGeopose>(
-        name, "Locomotion", config);
-    };
-
-  factory.registerBuilder<mp_behavior_tree::NavigateToGeopose>(
-    "NavigateToGeopose", builder);
+BT_REGISTER_NODES(factory)
+{
+  factory.registerNodeType<mp_behavior_tree::NavigateToGeopose>("NavigateToGeopose");
 }
+                    

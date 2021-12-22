@@ -2,13 +2,13 @@ default_mission_planner_bt_xml: vrx/stationkeep.xml
 plugin_lib_names:
   # Controls-related
   - mp_navigate_to_geopose_bt_node
+  - mp_navigate_to_pose_bt_node
   - mp_controller_service_bt_node
   - mp_update_pose_bt_node
   - mp_convert_odom_to_pose_bt_node
   - mp_split_pose_components_bt_node
   - mp_update_geopose_bt_node
   - mp_update_navsatfix_bt_node
-  - mp_navigate_control_bt_node
 
 odom_topic: /asv/nav/odom_ned
 transform_tolerance: 0.1

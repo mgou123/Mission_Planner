@@ -2,6 +2,7 @@
 #define ASV_BT_PLUGINS__PLUGINS__ACTION__NAVIGATE_TO_POSE_HPP_
 
 #include <string>
+#include "geometry_msgs/PoseStamped.h"
 #include "geographic_msgs/GeoPoseStamped.h"
 #include "geographic_msgs/GeoPoint.h"
 #include "bb_msgs/LocomotionAction.h"
@@ -20,30 +21,27 @@ namespace mp_behavior_tree
 {
 
 class NavigateToGeopose 
-: public BtActionNode<bb_msgs::LocomotionAction, 
-                      bb_msgs::LocomotionGoal, 
-                      bb_msgs::LocomotionResult>
+: public BT::SyncActionNode
 {
 public:
     NavigateToGeopose(
         const std::string & xml_tag_name,
-        const std::string & action_name,
         const BT::NodeConfiguration & conf);
-    
-    void on_tick() override;
+
+    ~NavigateToGeopose() {};
 
     static BT::PortsList providedPorts()
     {
-        return providedBasicPorts(
-        {
-            BT::InputPort<geographic_msgs::GeoPoseStamped>("origin", "Destination geopose"),
+        return {
+            BT::InputPort<geographic_msgs::GeoPoseStamped>("origin", "Origin geopose"),
+            BT::InputPort<geometry_msgs::PoseStamped>("curr_pose", "Current pose"),            
             BT::InputPort<geographic_msgs::GeoPoseStamped>("goal", "Destination geopose"),
-            BT::InputPort<double>("forward_tolerance", "Tolerance for forward motion"),
-            BT::InputPort<double>("sidemove_tolerance", "Tolerance for XY motion"),
-            BT::InputPort<double>("yaw_tolerance", "Tolerance for yaw"),
+            BT::OutputPort<geometry_msgs::PoseStamped>("pose_output", "Pose output"),            
             BT::OutputPort<double>("yaw_output", "Yaw output")
-        });
+        };
     }
+
+    BT::NodeStatus tick() override;
 
 private:
     // WGS-84 geodetic constants
