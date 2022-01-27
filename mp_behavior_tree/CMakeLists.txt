@@ -11,7 +11,6 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   actionlib
   actionlib_msgs
-  behaviortree_cpp_v3
   tf2_ros
   tf2
   tf2_geometry_msgs
@@ -19,11 +18,11 @@ find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   std_msgs
   sensor_msgs
-  bb_msgs
 )
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
+find_package(BehaviorTreeV3 REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
@@ -37,13 +36,11 @@ catkin_package(
     tf2_ros
     tf2
     tf2_geometry_msgs
-    behaviortree_cpp_v3
     geometry_msgs
     nav_msgs
     sensor_msgs
     std_msgs
-    bb_msgs
-  DEPENDS system_lib
+  DEPENDS BehaviorTreeV3
 )
 
 
@@ -66,6 +63,7 @@ add_library(${PROJECT_NAME} SHARED
 add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
+  behaviortree_cpp_v3
 )
 
 add_library(mp_update_pose_bt_node SHARED plugins/action/update_pose.cpp)
@@ -73,9 +71,6 @@ list(APPEND plugin_libs mp_update_pose_bt_node)
 
 add_library(mp_convert_odom_to_pose_bt_node SHARED plugins/action/convert_odom_to_pose.cpp)
 list(APPEND plugin_libs mp_convert_odom_to_pose_bt_node)
-
-add_library(mp_controller_service_bt_node SHARED plugins/action/controller_service.cpp)
-list(APPEND plugin_libs mp_controller_service_bt_node)
 
 add_library(mp_set_relative_goal_bt_node SHARED plugins/action/set_relative_goal.cpp)
 list(APPEND plugin_libs mp_set_relative_goal_bt_node)
@@ -113,7 +108,8 @@ list(APPEND plugin_libs mp_dynamic_timeout_bt_node)
 foreach(bt_plugin ${plugin_libs})
   add_dependencies(${bt_plugin} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
   target_link_libraries(${bt_plugin}
-    ${catkin_LIBRARIES}
+    ${catkin_LIBRARIES} 
+    behaviortree_cpp_v3
   )
   target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
 endforeach()

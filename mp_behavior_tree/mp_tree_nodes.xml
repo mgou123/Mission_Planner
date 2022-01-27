@@ -15,11 +15,6 @@
       <output_port name="pose">Pose as a geometry_msgs::PoseStamped message</output_port>
     </Action>
 
-    <Action ID="ControllerService">
-      <input_port name="service_name">Name of service</input_port>
-      <input_port name="enable">True to enable controls, false to disable controls</input_port>
-    </Action>
-
     <Action ID="SetRelativeGoal">
       <input_port name="relative_goal">Relative pose goal (refer to bt conversions for specification)</input_port>
       <input_port name="pose">Current pose</input_port>

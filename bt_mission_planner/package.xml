@@ -49,14 +49,13 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
+  <depend>roslib</depend>
   <depend>mp_behavior_tree</depend>
   <depend>mp_core</depend>
   <depend>mp_msgs</depend>
   <depend>roscpp</depend>
   <depend>tf2_ros</depend>
-  <depend>auv_bt_plugins</depend>
-  <depend>robosub21_bt_plugins</depend>
-
+  <depend>BehaviorTreeV3</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

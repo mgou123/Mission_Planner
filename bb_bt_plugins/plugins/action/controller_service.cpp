@@ -1,4 +1,4 @@
-#include "mp_behavior_tree/plugins/action/controller_service.hpp"
+#include "bb_bt_plugins/action/controller_service.hpp"
 
 namespace mp_behavior_tree
 {
@@ -24,7 +24,7 @@ BT_REGISTER_NODES(factory)
         [](const std::string & name, const BT::NodeConfiguration & config)
         {
             return std::make_unique<mp_behavior_tree::ControllerService>(
-                name, "/auv/controller", config);
+                name, "Controller", config);
         };
     
     factory.registerBuilder<mp_behavior_tree::ControllerService>("ControllerService", builder);

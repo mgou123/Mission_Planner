@@ -1,14 +1,13 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>asv_bt_plugins</name>
+  <name>bb_bt_plugins</name>
   <version>0.0.0</version>
-  <description>The asv_bt_plugins package</description>
+  <description>The bb_bt_plugins package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
   <maintainer email="kaitlyn@todo.todo">kaitlyn</maintainer>
-
 
   <!-- One license tag required, multiple allowed, one license per tag -->
   <!-- Commonly used license strings: -->
@@ -50,6 +49,14 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
+  <depend>mp_behavior_tree</depend>
+  <depend>tf2</depend>
+  <depend>tf2_geometry_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>bb_msgs</depend>
+
+  <depend>BehaviorTreeV3</depend>
+
 
 
   <!-- The export tag contains other, unspecified, tags -->

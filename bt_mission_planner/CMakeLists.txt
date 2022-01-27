@@ -8,13 +8,14 @@ project(bt_mission_planner)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  mp_behavior_tree
+  roscpp
+  roslib
   mp_msgs
   tf2_ros
-  roscpp
-  auv_bt_plugins
-  robosub21_bt_plugins
+  mp_behavior_tree
 )
+
+find_package(BehaviorTreeV3 REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -59,13 +60,12 @@ catkin_package(
  INCLUDE_DIRS include
  LIBRARIES bt_mission_planner
  CATKIN_DEPENDS 
+  roslib
   tf2_ros 
   mp_behavior_tree 
   mp_core 
   mp_msgs
   roscpp
-  auv_bt_plugins
-  robosub21_bt_plugins
  DEPENDS system_lib
 )
 
@@ -107,6 +107,7 @@ add_dependencies(mission_planner_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 target_link_libraries(mission_planner_node
   mission_planner_lib
   ${catkin_LIBRARIES}
+  behaviortree_cpp_v3
 )
 
 #############

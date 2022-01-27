@@ -1,0 +1,13 @@
+default_mission_planner_bt_xml: basic_forward.xml
+plugin_lib_names:
+  - mp_go_to_bt_node
+  - mp_controller_service_bt_node
+
+odom_topic: nav/odom_ned
+transform_tolerance: 0.1
+
+bt_loop_duration: 10
+default_server_timeout: 20
+enable_groot_monitoring: false
+groot_zmq_publisher_port: 1666
+groot_zmq_server_port: 1667

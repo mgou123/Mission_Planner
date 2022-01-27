@@ -1,0 +1,10 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <Sequence>
+        <SetBlackboard output_key="locomotion_server_name" value="LocomotionServer" />
+        
+        <ControllerService service_name="controller" enable="true"/>
+        <GoTo server_name="{locomotion_server_name}" forward="5 / 2" yaw_lock="3 * 2" />
+    </Sequence>
+  </BehaviorTree>
+</root>

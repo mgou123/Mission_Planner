@@ -173,3 +173,6 @@ Session.vim
 *~
 # auto-generated tag files
 tags
+
+# catkin ignore files
+CATKIN_IGNORE

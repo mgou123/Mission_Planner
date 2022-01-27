@@ -57,16 +57,16 @@
   <depend>tf2_ros</depend>
   <depend>tf2</depend>
   <depend>tf2_geometry_msgs</depend>
-  <depend>behaviortree_cpp_v3</depend>
+  <depend>BehaviorTreeV3</depend>
 
   <depend>geometry_msgs</depend>
   <depend>nav_msgs</depend>
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
-  <depend>bb_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
+  
     <!-- Other tools can request additional information be placed here -->
 
   </export>

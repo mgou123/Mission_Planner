@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(asv_bt_plugins)
+project(bb_bt_plugins)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -9,10 +9,16 @@ project(asv_bt_plugins)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  tf2
+  tf2_geometry_msgs
+  tf2_geometry_msgs
+  bb_msgs
+  mp_behavior_tree
 )
 
 ## System dependencies are found with CMake's conventions
-find_package(Boost REQUIRED COMPONENTS system)
+# find_package(Boost REQUIRED COMPONENTS system)
+find_package(BehaviorTreeV3 REQUIRED)
 
 ## Generate messages in the 'msg' folder
 # add_message_files(
@@ -74,10 +80,14 @@ find_package(Boost REQUIRED COMPONENTS system)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES 
-    ${PROJECT_NAME}
     ${plugin_libs}
   CATKIN_DEPENDS 
     roscpp
+    tf2
+    tf2_geometry_msgs
+    geometry_msgs
+    bb_msgs
+    mp_behavior_tree
   DEPENDS system_lib
 )
 
@@ -95,7 +105,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/asv_bt_plugins.cpp
+#   src/${PROJECT_NAME}/bb_bt_plugins.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -106,7 +116,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/asv_bt_plugins_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/bb_bt_plugins_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -122,6 +132,21 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+
+add_library(mp_go_to_bt_node SHARED plugins/action/go_to.cpp)
+list(APPEND plugin_libs mp_go_to_bt_node)
+
+add_library(mp_controller_service_bt_node SHARED plugins/action/controller_service.cpp)
+list(APPEND plugin_libs mp_controller_service_bt_node)
+
+foreach(bt_plugin ${plugin_libs})
+  add_dependencies(${bt_plugin} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+  target_link_libraries(${bt_plugin}
+    ${catkin_LIBRARIES}
+    behaviortree_cpp_v3
+  )
+  target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
+endforeach()
 
 #############
 ## Install ##
@@ -145,18 +170,25 @@ include_directories(
 
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS ${plugin_libs}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+  PATTERN ".svn" EXCLUDE
 )
 
 ## Mark cpp header files for installation
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h"
-  PATTERN ".svn" EXCLUDE
-)
+# install(DIRECTORY include/${PROJECT_NAME}/
+#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+#   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+#   PATTERN ".svn" EXCLUDE
+# )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
@@ -170,7 +202,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_asv_bt_plugins.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_bb_bt_plugins.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

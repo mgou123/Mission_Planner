@@ -1,0 +1,7 @@
+<launch>
+  <arg name="namespace" default="asv" />
+  <group ns="$(arg namespace)">
+    <rosparam file="$(find bt_mission_planner)/config/basic.yaml" />
+    <node name="mission_planner" pkg="bt_mission_planner" type="mission_planner_node" respawn="true" output="screen"/>
+  </group>
+</launch>
