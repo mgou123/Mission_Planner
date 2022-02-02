@@ -16,6 +16,9 @@
             <SetBlackboard output_key="{standard_depth}" value="0.9" />
             <SetBlackboard output_key="{standard_yaw}" value="-80" />
 
+            <SetBlackboard output_key="vision_main_target" value="bootlegger"/>
+            <SetBlackboard output_key="vision_target" value="Bootlegger Small Hole"/>
+
             <!-- [SIM ONLY] Teleport to starting position -->
             <NavigateToPose relative="false" server_name="{locomotion_server_name}" goal="4;4;0.9" yaw_lock="{standard_yaw}"/>
 
@@ -23,7 +26,10 @@
             <NavigateToPose server_name="{locomotion_server_name}" goal="0;0;0;0" yaw_lock="{fixed_yaw}" depth_lock="{standard_depth}" />
 
             <!-- Run torpedo task -->
-            <SubTree ID="TorpedoTaskTree" node="node" vision_topic_name="vision_topic_name" vision_service_name="vision_service_name" server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" />
+            <SubTree ID="TorpedoTaskTree" node="node"
+                vision_topic_name="vision_topic_name" vision_service_name="vision_service_name"
+                vision_main_target="vision_main_target" vision_target="vision_target"
+                server_name="locomotion_server_name" pose_topic_name="pose_topic_name" standard_depth="standard_depth" fixed_yaw="standard_yaw" />
 
             <!-- Travel to bin task -->
             <ControllerService service_name="/auv3/controller" enable="false" />

@@ -2,13 +2,7 @@
   <include ros_pkg="bt_mission_planner" path="behavior_trees/side_sweep_sim.xml"/>
   <BehaviorTree ID="TorpedoTaskTree">
     <Sequence>
-      <SetBlackboard output_key="vision_main_target" value="bootlegger"/>
-      <SetBlackboard output_key="vision_target" value="Bootlegger Small Hole"/>
       <DetectorAUVService service_name="{vision_service_name}" objects="bootlegger" enable="true"/>
-
-      <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
-      <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
-      <SplitPoseComponents pose="{pose}" yaw="{temp_yaw}" />
 
       <!-- Find vision_main_target -->
       <Delay delay_msec="3000">
@@ -28,8 +22,8 @@
       <ReactiveFallback>
         <Sequence>
           <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
-          <ComputeGoal vision_objects="{detected_objects}" target_identity="{vision_target}" main_target="{vision_main_target}" goal="{hole_goal}" absolute_depth="{hole_depth}" absolute_yaw="{hole_yaw}" />
           <SetObjectGoal vision_objects="{detected_objects}" target_identity="{vision_main_target}" goal="{buoy_goal}" absolute_depth="{object_depth}" absolute_yaw="{object_yaw}" />
+          <ComputeGoal vision_objects="{detected_objects}" target_identity="{vision_target}" main_target="{vision_main_target}" goal="{hole_goal}" absolute_depth="{hole_depth}" absolute_yaw="{hole_yaw}" />
         </Sequence>
         <SubTree ID="SideSweepTree" node="node" server_name="server_name" original_yaw="{object_yaw}" depth="standard_depth" />
       </ReactiveFallback>
@@ -38,10 +32,6 @@
       <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
       <SplitPoseComponents pose="{pose}" yaw="{current_yaw}" z="{current_depth}" />
 
-      <!-- Align Yaw -->
-      <NavigateToPose server_name="{server_name}" goal="0;0;0;0" yaw_lock="{object_yaw}" depth_lock="{current_depth}" />
-
-      <!-- Rough align with hole -->
       <ModifyGoal original_pose="{pose}" zeroed_components="x,y" final_pose="{pose}"/>
       <ModifyGoal original_pose="{hole_goal}" modifying_pose="{pose}" final_pose="{hole_goal}"/>
       <NavigateToPose server_name="{server_name}" goal="{hole_goal}" yaw_lock="{current_yaw}" />
@@ -91,22 +81,12 @@
         </Sequence>
       </Repeat>
 
-      <!-- Approach Hole -->
-      <!-- <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
-      <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
-      <SplitPoseComponents pose="{pose}" z="{current_depth}" />
-
-      <ModifyGoal original_pose="{goal}" zeroed_components="x" final_pose="{goal}"/>
-      <ModifyGoal original_pose="{goal}" modifying_pose="0.1;0;0" final_pose="{goal}"/>
-      <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}"/> -->
-      <!-- At this point, the vehicle should be 10 cm away from the hole -->
-
       <!-- Shoots torpedo here -->
-      <Delay delay_msec="3000">
-        <Repeat num_cycles="10">
+      <Repeat num_cycles="10">
+        <Delay delay_msec="500">
           <ManipulatorsService service_name="/auv3/manipulators" top_torpedo="false" bottom_torpedo="true" dropper="false" grabber="false" extend_linear="false" retract_linear="false" />
-        </Repeat>
-      </Delay>
+        </Delay>
+    </Repeat>
 
       <!-- Disable Vision -->
       <DetectorAUVService service_name="{vision_service_name}" objects="bootlegger" enable="false"/>
