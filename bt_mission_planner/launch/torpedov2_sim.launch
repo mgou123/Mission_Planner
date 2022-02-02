@@ -1,0 +1,5 @@
+<launch>
+    <rosparam file="$(find bt_mission_planner)/config/torpedov2_sim.yaml" />
+    <node name="mission_planner" pkg="bt_mission_planner" type="mission_planner_node" respawn="true" output="screen"/>
+</launch>
+  

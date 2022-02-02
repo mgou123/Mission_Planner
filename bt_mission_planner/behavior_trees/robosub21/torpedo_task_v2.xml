@@ -1,5 +1,5 @@
 <root main_tree_to_execute = "TorpedoTaskTree">
-  <include ros_pkg="bt_mission_planner" path="behavior_trees/side_sweep_sim.xml"/>
+  <include ros_pkg="bt_mission_planner" path="behavior_trees/side_sweep.xml"/>
   <BehaviorTree ID="TorpedoTaskTree">
     <Sequence>
       <SetBlackboard output_key="vision_main_target" value="bootlegger"/>
@@ -22,7 +22,7 @@
       </Delay>
 
       <!-- Rough align Yaw -->
-      <NavigateToPose server_name="{server_name}" goal="0;0;0;0" yaw_lock="{object_yaw}" depth_lock="{standard_depth}" yaw_tolerance="1"/>
+      <NavigateToPose server_name="{server_name}" goal="0;0;0;0" yaw_lock="{object_yaw}" yaw_lock_relative="true" depth_lock="{standard_depth}" yaw_tolerance="1"/>
 
       <!-- Align Sidemove -->
       <ReactiveFallback>

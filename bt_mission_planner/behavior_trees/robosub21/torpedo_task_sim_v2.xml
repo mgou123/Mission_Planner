@@ -56,10 +56,12 @@
       <NavigateToPose server_name="{server_name}" goal="{buoy_goal}" yaw_lock="{current_yaw}" depth_lock="{current_depth}"/>
 
       <!-- Align with hole -->
-      <SetBlackboard output_key="range" value="1.5;0;0"/>
+      <SetBlackboard output_key="range" value="1.0;0;0"/>
+      <SetBlackboard output_key="covered_dist" value="0.2;0;0"/>
 
-      <Repeat num_cycles="1">
+      <Repeat num_cycles="3">
         <Sequence>
+          <!-- Actual Hole Alignment -->
           <RetryUntilSuccesful num_attempts="-1">
             <Sequence>
               <UpdateDetectedObjects topic_name="{vision_topic_name}" objects="{detected_objects}" timeout_sec="10.0" />
@@ -67,7 +69,6 @@
             </Sequence>
           </RetryUntilSuccesful>
 
-          <!-- Actual Hole Alignment -->
           <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
           <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
           <SplitPoseComponents pose="{pose}" yaw="{current_yaw}" />
@@ -83,12 +84,22 @@
           <SplitPoseComponents pose="{pose}" z="{current_depth}" />
 
           <ModifyGoal original_pose="{goal}" zeroed_components="x" final_pose="{goal}"/>
-          <ModifyGoal original_pose="{goal}" modifying_pose="0.5;0;0" final_pose="{goal}"/>
+          <ModifyGoal original_pose="{goal}" modifying_pose="{covered_dist}" final_pose="{goal}"/>
           <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}"/>
 
-          <ModifyGoal original_pose="{range}" modifying_pose="-0.5;0;0" final_pose="{range}"/>
+          <ModifyGoal original_pose="{range}" modifying_pose="-0.2;0;0" final_pose="{range}"/>
         </Sequence>
       </Repeat>
+
+      <!-- Approach Hole -->
+      <!-- <UpdatePose topic_name="{pose_topic_name}" result="{odom_pose}" depth="{standard_depth}"/>
+      <ConvertOdomToPose odom_pose="{odom_pose}" pose="{pose}" />
+      <SplitPoseComponents pose="{pose}" z="{current_depth}" />
+
+      <ModifyGoal original_pose="{goal}" zeroed_components="x" final_pose="{goal}"/>
+      <ModifyGoal original_pose="{goal}" modifying_pose="0.1;0;0" final_pose="{goal}"/>
+      <NavigateToPose server_name="{server_name}" goal="{goal}" yaw_lock="{current_yaw}"/> -->
+      <!-- At this point, the vehicle should be 10 cm away from the hole -->
 
       <!-- Shoots torpedo here -->
       <Delay delay_msec="3000">
