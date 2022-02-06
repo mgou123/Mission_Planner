@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <root main_tree_to_execute="BehaviorTree">
     <!-- ////////// -->
+    <!-- Left here cuz the parameters tuned, mission no longer in use-->
     <BehaviorTree ID="BehaviorTree">
         <Sequence>
             <Action ID="ControllerService" enable="true" service_name="/auv3/controller"/>
